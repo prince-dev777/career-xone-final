@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Xone</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- COPY CSS TO YOUR STYLE FILE --- */
+        :root {
+            /* NEET Result Theme: Teal/Green */
+            --primary: #0d9488; /* Teal-600 */
+            --primary-dark: #0f766e;
+            --secondary: #0f172a; 
+            --accent: #fbbf24;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #f0fdfa; /* Light Teal Tint */
+            --card-shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- 1. HERO SECTION --- */
+        .page-hero {
+            background: linear-gradient(135deg, #115e59 0%, #14b8a6 100%);
+            color: white;
+            padding: 80px 20px 120px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        /* Back Button Removed */
+        
+        .page-badge {
+            background: rgba(255, 255, 255, 0.1); color: #fff; padding: 6px 16px; border-radius: 50px;
+            font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title { font-size: 48px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .page-subtitle { font-size: 18px; opacity: 0.9; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+
+        /* --- 2. STATS BAR (Floating) --- */
+        .nt-stats-container { max-width: 1000px; margin: -60px auto 60px; position: relative; z-index: 10; padding: 0 20px; }
+        .nt-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        .nt-stat-card {
+            background: white; padding: 30px; border-radius: 16px; text-align: center;
+            box-shadow: var(--card-shadow); border-bottom: 4px solid var(--primary);
+        }
+        .nt-stat-num { font-size: 36px; font-weight: 800; color: var(--secondary); margin-bottom: 5px; }
+        .nt-stat-label { font-size: 14px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- 3. RESULT GRID (Original Size) --- */
+        .nt-result-section { 
+            max-width: 1450px; /* Thoda aur width badhaya taaki 5 cards khule dikhein */
+            margin: 0 auto 80px; 
+            padding: 0 10px; 
+        }
+        .nt-heading-box { text-align: center; margin-bottom: 50px; }
+        .nt-heading-box h2 { font-size: 32px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        .nt-heading-box p { color: var(--text-muted); }
+
+        .nt-res-grid {
+            display: grid;
+            gap: 15px; /* Gap thoda kam kiya */
+            /* Default Mobile: 2 Columns */
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* Responsive Grid Logic - Adjusted for 5 Columns */
+        @media (min-width: 600px) {
+            .nt-res-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 1000px) {
+            /* Laptop aur Desktop par ab sidha 5 Columns dikhenge */
+            .nt-res-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+
+        .nt-res-card {
+            background: white; 
+            border-radius: 12px; 
+            padding: 10px; /* Reduced padding for cleaner look */
+            text-align: center;
+            box-shadow: var(--card-shadow); 
+            border: 1px solid #e2e8f0; 
+            transition: 0.3s;
+            position: relative; 
+            overflow: hidden;
+        }
+        .nt-res-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(13, 148, 136, 0.15); border-color: var(--primary); }
+        
+        /* 🔥 FIXED PASSPORT SIZE PHOTO STYLING 🔥 */
+        .nt-img-box {
+            width: 100%; /* Full width of the card padding */
+            aspect-ratio: 414 / 518; /* Perfect Passport Ratio */
+            border-radius: 8px;
+            margin: 0 auto 10px;
+            overflow: hidden; 
+            border: 1px solid #e2e8f0; 
+            position: relative;
+        }
+        .nt-student-img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+        
+        .nt-rank-badge {
+            position: absolute; top: 10px; right: 10px; background: #fbbf24; color: #000;
+            padding: 3px 10px; border-radius: 4px; font-size: 11px; font-weight: 800;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 2;
+        }
+
+        .nt-student-name { font-size: 16px; font-weight: 700; color: var(--secondary); margin-bottom: 2px; }
+        .nt-student-score { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 10px; background: #f0fdfa; display: inline-block; padding: 2px 10px; border-radius: 50px; }
+        
+        .nt-college-info { 
+            border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 4px;
+        }
+        .nt-college-val { font-size: 11px; font-weight: 600; color: var(--text-main); line-height: 1.3; }
+
+        @media (max-width: 768px) {
+            .nt-stats-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 32px; }
+            .nt-res-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } /* Mobile par bhi 2 dikhe */
+        }
+    </style>
+    
+</head>
+<body>
+<!-- ========================================================================================================================================= -->
+                                                                      <!-- HEADER START -->
+
+
+
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <!-- Blue theme dummy logo added -->
+                    <img src="images/logo.png" alt="Career Xone Logo"> 
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Courses <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="jee.html">JEE (Main & Adv)</a>
+                        <a href="neet.html">NEET (Medical)</a>
+                        <a href="foundation.html">Foundation (6-10)</a>
+                        <a href="all-courses.html">All Courses</a>
+                    </div>
+                </div>
+
+                <a href="admission.html">Admission</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Results <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="results-neet.html">NEET Results</a>
+                        <a href="results-jee.html">JEE Results</a>
+                        <a href="results-foundation.html">Class 6 - 10 Results</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Test Series <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <div class="sub-dropdown">
+                            <a href="test-neet.html">NEET (UG) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-neet-11.html">Class 11</a>
+                                <a href="test-neet-12.html">Class 12</a>
+                                <a href="test-neet-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <div class="sub-dropdown">
+                            <a href="test-jee.html">JEE (Main+Adv) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-jee-11.html">Class 11</a>
+                                <a href="test-jee-12.html">Class 12</a>
+                                <a href="test-jee-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <a href="all-test-series.html">All Test Series</a>
+                    </div>
+                </div>
+
+                <a href="scholarship.html">Scholarship</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="gallery.html">Gallery</a>
+                        <a href="blog.html">Blog</a>
+                        <a href="jobs.html">Job at Career Xone</a>
+                        <a href="study-material.html">Study Material</a>
+                        <a href="about.html">About Us</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="login.html" class="login-btn">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <div class="mobile-menu-btn" id="mobileBtn">
+                     <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+
+<!-- ========================================================================================================================================================== -->
+                                                        <!-- 🔥 CLICKABLE TICKER WITH PREMIUM GRADIENT 🔥 -->
+
+
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+            
+            <!-- DUPLICATE FOR INFINITE LOOP -->
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+        </div>
+    </div>
+
+
+
+<!-- ======================================================================================================================================================== -->
+                                                                                <!-- 1. PREMIUM HERO SECTION -->
+    <!-- 1. HERO SECTION -->
+    <section class="page-hero">
+        <span class="page-badge">Hall of Fame</span>
+        <h1 class="page-title">NEET (UG) Results</h1>
+        <p class="page-subtitle">
+            Celebrating the success of our champions who secured seats in India's top Medical Colleges (AIIMS, GMCs).
+        </p>
+    </section>
+
+    <!-- 2. STATS BAR -->
+    <div class="nt-stats-container">
+        <div class="nt-stats-grid">
+            <div class="nt-stat-card">
+                <div class="nt-stat-num">45+</div>
+                <div class="nt-stat-label">Students in GMC</div>
+            </div>
+            <div class="nt-stat-card">
+                <div class="nt-stat-num">12</div>
+                <div class="nt-stat-label">Students in AIIMS</div>
+            </div>
+            <div class="nt-stat-card">
+                <div class="nt-stat-num">695</div> 
+                <div class="nt-stat-label">Highest Score</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. RESULT CARDS GRID (5 per row) -->
+    <section class="nt-result-section">
+        <div class="nt-heading-box">
+            <h2>Our Top Performers</h2>
+            <p>Consistency and hard work always pay off. Meet our stars.</p>
+        </div>
+
+        <div class="nt-res-grid">
+
+            <!-- Card 1 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 45</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Rahul" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Rahul Sharma</h3>
+                <div class="nt-student-score">710 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">AIIMS, New Delhi</div>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 120</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Sneha" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Sneha Patil</h3>
+                <div class="nt-student-score">705 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">Maulana Azad Medical College</div>
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 350</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Amit" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Amit Deshmukh</h3>
+                <div class="nt-student-score">695 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">Grant Medical College</div>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 510</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Priya" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Priya Singh</h3>
+                <div class="nt-student-score">690 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Nagpur</div>
+                </div>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 600</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Rohan" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Rohan Gupta</h3>
+                <div class="nt-student-score">685 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">BJ Medical College, Pune</div>
+                </div>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 750</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Anjali" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Anjali Verma</h3>
+                <div class="nt-student-score">680 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">AIIMS, Bhopal</div>
+                </div>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 890</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Vikram" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Vikram Rathi</h3>
+                <div class="nt-student-score">675 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Aurangabad</div>
+                </div>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 950</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Kavita" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Kavita Joshi</h3>
+                <div class="nt-student-score">672 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">IGGMC, Nagpur</div>
+                </div>
+            </div>
+
+            <!-- Card 9 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1100</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Sameer" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Sameer Khan</h3>
+                <div class="nt-student-score">670 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Akola</div>
+                </div>
+            </div>
+
+            <!-- Card 10 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1250</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Nisha" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Nisha Agrawal</h3>
+                <div class="nt-student-score">668 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Gondia</div>
+                </div>
+            </div>
+
+            <!-- Card 11 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1400</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Arjun" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Arjun Singh</h3>
+                <div class="nt-student-score">665 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Chandrapur</div>
+                </div>
+            </div>
+
+            <!-- Card 12 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1550</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Meera" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Meera Patel</h3>
+                <div class="nt-student-score">662 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">AIIMS, Raipur</div>
+                </div>
+            </div>
+
+            <!-- Card 13 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1700</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Raj" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Raj Malhotra</h3>
+                <div class="nt-student-score">660 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Yavatmal</div>
+                </div>
+            </div>
+
+            <!-- Card 14 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 1850</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Sonia" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Sonia Reddy</h3>
+                <div class="nt-student-score">658 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Latur</div>
+                </div>
+            </div>
+
+            <!-- Card 15 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2000</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Vivek" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Vivek Sharma</h3>
+                <div class="nt-student-score">655 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Dhule</div>
+                </div>
+            </div>
+
+            <!-- Card 16 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2150</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Pooja" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Pooja Gupta</h3>
+                <div class="nt-student-score">652 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Solapur</div>
+                </div>
+            </div>
+
+            <!-- Card 17 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2300</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Karan" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Karan Mehta</h3>
+                <div class="nt-student-score">650 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Miraj</div>
+                </div>
+            </div>
+
+            <!-- Card 18 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2450</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Simran" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Simran Kaur</h3>
+                <div class="nt-student-score">648 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Nanded</div>
+                </div>
+            </div>
+
+            <!-- Card 19 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2600</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Aditya" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Aditya Roy</h3>
+                <div class="nt-student-score">645 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Jalgaon</div>
+                </div>
+            </div>
+
+            <!-- Card 20 -->
+            <div class="nt-res-card">
+                <div class="nt-rank-badge">AIR 2750</div>
+                <div class="nt-img-box"><img src="https://placehold.co/414x518/png?text=Riya" class="nt-student-img" alt="Student"></div>
+                <h3 class="nt-student-name">Riya Sen</h3>
+                <div class="nt-student-score">642 / 720</div>
+                <div class="nt-college-info">
+                    <div class="nt-college-val">GMC, Baramati</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================================================================================================-->
+                                                    <!-- footer section -->
+<footer class="footer-section">
+    <div class="footer-glow"></div>
+    <div class="footer-blob"></div>
+
+    <div class="footer-container">
+        
+        <!-- COL 1: ABOUT -->
+        <div>
+            <div class="footer-logo">
+                <div class="cx-logo-box">CX</div>
+                <span style="font-size: 20px; font-weight: 700;">CAREER<span style="color: #818cf8;">XONE</span></span>
+            </div>
+            <p class="footer-desc">
+                Recognized as one of the best IIT JEE, NEET & MHCET coaching centers in Gondia. Consistent top results since inception.
+            </p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@careerxonegondiajeeneet4961" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/CareerXone" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/career_xone_gondia" class="social-icon"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <!-- COL 2: QUICK LINKS (From your image) -->
+        <div>
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Blog Updates</a></li>
+                <li><a href="#">Exam Results</a></li>
+                <li><a href="#">Photo Gallery</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">News & Events</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 3: RESOURCES (From your image) -->
+        <div>
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">JEE Main / Advance</a></li>
+                <li><a href="#">NEET (UG)</a></li>
+                <li><a href="#">MHT-CET</a></li>
+                <li><a href="#">CBSE Board</a></li>
+                <li><a href="#">Maharashtra Board</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 4: CONTACT & SUBSCRIBE -->
+        <div>
+            <h4 class="footer-heading">Get in Touch</h4>
+            
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <div class="contact-text">
+                    <strong>Hadditoli Road</strong>
+                    Near Dr. Giri Hospital, Gondia,<br> Maharashtra 441601
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone-alt contact-icon"></i>
+                <div class="contact-text">
+                    +91 96733 83561 <br>
+                    +91 74477 58668
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <div class="contact-text">
+                    cxjeeneet@gmail.com
+                </div>
+            </div>
+
+            <!-- Premium Subscribe Box -->
+            <form class="subscribe-box">
+                <input type="email" placeholder="Enter your email" class="sub-input">
+                <button type="button" class="sub-btn">Subscribe</button>
+            </form>
+            <p style="font-size: 11px; color: #64748b; margin-top: 8px;">
+                Get latest updates & news.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="copyright-bar">
+        <div>© 2025 CareerXone. All Rights Reserved.</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>

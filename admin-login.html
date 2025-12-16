@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Career Xone</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0fdf4; /* Light Green Bg */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h2 { color: #333; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #0066ff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover { background-color: #0052cc; }
+        .error { color: red; font-size: 14px; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>🔒 Admin Login</h2>
+        <input type="password" id="adminPass" placeholder="Enter Admin Password">
+        <button onclick="checkLogin()">Login Access</button>
+        <p class="error" id="errorMsg">❌ Wrong Password!</p>
+    </div>
+        <script>
+        async function checkLogin() {
+            const pass = document.getElementById('adminPass').value;
+            const errorMsg = document.getElementById('errorMsg');
+
+            try {
+                // 1. Server se baat karo (Fetch)
+                const response = await fetch('/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pass })
+                });
+
+                // 2. Jawab (Result) nikalo
+                const result = await response.json();
+
+                // 3. Ab tumhara wala secure logic chalega
+                if (result.success) {
+                    // ✅ Token save karo (Asli Chabi)
+                    sessionStorage.setItem("isAdminLoggedIn", "true");
+                    
+                    // Server ne jo token bheja, wo save karo (Secure)
+                    sessionStorage.setItem("adminToken", result.token); 
+                    
+                    // Admin page par jao
+                    window.location.href = "/admin"; 
+                } else {
+                    // ❌ Galat password
+                    errorMsg.style.display = "block";
+                    errorMsg.innerText = "❌ " + result.message;
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Server connect nahi ho raha!");
+            }
+        }
+    </script>
+
+</body>
+</html>

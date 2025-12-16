@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Xone</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- COPY CSS TO YOUR STYLE FILE --- */
+        :root {
+            /* Scholarship Specific Theme: Gold/Amber */
+            --primary: #d97706; /* Amber-600 */
+            --primary-dark: #b45309;
+            --secondary: #0f172a; 
+            --accent: #fbbf24;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #fffbeb; /* Light Amber Tint */
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- 1. HERO SECTION --- */
+        .page-hero {
+            background: linear-gradient(135deg, #78350f 0%, #d97706 100%);
+            color: white;
+            padding: 80px 20px 120px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        /* Back button CSS removed */
+        
+        .page-badge {
+            background: rgba(255, 255, 255, 0.1); color: #fff; padding: 6px 16px; border-radius: 50px;
+            font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title { font-size: 48px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .page-subtitle { font-size: 18px; opacity: 0.9; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+
+        /* --- 2. HIGHLIGHTS BAR --- */
+        .highlights-container { max-width: 1100px; margin: -80px auto 60px; position: relative; z-index: 10; padding: 0 20px; }
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+        .highlight-card {
+            background: white; padding: 25px; border-radius: 16px; text-align: center;
+            box-shadow: var(--card-shadow); transition: transform 0.3s; border-bottom: 4px solid var(--primary);
+        }
+        .highlight-card:hover { transform: translateY(-5px); }
+        .h-icon { font-size: 32px; color: var(--primary); margin-bottom: 15px; }
+        .h-title { font-weight: 700; font-size: 16px; margin-bottom: 5px; }
+        .h-desc { font-size: 13px; color: var(--text-muted); }
+
+        /* --- 3. SCHOLARSHIP DETAILS --- */
+        .content-section { max-width: 1000px; margin: 0 auto 80px; padding: 0 20px; }
+        .section-heading { text-align: center; margin-bottom: 50px; }
+        .section-heading h2 { font-size: 32px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        .section-heading p { color: var(--text-muted); }
+
+        .scholarship-box {
+            background: white; border-radius: 20px; padding: 40px; box-shadow: var(--card-shadow);
+            border: 1px solid #fcd34d; margin-bottom: 30px; position: relative; overflow: hidden;
+        }
+        .scholarship-box::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; 
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .scholarship-title { font-size: 24px; font-weight: 800; color: var(--secondary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .scholarship-title i { color: var(--primary); }
+
+        .scholarship-text { color: var(--text-muted); line-height: 1.7; margin-bottom: 25px; font-size: 15px; }
+        
+        .criteria-list li { margin-bottom: 10px; display: flex; gap: 10px; font-size: 15px; color: var(--text-main); }
+        .criteria-list i { color: #10b981; margin-top: 3px; }
+
+        /* --- NEW FORM STYLES --- */
+        .reg-form-box {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px dashed #d97706;
+        }
+        .form-heading {
+            font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 20px;
+        }
+        .form-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;
+        }
+        .form-input {
+            width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f8fafc; font-size: 14px; color: var(--text-main); outline: none; transition: 0.3s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .form-input:focus {
+            border-color: var(--primary); background: white; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.1);
+        }
+        .submit-btn {
+            width: 100%; background: var(--primary); color: white; padding: 14px; border: none;
+            border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; font-size: 15px; margin-top: 10px;
+        }
+        .submit-btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(217, 119, 6, 0.3); }
+
+        @media (max-width: 768px) {
+            .page-title { font-size: 32px; }
+            .highlights-container { margin-top: -40px; }
+            .back-btn { position: relative; top: 0; left: 0; margin-bottom: 20px; display: inline-flex; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+
+
+
+
+    
+</head>
+<body>
+<!-- ========================================================================================================================================= -->
+                                                                      <!-- HEADER START -->
+
+
+
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <!-- Blue theme dummy logo added -->
+                    <img src="images/logo.png" alt="Career Xone Logo"> 
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Courses <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="jee.html">JEE (Main & Adv)</a>
+                        <a href="neet.html">NEET (Medical)</a>
+                        <a href="foundation.html">Foundation (6-10)</a>
+                        <a href="all-courses.html">All Courses</a>
+                    </div>
+                </div>
+
+                <a href="admission.html">Admission</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Results <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="results-neet.html">NEET Results</a>
+                        <a href="results-jee.html">JEE Results</a>
+                        <a href="results-foundation.html">Class 6 - 10 Results</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Test Series <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <div class="sub-dropdown">
+                            <a href="test-neet.html">NEET (UG) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-neet-11.html">Class 11</a>
+                                <a href="test-neet-12.html">Class 12</a>
+                                <a href="test-neet-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <div class="sub-dropdown">
+                            <a href="test-jee.html">JEE (Main+Adv) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-jee-11.html">Class 11</a>
+                                <a href="test-jee-12.html">Class 12</a>
+                                <a href="test-jee-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <a href="all-test-series.html">All Test Series</a>
+                    </div>
+                </div>
+
+                <a href="scholarship.html">Scholarship</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="gallery.html">Gallery</a>
+                        <a href="blog.html">Blog</a>
+                        <a href="jobs.html">Job at Career Xone</a>
+                        <a href="study-material.html">Study Material</a>
+                        <a href="about.html">About Us</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="login.html" class="login-btn">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <div class="mobile-menu-btn" id="mobileBtn">
+                     <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+
+<!-- ========================================================================================================================================================== -->
+                                                        <!-- 🔥 CLICKABLE TICKER WITH PREMIUM GRADIENT 🔥 -->
+
+
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+            
+            <!-- DUPLICATE FOR INFINITE LOOP -->
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+        </div>
+    </div>
+
+<!-- =================================================================================================================================================== -->
+                                                                             <!-- 1. HERO SECTION -->
+    <section class="page-hero">
+        <!-- Back button removed from here -->
+        <span class="page-badge">Merit Based</span>
+        <h1 class="page-title">Scholarship Program</h1>
+        <p class="page-subtitle">
+            We believe financial constraints should not stop talent. Get up to 100% scholarship based on your merit and performance.
+        </p>
+    </section>
+
+    <!-- 2. FLOATING HIGHLIGHTS -->
+    <div class="highlights-container">
+        <div class="highlights-grid">
+            <div class="highlight-card">
+                <i class="fas fa-percentage h-icon"></i>
+                <h3 class="h-title">Upto 100% Off</h3>
+                <p class="h-desc">On Tuition Fees</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-user-graduate h-icon"></i>
+                <h3 class="h-title">Merit Based</h3>
+                <p class="h-desc">Exam Performance</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-hand-holding-heart h-icon"></i>
+                <h3 class="h-title">Need Based</h3>
+                <p class="h-desc">Financial Aid</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-award h-icon"></i>
+                <h3 class="h-title">Special Quota</h3>
+                <p class="h-desc">For Girls & EWS</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. SCHOLARSHIP DETAILS -->
+    <section class="content-section">
+        <div class="section-heading">
+            <h2>Scholarship Schemes</h2>
+            <p>Check your eligibility and apply for the right scholarship program.</p>
+        </div>
+
+        <!-- Scheme 1: Admission Test WITH FORM -->
+        <div class="scholarship-box">
+            <h3 class="scholarship-title"><i class="fas fa-edit"></i> Career Xone Admission Test (CAT)</h3>
+            <p class="scholarship-text">
+                Appear for our scholarship test held every Sunday. Based on your score, you can avail scholarships ranging from 10% to 100% on tuition fees.
+            </p>
+            <ul class="criteria-list" style="list-style: none; padding: 0;">
+                <li><i class="fas fa-check-circle"></i> <strong>90% - 100% Score:</strong> 100% Scholarship</li>
+                <li><i class="fas fa-check-circle"></i> <strong>80% - 90% Score:</strong> 75% Scholarship</li>
+                <li><i class="fas fa-check-circle"></i> <strong>70% - 80% Score:</strong> 50% Scholarship</li>
+                <li><i class="fas fa-check-circle"></i> <strong>60% - 70% Score:</strong> 25% Scholarship</li>
+            </ul>
+            
+            <!-- DIRECT REGISTRATION FORM -->
+            <div class="reg-form-box">
+    <h4 class="form-heading"><i class="fas fa-clipboard-list" style="color:var(--primary);"></i> Register for CAT Test</h4>
+    <form>
+        <div class="form-grid">
+            <input type="text" id="catName" class="form-input" placeholder="Student Name" required>
+            <input type="tel" id="catPhone" class="form-input" placeholder="Mobile Number" required>
+        </div>
+        <div class="form-grid">
+            <select id="catClass" class="form-input" required>
+                <option value="" disabled selected>Select Class</option>
+                <option>Class 6-10</option>
+                <option>Class 11th</option>
+                <option>Class 12th</option>
+                <option>Repeater</option>
+            </select>
+            <select id="catDate" class="form-input">
+                <option value="" disabled selected>Preferred Date</option>
+                <option>Coming Sunday</option>
+                <option>Next to Next Sunday</option>
+            </select>
+        </div>
+        <button type="button" id="catBtn" class="submit-btn">Book My Test Slot</button>
+    </form>
+</div>
+
+
+        </div>
+
+        <!-- Scheme 2: Past Academic Performance -->
+        <div class="scholarship-box">
+            <h3 class="scholarship-title"><i class="fas fa-medal"></i> Board Marks Scholarship</h3>
+            <p class="scholarship-text">
+                Direct scholarship based on your Class 10th or 12th Board Exam percentage.
+            </p>
+            <ul class="criteria-list" style="list-style: none; padding: 0;">
+                <li><i class="fas fa-check-circle"></i> <strong>Above 95% in Boards:</strong> Flat 40% Off</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Above 90% in Boards:</strong> Flat 30% Off</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Above 85% in Boards:</strong> Flat 20% Off</li>
+            </ul>
+        </div>
+
+        <!-- Scheme 3: Special Categories -->
+        <div class="scholarship-box">
+            <h3 class="scholarship-title"><i class="fas fa-hands-helping"></i> Special Categories</h3>
+            <p class="scholarship-text">
+                We support students from various backgrounds to ensure equal opportunities for all.
+            </p>
+            <ul class="criteria-list" style="list-style: none; padding: 0;">
+                <li><i class="fas fa-check-circle"></i> <strong>Single Parent Child:</strong> Additional 10% Waiver</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Defence Personnel Wards:</strong> Additional 10% Waiver</li>
+                <li><i class="fas fa-check-circle"></i> <strong>Sibling Discount:</strong> If brother/sister studies here.</li>
+            </ul>
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="script.js"></script>
+
+
+    <!-- =====================================================================================================================================-->
+                                                    <!-- footer section -->
+<footer class="footer-section">
+    <div class="footer-glow"></div>
+    <div class="footer-blob"></div>
+
+    <div class="footer-container">
+        
+        <!-- COL 1: ABOUT -->
+        <div>
+            <div class="footer-logo">
+                <div class="cx-logo-box">CX</div>
+                <span style="font-size: 20px; font-weight: 700;">CAREER<span style="color: #818cf8;">XONE</span></span>
+            </div>
+            <p class="footer-desc">
+                Recognized as one of the best IIT JEE, NEET & MHCET coaching centers in Gondia. Consistent top results since inception.
+            </p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@careerxonegondiajeeneet4961" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/CareerXone" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/career_xone_gondia" class="social-icon"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <!-- COL 2: QUICK LINKS (From your image) -->
+        <div>
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Blog Updates</a></li>
+                <li><a href="#">Exam Results</a></li>
+                <li><a href="#">Photo Gallery</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">News & Events</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 3: RESOURCES (From your image) -->
+        <div>
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">JEE Main / Advance</a></li>
+                <li><a href="#">NEET (UG)</a></li>
+                <li><a href="#">MHT-CET</a></li>
+                <li><a href="#">CBSE Board</a></li>
+                <li><a href="#">Maharashtra Board</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 4: CONTACT & SUBSCRIBE -->
+        <div>
+            <h4 class="footer-heading">Get in Touch</h4>
+            
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <div class="contact-text">
+                    <strong>Hadditoli Road</strong>
+                    Near Dr. Giri Hospital, Gondia,<br> Maharashtra 441601
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone-alt contact-icon"></i>
+                <div class="contact-text">
+                    +91 96733 83561 <br>
+                    +91 74477 58668
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <div class="contact-text">
+                    cxjeeneet@gmail.com
+                </div>
+            </div>
+
+            <!-- Premium Subscribe Box -->
+            <form class="subscribe-box">
+                <input type="email" placeholder="Enter your email" class="sub-input">
+                <button type="button" class="sub-btn">Subscribe</button>
+            </form>
+            <p style="font-size: 11px; color: #64748b; margin-top: 8px;">
+                Get latest updates & news.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="copyright-bar">
+        <div>© 2025 CareerXone. All Rights Reserved.</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

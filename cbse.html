@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Xone</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- PREMIUM RESET & VARIABLES --- */
+        :root {
+            /* CBSE Specific Theme: Rose Red */
+            --primary: #e11d48; 
+            --primary-dark: #be123c;
+            --secondary: #0f172a; 
+            --accent: #fbbf24;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #fff1f2; /* Light Redish Tint */
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- 1. HERO SECTION --- */
+        .course-hero {
+            background: linear-gradient(135deg, #881337 0%, #e11d48 100%);
+            color: white;
+            padding: 80px 20px 120px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute; top: 30px; left: 30px; display: inline-flex; align-items: center; gap: 8px;
+            color: rgba(255, 255, 255, 0.9); text-decoration: none; font-weight: 600; font-size: 14px;
+            background: rgba(255, 255, 255, 0.15); padding: 10px 20px; border-radius: 50px;
+            backdrop-filter: blur(5px); transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.1); z-index: 20;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.3); transform: translateX(-5px); color: white; }
+        
+        .course-badge {
+            background: rgba(255, 255, 255, 0.1); color: var(--accent); padding: 6px 16px; border-radius: 50px;
+            font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .course-title { font-size: 48px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; color: white; }
+        .course-subtitle { font-size: 18px; opacity: 0.9; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+
+        /* --- 2. HIGHLIGHTS BAR --- */
+        .highlights-container { max-width: 1100px; margin: -80px auto 60px; position: relative; z-index: 10; padding: 0 20px; }
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+        .highlight-card {
+            background: white; padding: 25px; border-radius: 16px; text-align: center;
+            box-shadow: var(--card-shadow); transition: transform 0.3s; border-bottom: 4px solid var(--primary);
+        }
+        .highlight-card:hover { transform: translateY(-5px); }
+        .h-icon { font-size: 32px; color: var(--primary); margin-bottom: 15px; }
+        .h-title { font-weight: 700; font-size: 16px; margin-bottom: 5px; }
+        .h-desc { font-size: 13px; color: var(--text-muted); }
+
+        /* --- 3. BATCH DETAILS --- */
+        .section-container { max-width: 1100px; margin: 0 auto 80px; padding: 0 20px; }
+        .section-heading { text-align: center; margin-bottom: 50px; }
+        .section-heading h2 { font-size: 32px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        .section-heading p { color: var(--text-muted); }
+
+        .batches-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+
+        .batch-box {
+            background: white; border-radius: 20px; padding: 40px; box-shadow: var(--card-shadow);
+            position: relative; border: 1px solid #e2e8f0; transition: 0.3s;
+        }
+        .batch-box:hover { border-color: var(--primary); box-shadow: 0 20px 50px -10px rgba(225, 29, 72, 0.15); }
+
+        .batch-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; border-bottom: 1px solid #f1f5f9; padding-bottom: 20px; }
+        .batch-name { font-size: 24px; font-weight: 800; color: var(--secondary); }
+        .batch-duration { font-size: 14px; font-weight: 600; color: var(--primary); background: #ffe4e6; padding: 5px 12px; border-radius: 8px; }
+
+        .batch-features { list-style: none; margin-bottom: 30px; }
+        .batch-features li { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; color: var(--text-muted); font-size: 15px; }
+        .batch-features li i { color: #10b981; font-size: 14px; }
+
+        .enroll-btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 16px; }
+        .btn-red { background: var(--primary); color: white; }
+        .btn-red:hover { background: var(--primary-dark); }
+        
+        .btn-outline { background: transparent; border: 2px solid var(--secondary); color: var(--secondary); }
+        .btn-outline:hover { background: var(--secondary); color: white; }
+
+        .board-badge {
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+            background: var(--accent); color: #000; padding: 6px 20px; border-radius: 20px;
+            font-size: 12px; font-weight: 800; text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        /* --- 4. SCHEDULE & STRATEGY --- */
+        .info-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; margin-top: 60px; }
+        .content-card { background: white; padding: 35px; border-radius: 20px; box-shadow: var(--card-shadow); }
+        .content-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .content-title i { color: var(--accent); }
+
+        .schedule-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px dashed #e2e8f0; }
+        .schedule-row:last-child { border-bottom: none; }
+        .sch-time { font-weight: 700; color: var(--secondary); }
+        .sch-activity { color: var(--text-muted); }
+        
+        .timeline-item { display: flex; margin-bottom: 20px; }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .tl-time { min-width: 85px; font-weight: 700; color: var(--accent); font-size: 13px; padding-top: 2px; }
+        .tl-content { flex: 1; }
+        .tl-title { font-size: 14px; font-weight: 700; color: white; display: block; margin-bottom: 4px; }
+        .tl-desc { font-size: 13px; color: #cbd5e1; line-height: 1.4; display: block; }
+
+        .strategy-list li { position: relative; padding-left: 25px; margin-bottom: 15px; color: var(--text-muted); line-height: 1.6; }
+        .strategy-list li::before { content: '\f058'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; left: 0; color: var(--primary); }
+
+        @media (max-width: 768px) {
+            .batches-wrapper, .info-grid { grid-template-columns: 1fr; }
+            .course-title { font-size: 32px; }
+            .highlights-container { margin-top: -40px; }
+            .back-btn { position: relative; top: 0; left: 0; margin-bottom: 20px; display: inline-flex; }
+        }
+    </style>
+
+
+
+
+
+    
+</head>
+<body>
+<!-- ========================================================================================================================================= -->
+                                                                      <!-- HEADER START -->
+
+
+
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <!-- Blue theme dummy logo added -->
+                    <img src="images/logo.png" alt="Career Xone Logo"> 
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Courses <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="jee.html">JEE (Main & Adv)</a>
+                        <a href="neet.html">NEET (Medical)</a>
+                        <a href="foundation.html">Foundation (6-10)</a>
+                        <a href="all-courses.html">All Courses</a>
+                    </div>
+                </div>
+
+                <a href="admission.html">Admission</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Results <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="results-neet.html">NEET Results</a>
+                        <a href="results-jee.html">JEE Results</a>
+                        <a href="results-foundation.html">Class 6 - 10 Results</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Test Series <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <div class="sub-dropdown">
+                            <a href="test-neet.html">NEET (UG) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-neet-11.html">Class 11</a>
+                                <a href="test-neet-12.html">Class 12</a>
+                                <a href="test-neet-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <div class="sub-dropdown">
+                            <a href="test-jee.html">JEE (Main+Adv) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-jee-11.html">Class 11</a>
+                                <a href="test-jee-12.html">Class 12</a>
+                                <a href="test-jee-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <a href="all-test-series.html">All Test Series</a>
+                    </div>
+                </div>
+
+                <a href="scholarship.html">Scholarship</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="gallery.html">Gallery</a>
+                        <a href="blog.html">Blog</a>
+                        <a href="jobs.html">Job at Career Xone</a>
+                        <a href="study-material.html">Study Material</a>
+                        <a href="about.html">About Us</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="login.html" class="login-btn">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <div class="mobile-menu-btn" id="mobileBtn">
+                     <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+
+<!-- ========================================================================================================================================================== -->
+                                                        <!-- 🔥 CLICKABLE TICKER WITH PREMIUM GRADIENT 🔥 -->
+
+
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+            
+            <!-- DUPLICATE FOR INFINITE LOOP -->
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+        </div>
+    </div>
+
+<!-- =================================================================================================================================================== -->
+                                                                     <!-- 1. HERO SECTION -->
+    <section class="course-hero">
+        <a href="all-courses.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Courses</a>
+        <span class="course-badge">School Curriculum</span>
+        <h1 class="course-title">CBSE Board (11th & 12th)</h1>
+        <p class="course-subtitle">
+            Secure 95%+ in Board Exams with our NCERT-focused comprehensive classroom program designed for PCB & PCM streams.
+        </p>
+    </section>
+
+    <!-- 2. FLOATING HIGHLIGHTS -->
+    <div class="highlights-container">
+        <div class="highlights-grid">
+            <div class="highlight-card">
+                <i class="fas fa-book-reader h-icon"></i>
+                <h3 class="h-title">NCERT Mastery</h3>
+                <p class="h-desc">Line-by-line coverage</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-pen-fancy h-icon"></i>
+                <h3 class="h-title">Answer Writing</h3>
+                <p class="h-desc">Subjective Skill Development</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-file-alt h-icon"></i>
+                <h3 class="h-title">Sample Papers</h3>
+                <p class="h-desc">Strictly on CBSE Pattern</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-flask h-icon"></i>
+                <h3 class="h-title">Practical Prep</h3>
+                <p class="h-desc">Lab & Viva Guidance</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. BATCH DETAILS -->
+    <section class="section-container">
+        <div class="section-heading">
+            <h2>Select Your Class</h2>
+            <p>Focused batches for 11th foundation and 12th board targets.</p>
+        </div>
+
+        <div class="batches-wrapper">
+            <!-- Class 11th -->
+            <div class="batch-box">
+                <div class="batch-header">
+                    <div>
+                        <h3 class="batch-name">Class 11th</h3>
+                        <p style="font-size: 13px; color: #64748b; margin-top: 5px;">Building Strong Base</p>
+                    </div>
+                    <span class="batch-duration">1 Year</span>
+                </div>
+                <ul class="batch-features">
+                    <li><i class="fas fa-check-circle"></i> Physics, Chemistry, Maths/Bio</li>
+                    <li><i class="fas fa-check-circle"></i> Concept Clarity & Derivations</li>
+                    <li><i class="fas fa-check-circle"></i> School Exam Prep</li>
+                    <li><i class="fas fa-check-circle"></i> Bridge for Competitive Exams</li>
+                </ul>
+                <button class="enroll-btn btn-red">Join Class 11th</button>
+            </div>
+
+            <!-- Class 12th -->
+            <div class="batch-box" style="border-color: #fbbf24; background: #fffdf5;">
+                <div class="board-badge"><i class="fas fa-star"></i> Board Focus</div>
+                <div class="batch-header">
+                    <div>
+                        <h3 class="batch-name">Class 12th</h3>
+                        <p style="font-size: 13px; color: #64748b; margin-top: 5px;">Target 95%+</p>
+                    </div>
+                    <span class="batch-duration">1 Year</span>
+                </div>
+                <ul class="batch-features">
+                    <li><i class="fas fa-check-circle"></i> Complete Syllabus Coverage</li>
+                    <li><i class="fas fa-check-circle"></i> Previous 10 Years PYQs</li>
+                    <li><i class="fas fa-check-circle"></i> Strict Answer Writing Drills</li>
+                    <li><i class="fas fa-check-circle"></i> 3 Hours Daily Classes</li>
+                </ul>
+                <button class="enroll-btn btn-outline">Join Class 12th</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. SCHEDULE & STRATEGY -->
+    <section class="section-container">
+        <div class="info-grid">
+            
+            <!-- Strategy (Left) -->
+            <div class="content-card">
+                <div class="content-title"><i class="fas fa-bullseye"></i> Exam Strategy</div>
+                <p style="margin-bottom: 20px; color: #64748b; font-size: 15px;">
+                    CBSE exams require a different approach than competitive exams. We focus on presentation and step-marking.
+                </p>
+                <ul class="strategy-list">
+                    <li><strong>NCERT Focus:</strong> 100% adherence to NCERT textbooks and exemplar problems.</li>
+                    <li><strong>Writing Skills:</strong> Regular subjective tests to improve speed and handwriting presentation.</li>
+                    <li><strong>Derivations:</strong> Special focus on Physics & Chemistry derivations often asked in exams.</li>
+                    <li><strong>Case Studies:</strong> Practice for new pattern assertion-reasoning and case-based questions.</li>
+                </ul>
+            </div>
+
+            <!-- Timetable (Right) -->
+            <div class="content-card" style="background: #0f172a; color: white;">
+                <div class="content-title" style="color: #fbbf24;"><i class="far fa-clock"></i> Evening Schedule</div>
+                
+                <div style="margin-bottom: 25px;">
+                    <div class="schedule-row" style="border-color: rgba(255,255,255,0.1);">
+                        <div class="sch-time" style="color:white;">04:00 PM - 05:30 PM</div>
+                        <div class="sch-activity" style="color:#cbd5e1;">Lecture 1</div>
+                    </div>
+                    <div class="schedule-row" style="border-color: rgba(255,255,255,0.1);">
+                        <div class="sch-time" style="color:white;">05:45 PM - 07:15 PM</div>
+                        <div class="sch-activity" style="color:#cbd5e1;">Lecture 2</div>
+                    </div>
+                    <div class="schedule-row" style="border-color: rgba(255,255,255,0.1);">
+                        <div class="sch-time" style="color:white;">07:30 PM - 08:30 PM</div>
+                        <div class="sch-activity" style="color:#cbd5e1;">Writing Practice / Doubt</div>
+                    </div>
+                </div>
+                
+                <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700; margin-bottom: 15px; letter-spacing: 1px;">Annual Planner</div>
+
+                <div class="timeline-item">
+                    <div class="tl-time">Apr - Sep</div>
+                    <div class="tl-content">
+                        <span class="tl-title">Syllabus Completion</span>
+                        <span class="tl-desc">Detailed teaching of all chapters</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="tl-time">Oct - Dec</div>
+                    <div class="tl-content">
+                        <span class="tl-title">Revision & Pre-Boards</span>
+                        <span class="tl-desc">First round of revision + Half Syllabus Tests</span>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="tl-time">Jan - Feb</div>
+                    <div class="tl-content">
+                        <span class="tl-title">Final Lap</span>
+                        <span class="tl-desc">Sample Papers & Full Syllabus Mock Tests</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+        <!-- ======================================================================================================================================================= -->
+                                                                                 <!-- REQUEST A CALBACK  -->
+    <!-- 🌟 ENQUIRY FORM SECTION (Copy this part) 🌟 -->
+    <section class="enquiry-section">
+        <div class="enquiry-container">
+            
+            <!-- Left Text Content -->
+            <div class="enquiry-text">
+                <h2>Still confused about the right path?</h2>
+                <p>
+                    Talk to our senior academic counselors to get a personalized roadmap for your board exams and competitive preparation. We help you choose the best strategy.
+                </p>
+                
+                <div class="contact-box">
+                    <div class="phone-icon"><i class="fas fa-phone-alt"></i></div>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 700; font-size: 14px; color: var(--secondary);">Call Us Directly</div>
+                        <div style="font-size: 15px; color: var(--text-muted); font-weight: 600;">+91 9673383561 / 91454 81323 </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Form Card -->
+            <div class="glass-card">
+                <h3 class="form-header">🚀 Request a Callback</h3>
+                <form>
+                    <!-- Name Input -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" class="input-box" placeholder="Student Name">
+                        </div>
+                    </div>
+
+                    <!-- Mobile Input -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-phone-alt input-icon"></i>
+                            <input type="tel" class="input-box" placeholder="Mobile Number">
+                        </div>
+                    </div>
+
+                    <!-- Class Select -->
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-graduation-cap input-icon"></i>
+                            <select class="input-box" style="cursor: pointer;">
+                                <option>Select Class...</option>
+                                <option>Class 6th - 10th</option>
+                                <option>Class 11th</option>
+                                <option>Class 12th</option>
+                                <option>Repeater / Dropper</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="button" class="submit-btn">Get Free Counselling</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================================================================================================-->
+                                                    <!-- footer section -->
+<footer class="footer-section">
+    <div class="footer-glow"></div>
+    <div class="footer-blob"></div>
+
+    <div class="footer-container">
+        
+        <!-- COL 1: ABOUT -->
+        <div>
+            <div class="footer-logo">
+                <div class="cx-logo-box">CX</div>
+                <span style="font-size: 20px; font-weight: 700;">CAREER<span style="color: #818cf8;">XONE</span></span>
+            </div>
+            <p class="footer-desc">
+                Recognized as one of the best IIT JEE, NEET & MHCET coaching centers in Gondia. Consistent top results since inception.
+            </p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@careerxonegondiajeeneet4961" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/CareerXone" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/career_xone_gondia" class="social-icon"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <!-- COL 2: QUICK LINKS (From your image) -->
+        <div>
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Blog Updates</a></li>
+                <li><a href="#">Exam Results</a></li>
+                <li><a href="#">Photo Gallery</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">News & Events</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 3: RESOURCES (From your image) -->
+        <div>
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">JEE Main / Advance</a></li>
+                <li><a href="#">NEET (UG)</a></li>
+                <li><a href="#">MHT-CET</a></li>
+                <li><a href="#">CBSE Board</a></li>
+                <li><a href="#">Maharashtra Board</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 4: CONTACT & SUBSCRIBE -->
+        <div>
+            <h4 class="footer-heading">Get in Touch</h4>
+            
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <div class="contact-text">
+                    <strong>Hadditoli Road</strong>
+                    Near Dr. Giri Hospital, Gondia,<br> Maharashtra 441601
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone-alt contact-icon"></i>
+                <div class="contact-text">
+                    +91 96733 83561 <br>
+                    +91 74477 58668
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <div class="contact-text">
+                    cxjeeneet@gmail.com
+                </div>
+            </div>
+
+            <!-- Premium Subscribe Box -->
+            <form class="subscribe-box">
+                <input type="email" placeholder="Enter your email" class="sub-input">
+                <button type="button" class="sub-btn">Subscribe</button>
+            </form>
+            <p style="font-size: 11px; color: #64748b; margin-top: 8px;">
+                Get latest updates & news.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="copyright-bar">
+        <div>© 2025 CareerXone. All Rights Reserved.</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

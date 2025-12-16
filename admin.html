@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Career Xone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <script>
+        if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
+            window.location.href = "/admin-login"; // Galat aadmi ko bhaga do
+        }
+    </script>
+    
+    <style>
+        /* --- YOUR THEME VARIABLES --- */
+        :root {
+            --primary: #0066ff;
+            --primary-dark: #004ec2;
+            --secondary: #001f3f;
+            --accent: #fbbf24;
+            --text-dark: #0f172a;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body { background: var(--bg-light); padding-bottom: 50px; }
+        
+        /* --- HEADER --- */
+        .admin-header {
+            background: linear-gradient(135deg, #0f172a 0%, #001f3f 100%);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            box-shadow: 0 5px 20px rgba(0, 31, 63, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        
+        .admin-logo-box {
+            width: 45px; height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; color: #fbbf24;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-left h1 { font-size: 22px; font-weight: 700; margin: 0; }
+        .badge-pro { background: #0066ff; font-size: 11px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; text-transform: uppercase; margin-left: 5px; }
+        .subtitle { font-size: 13px; color: #94a3b8; margin: 0; }
+
+        .header-right { display: flex; align-items: center; gap: 25px; }
+        
+        .logout-btn {
+            background: linear-gradient(to right, #ef4444, #dc2626);
+            color: white; border: none; padding: 10px 24px;
+            border-radius: 8px; font-weight: 600; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
+
+        /* --- SECTIONS & TABLES --- */
+        .content-wrapper { padding: 40px; max-width: 1400px; margin: 0 auto; }
+
+        .section-title {
+            margin-top: 40px; margin-bottom: 20px;
+            color: var(--secondary); font-size: 1.4rem; font-weight: 700;
+            display: flex; align-items: center; gap: 10px;
+        }
+        
+        .table-container {
+            background: white; padding: 0; border-radius: 16px;
+            box-shadow: var(--card-shadow); overflow-x: auto;
+            border: 1px solid #e2e8f0;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        thead { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; }
+        
+        th { padding: 18px 25px; text-align: left; color: var(--secondary); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 16px 25px; border-bottom: 1px solid #f1f5f9; color: var(--text-light); font-size: 14px; vertical-align: middle; }
+        
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background-color: #f8fafc; }
+
+        .badge { padding: 5px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; display: inline-block; }
+        .loading-text { text-align: center; padding: 30px; font-weight: 600; color: var(--primary); }
+    </style>
+</head>
+<body>
+
+<header class="admin-header">
+    <div class="header-left">
+        <div class="admin-logo-box"><i class="fas fa-user-shield"></i></div>
+        <div>
+            <h1>Career Xone <span class="badge-pro">Admin</span></h1>
+            <p class="subtitle">Secure Control Panel</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <button onclick="logoutAdmin()" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</header>
+
+<div class="content-wrapper">
+
+    <h2 class="section-title"><i class="fas fa-envelope-open-text"></i> New Enquiries</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Message</th><th>Action</th></tr>
+            </thead>
+            <tbody id="contactsTableBody">
+                <tr><td colspan="4" class="loading-text">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title"><i class="fas fa-user-graduate"></i> Admission Applications</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Name</th><th>Course</th><th>School</th><th>Phone</th><th>Email</th><th>Action</th></tr>
+            </thead>
+            <tbody id="admissionsTableBody">
+                <tr><td colspan="6" class="loading-text">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title"><i class="fas fa-book-reader"></i> Test Series Requests</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Selected Series</th><th>Action</th></tr>
+            </thead>
+            <tbody id="testTableBody">
+                <tr><td colspan="4" class="loading-text">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title"><i class="fas fa-trophy"></i> Scholarship (CAT) Registrations</h2>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Class</th><th>Preferred Slot</th><th>Action</th></tr>
+            </thead>
+            <tbody id="scholarshipTableBody">
+                <tr><td colspan="5" class="loading-text">Loading...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // 1. Logout Function
+    function logoutAdmin() {
+        sessionStorage.clear();
+        window.location.href = "/admin-login";
+    }
+
+    // 2. Helper: Secure Data Fetcher
+    async function fetchData(url) {
+        const token = sessionStorage.getItem("adminToken");
+        if (!token) return null;
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'auth-token': token }
+            });
+            if (response.ok) return await response.json();
+        } catch (error) { console.error("Fetch Error:", error); }
+        return [];
+    }
+
+    // 🔥 3. DELETE FUNCTION (Ye Naya Hai)
+    async function deleteItem(type, id) {
+        if (!confirm("⚠️ Are you sure? Ye data wapas nahi aayega!")) return; // Confirmation
+
+        const token = sessionStorage.getItem("adminToken");
+        try {
+            const response = await fetch(`/${type}/${id}`, {
+                method: 'DELETE',
+                headers: { 'auth-token': token }
+            });
+
+            if (response.ok) {
+                // Delete hone ke baad table refresh karo
+                loadAllData();
+            } else {
+                alert("❌ Delete nahi hua. Server Error.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("❌ Server Down hai!");
+        }
+    }
+
+    // 4. Load All Data Function (Ab isme Delete Button bhi hai)
+    async function loadAllData() {
+        // --- A. Contacts ---
+        const contacts = await fetchData('/contacts');
+        const contactBody = document.getElementById('contactsTableBody');
+        if (contacts && contacts.length > 0) {
+            contactBody.innerHTML = contacts.map((item) => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.phone}</td>
+                    <td>${item.message}</td>
+                    <td>
+                        <button onclick="deleteItem('contacts', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        } else { contactBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No Enquiries Found</td></tr>`; }
+
+        // --- B. Admissions ---
+        const admissions = await fetchData('/admissions');
+        const adminBody = document.getElementById('admissionsTableBody');
+        if (admissions && admissions.length > 0) {
+            adminBody.innerHTML = admissions.map(item => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${item.course}</span></td>
+                    <td>${item.school}</td>
+                    <td>${item.phone}</td>
+                    <td>${item.email}</td>
+                    <td>
+                        <button onclick="deleteItem('admissions', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        } else { adminBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">No Admissions Found</td></tr>`; }
+
+        // --- C. Test Series ---
+        const tests = await fetchData('/testseries');
+        const testBody = document.getElementById('testTableBody');
+        if (tests && tests.length > 0) {
+            testBody.innerHTML = tests.map(item => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.phone}</td>
+                    <td><span class="badge" style="background:#fef3c7; color:#b45309;">${item.series}</span></td>
+                    <td>
+                        <button onclick="deleteItem('testseries', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        } else { testBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No Test Requests</td></tr>`; }
+
+        // --- D. Scholarships ---
+        const scholarships = await fetchData('/scholarships');
+        const scholarBody = document.getElementById('scholarshipTableBody');
+        if (scholarships && scholarships.length > 0) {
+            scholarBody.innerHTML = scholarships.map(item => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.phone}</td>
+                    <td>${item.studentClass}</td>
+                    <td><span class="badge" style="background:#d1fae5; color:#065f46;">${item.preferredDate}</span></td>
+                    <td>
+                        <button onclick="deleteItem('scholarships', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        } else { scholarBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No Scholarships Found</td></tr>`; }
+    }
+
+    // Page Load hote hi sab chalao
+    window.onload = loadAllData;
+</script>
+
+</body>
+</html>

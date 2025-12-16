@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Xone</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Manrope:wght@600;700;800&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- SAME THEME AS NEET MAIN PAGE --- */
+        :root {
+            --primary: #10b981; 
+            --primary-dark: #047857;
+            --secondary: #0f172a; 
+            --accent: #fbbf24;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #ecfdf5;
+            --card-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- 1. HERO SECTION (Specific to Dropper) --- */
+        .page-hero {
+            /* Intense Dark Green Gradient for serious prep feel */
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            color: white;
+            padding: 80px 20px 120px;
+            text-align: center;
+            position: relative;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        .page-badge {
+            background: rgba(255, 255, 255, 0.1); color: #fff; padding: 6px 16px; border-radius: 50px;
+            font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+            display: inline-block; margin-bottom: 20px; border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title { font-size: 48px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .page-subtitle { font-size: 18px; opacity: 0.9; max-width: 750px; margin: 0 auto; line-height: 1.6; }
+
+        /* --- 2. HIGHLIGHTS & CONTENT --- */
+        .highlights-container { max-width: 1100px; margin: -80px auto 60px; position: relative; z-index: 10; padding: 0 20px; }
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+
+        .highlight-card {
+            background: white; padding: 25px; border-radius: 16px; text-align: center;
+            box-shadow: var(--card-shadow); transition: transform 0.3s; border-bottom: 4px solid var(--primary);
+        }
+        .highlight-card:hover { transform: translateY(-5px); }
+        .h-icon { font-size: 32px; color: var(--primary); margin-bottom: 15px; }
+        .h-title { font-weight: 700; font-size: 16px; margin-bottom: 5px; }
+        .h-desc { font-size: 13px; color: var(--text-muted); }
+
+        .content-section { max-width: 1000px; margin: 0 auto 80px; padding: 0 20px; }
+        
+        /* Specific Details Box */
+        .details-box {
+            background: white; border-radius: 20px; padding: 40px; 
+            box-shadow: var(--card-shadow); border: 1px solid #e2e8f0;
+            position: relative; overflow: hidden;
+        }
+        .details-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #cbd5e1; padding-bottom: 20px; margin-bottom: 30px; }
+        .dh-title { font-size: 28px; font-weight: 800; color: var(--secondary); }
+        .dh-price { font-size: 24px; font-weight: 800; color: var(--primary); }
+        
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .feature-item { display: flex; gap: 15px; align-items: flex-start; }
+        .fi-icon { color: var(--primary); font-size: 18px; margin-top: 3px; }
+        .fi-text h4 { font-size: 16px; font-weight: 700; margin-bottom: 5px; color: var(--secondary); }
+        .fi-text p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+        /* Form Section Styles */
+        .ts-enquiry-section {
+            background: white; padding: 50px; border-radius: 24px;
+            box-shadow: 0 20px 60px -10px rgba(0,0,0,0.1); border: 1px solid #e2e8f0;
+            margin-top: 50px; position: relative; overflow: hidden;
+        }
+        .ts-enquiry-section::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, #10b981, #047857);
+        }
+        .ts-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .ts-text h3 { font-size: 28px; font-weight: 800; color: var(--secondary); margin-bottom: 15px; }
+        .ts-input { width: 100%; padding: 12px 15px; border: 1px solid #cbd5e1; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        .ts-submit-btn { width: 100%; background: #10b981; color: white; padding: 14px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .details-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .ts-form-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 32px; }
+        }
+    </style>
+    
+</head>
+<body>
+<!-- ========================================================================================================================================= -->
+                                                                      <!-- HEADER START -->
+
+
+
+    <header>
+        <div class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <!-- Blue theme dummy logo added -->
+                    <img src="images/logo.png" alt="Career Xone Logo"> 
+                </a>
+            </div>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Courses <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="jee.html">JEE (Main & Adv)</a>
+                        <a href="neet.html">NEET (Medical)</a>
+                        <a href="foundation.html">Foundation (6-10)</a>
+                        <a href="all-courses.html">All Courses</a>
+                    </div>
+                </div>
+
+                <a href="admission.html">Admission</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Results <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="results-neet.html">NEET Results</a>
+                        <a href="results-jee.html">JEE Results</a>
+                        <a href="results-foundation.html">Class 6 - 10 Results</a>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Test Series <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <div class="sub-dropdown">
+                            <a href="test-neet.html">NEET (UG) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-neet-11.html">Class 11</a>
+                                <a href="test-neet-12.html">Class 12</a>
+                                <a href="test-neet-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <div class="sub-dropdown">
+                            <a href="test-jee.html">JEE (Main+Adv) <i class="fas fa-chevron-right"></i></a>
+                            <div class="sub-dropdown-content">
+                                <a href="test-jee-11.html">Class 11</a>
+                                <a href="test-jee-12.html">Class 12</a>
+                                <a href="test-jee-dropper.html">12 Plus (Dropper)</a>
+                            </div>
+                        </div>
+                        <a href="all-test-series.html">All Test Series</a>
+                    </div>
+                </div>
+
+                <a href="scholarship.html">Scholarship</a>
+                
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">More <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="gallery.html">Gallery</a>
+                        <a href="blog.html">Blog</a>
+                        <a href="jobs.html">Job at Career Xone</a>
+                        <a href="study-material.html">Study Material</a>
+                        <a href="about.html">About Us</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <a href="login.html" class="login-btn">
+                    <i class="fas fa-user"></i> Login
+                </a>
+                <div class="mobile-menu-btn" id="mobileBtn">
+                     <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- HEADER END -->
+
+
+<!-- ========================================================================================================================================================== -->
+                                                        <!-- 🔥 CLICKABLE TICKER WITH PREMIUM GRADIENT 🔥 -->
+
+
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+            
+            <!-- DUPLICATE FOR INFINITE LOOP -->
+            <a href="admission.html" class="ticker-item">
+                <span class="ticker-new">NEW</span> Admission Open for JEE & NEET 2026-28 Batches!
+            </a>
+            <a href="results-neet.html" class="ticker-item">
+                🏆 Congratulations! Career Xone Student AIR 45 in NEET 2024.
+            </a>
+            <a href="scholarship.html" class="ticker-item">
+                📅 Upcoming Scholarship Test on 25th May - Register Now.
+            </a>
+            <span class="ticker-item">
+                📞 Call for Enquiry: +91 9673383561 / 91454 81323
+            </span>>
+        </div>
+    </div>
+
+
+
+<!-- ======================================================================================================================================================== -->
+                                                                                <!-- 1. PREMIUM HERO SECTION -->
+    <section class="page-hero">
+        <span class="page-badge">Rank Booster</span>
+        <h1 class="page-title">Repeater (12th+) NEET Test Series</h1>
+        <p class="page-subtitle">
+            An aggressive, high-frequency testing program designed for 12th passed students to maximize their score and secure a top rank in NEET 2026.
+        </p>
+    </section>
+
+    <!-- 2. HIGHLIGHTS -->
+    <div class="highlights-container">
+        <div class="highlights-grid">
+            <div class="highlight-card">
+                <i class="fas fa-tachometer-alt h-icon"></i>
+                <h3 class="h-title">High Speed</h3>
+                <p class="h-desc">Rapid Revision Tests</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-crosshairs h-icon"></i>
+                <h3 class="h-title">Target Weakness</h3>
+                <p class="h-desc">Focused Error Analysis</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-brain h-icon"></i>
+                <h3 class="h-title">Advanced Level</h3>
+                <p class="h-desc">Tricky & Rank Deciding Qs</p>
+            </div>
+            <div class="highlight-card">
+                <i class="fas fa-clipboard-check h-icon"></i>
+                <h3 class="h-title">Offline Mode</h3>
+                <p class="h-desc">Pen & Paper Exam</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. COURSE DETAILS -->
+    <section class="content-section">
+        
+        <div class="details-box">
+            <div class="details-header">
+                <div>
+                    <div class="dh-title">Repeater / Dropper Package</div>
+                    <div style="color:var(--text-muted); font-size:14px;">Ideal for 12th Passed Students targeting NEET 2026</div>
+                </div>
+                <div class="dh-price">₹10,000 <span style="font-size:12px; color:#64748b; font-weight:500;">/ Year</span></div>
+            </div>
+
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle fi-icon"></i>
+                    <div class="fi-text">
+                        <h4>20 Unit Tests</h4>
+                        <p>Intensive topic-wise tests to ensure no concept is left weak.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-sync-alt fi-icon"></i>
+                    <div class="fi-text">
+                        <h4>8 Part Syllabus Tests</h4>
+                        <p>Cumulative revision of large chunks of syllabus to build retention.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-file-alt fi-icon"></i>
+                    <div class="fi-text">
+                        <h4>15 Full Syllabus Tests</h4>
+                        <p>Maximum number of mock tests to perfect exam temperament and speed.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-puzzle-piece fi-icon"></i>
+                    <div class="fi-text">
+                        <h4>Advanced Problem Solving</h4>
+                        <p>Exposure to new pattern questions: Assertion-Reasoning & Statement based.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enquiry Form Integrated -->
+<div class="ts-enquiry-section" style="margin-top: 0; box-shadow: none; border: 1px dashed #10b981; background: #f0fdf4;">
+    <div class="ts-form-grid">
+        <div class="ts-text">
+            <h3>Secure Your Seat (Dropper Batch)</h3>
+            <p>Join the offline test series at Career Xone center. Fill details to proceed.</p>
+            <div style="font-weight:700; color:#0f172a;"><i class="fas fa-phone-alt" style="color:#10b981; margin-right:5px;"></i> +91 98765 43210</div>
+        </div>
+        <form>
+            <input type="text" id="testName" class="ts-input" placeholder="Student Name" required>
+
+            <input type="tel" id="testPhone" class="ts-input" placeholder="Mobile Number" required>
+
+            <input type="hidden" id="testSeries" value="NEET - Repeater Batch">
+
+            <button type="button" id="testBtn" class="ts-submit-btn">Request Enrollment</button>
+        </form>
+    </div>
+</div>
+
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+
+    <!-- =====================================================================================================================================-->
+                                                    <!-- footer section -->
+<footer class="footer-section">
+    <div class="footer-glow"></div>
+    <div class="footer-blob"></div>
+
+    <div class="footer-container">
+        
+        <!-- COL 1: ABOUT -->
+        <div>
+            <div class="footer-logo">
+                <div class="cx-logo-box">CX</div>
+                <span style="font-size: 20px; font-weight: 700;">CAREER<span style="color: #818cf8;">XONE</span></span>
+            </div>
+            <p class="footer-desc">
+                Recognized as one of the best IIT JEE, NEET & MHCET coaching centers in Gondia. Consistent top results since inception.
+            </p>
+            <div class="social-links">
+                <a href="https://www.youtube.com/@careerxonegondiajeeneet4961" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/CareerXone" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/career_xone_gondia" class="social-icon"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+
+        <!-- COL 2: QUICK LINKS (From your image) -->
+        <div>
+            <h4 class="footer-heading">Quick Links</h4>
+            <ul class="footer-links">
+                <li><a href="#">Blog Updates</a></li>
+                <li><a href="#">Exam Results</a></li>
+                <li><a href="#">Photo Gallery</a></li>
+                <li><a href="#">Contact Us</a></li>
+                <li><a href="#">News & Events</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 3: RESOURCES (From your image) -->
+        <div>
+            <h4 class="footer-heading">Resources</h4>
+            <ul class="footer-links">
+                <li><a href="#">JEE Main / Advance</a></li>
+                <li><a href="#">NEET (UG)</a></li>
+                <li><a href="#">MHT-CET</a></li>
+                <li><a href="#">CBSE Board</a></li>
+                <li><a href="#">Maharashtra Board</a></li>
+            </ul>
+        </div>
+
+        <!-- COL 4: CONTACT & SUBSCRIBE -->
+        <div>
+            <h4 class="footer-heading">Get in Touch</h4>
+            
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt contact-icon"></i>
+                <div class="contact-text">
+                    <strong>Hadditoli Road</strong>
+                    Near Dr. Giri Hospital, Gondia,<br> Maharashtra 441601
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-phone-alt contact-icon"></i>
+                <div class="contact-text">
+                    +91 96733 83561 <br>
+                    +91 74477 58668
+                </div>
+            </div>
+
+            <div class="contact-item">
+                <i class="fas fa-envelope contact-icon"></i>
+                <div class="contact-text">
+                    cxjeeneet@gmail.com
+                </div>
+            </div>
+
+            <!-- Premium Subscribe Box -->
+            <form class="subscribe-box">
+                <input type="email" placeholder="Enter your email" class="sub-input">
+                <button type="button" class="sub-btn">Subscribe</button>
+            </form>
+            <p style="font-size: 11px; color: #64748b; margin-top: 8px;">
+                Get latest updates & news.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Copyright Bar -->
+    <div class="copyright-bar">
+        <div>© 2025 CareerXone. All Rights Reserved.</div>
+        <div style="display: flex; gap: 20px;">
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Privacy Policy</a>
+        </div>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
