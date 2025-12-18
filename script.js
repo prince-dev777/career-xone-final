@@ -20,12 +20,12 @@
             }
 
             try {
-                // 👇 YAHAN CHANGE KIYA HAI (Pura Address dala hai)
-                const response = await fetch('http://localhost:5000/user-login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
+             // 👇 YAHAN CHANGE KIYA HAI (Render ka Live Link dala hai)
+            const response = await fetch('https://career-xone-final.onrender.com/user-login', {
+             method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ email, password })
+            });
 
                 const result = await response.json();
 
