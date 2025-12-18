@@ -238,6 +238,54 @@
         </div>
 
     </div>
+    <script>
+    const registerBtn = document.querySelector('button[type="submit"]'); // Ya jo bhi button ka ID/Class ho
+
+    // Agar form hai toh:
+    const form = document.querySelector('form');
+    
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Page reload roko
+
+            // Values uthao (IDs check karlena apni HTML me)
+            const nameInput = document.querySelector('input[type="text"]'); 
+            const emailInput = document.querySelector('input[type="email"]');
+            const passwordInput = document.querySelector('input[type="password"]');
+
+            const name = nameInput ? nameInput.value : "User";
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                alert("Please fill all fields ❌");
+                return;
+            }
+
+            try {
+                // Server ko data bhejo
+                const response = await fetch('http://localhost:5000/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }) // Name agar backend me add karna ho toh yahan add karein
+                });
+
+                const result = await response.json();
+
+                // ✅ SAHI CHECKING (Backend bhej raha hai 'success: true')
+                if (result.success) {
+                    alert("🎉 Registration Successful! Please Login.");
+                    window.location.href = "login.html"; // Login page par bhej do
+                } else {
+                    alert("❌ Registration Failed: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("❌ Server Connection Failed!");
+            }
+        });
+    }
+</script>
 
     <script src="script.js"></script>
 

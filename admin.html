@@ -163,8 +163,20 @@
             </tbody>
         </table>
     </div>
+    <h2 class="section-title"><i class="fas fa-users"></i> Registered Users</h2>
+<div class="table-container">
+    <table>
+        <thead>
+            <tr><th>Date</th><th>Email</th><th>Password</th></tr>
+        </thead>
+        <tbody id="usersTableBody">
+            <tr><td colspan="3" class="loading-text">Loading...</td></tr>
+        </tbody>
+    </table>
+</div>
 
 </div>
+
 
 <script>
     // 1. Logout Function
@@ -286,6 +298,18 @@
                     </td>
                 </tr>`).join('');
         } else { scholarBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No Scholarships Found</td></tr>`; }
+
+        // --- E. Users (loadAllData function ke andar last me add karo) ---
+const users = await fetchData('/users');
+const usersBody = document.getElementById('usersTableBody');
+if (users && users.length > 0) {
+    usersBody.innerHTML = users.map(item => `
+        <tr>
+            <td>${new Date(item.date).toLocaleDateString()}</td>
+            <td><strong>${item.email}</strong></td>
+            <td>${item.password}</td> 
+        </tr>`).join('');
+} else { usersBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">No Users Registered</td></tr>`; }
     }
 
     // Page Load hote hi sab chalao

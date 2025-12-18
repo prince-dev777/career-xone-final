@@ -5,47 +5,43 @@
 // ------------------------------------------------------
 // 1. LOGIN FORM HANDLING (UPDATED)
 // ------------------------------------------------------
-const loginBtn = document.getElementById('loginBtn');
+    const loginBtn = document.getElementById('loginBtn');
 
-if (loginBtn) {
-    loginBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
+    if (loginBtn) {
+        loginBtn.addEventListener('click', async (e) => {
+            e.preventDefault(); // Page reload roko
 
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
 
-        if (!email || !password) {
-            alert("⚠️ Please enter both Email and Password.");
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:5000/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-
-            if (result.status === "success") {
-                // 1. Browser ki memory me user ko save karein
-                localStorage.setItem('loggedInUser', email);
-                
-                alert("✅ Login Successful! Redirecting...");
-                
-                // 2. Home Page par bhej dein (Redirect)
-                window.location.href = 'index.html'; 
-            } else {
-                alert("❌ Login Failed: " + result.message);
+            if (!email || !password) {
+                alert("Please fill all fields");
+                return;
             }
 
-        } catch (error) {
-            console.error("Login Error:", error);
-            alert("⚠️ Server Error. Please try again.");
-        }
-    });
-}
+            try {
+                // 👇 YAHAN CHANGE KIYA HAI (Pura Address dala hai)
+                const response = await fetch('http://localhost:5000/user-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    localStorage.setItem("userEmail", email);
+                    alert("Login Successful! 🎉");
+                    window.location.href = "index.html"; // Ya dashboard.html jahan bhejna ho
+                } else {
+                    alert("❌ Error: " + result.message);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Server connection failed! Make sure backend is running on port 5000.");
+            }
+        });
+    }
 
 // ------------------------------------------------------
 // 2. CONTACT / INQUIRY FORM HANDLING
@@ -319,6 +315,41 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileBtn.addEventListener('click', () => {
             // Menu ko Toggle karein
             navLinks.classList.toggle('active');
+        });
+    }
+});
+
+
+
+
+// ==========================================
+// 🔐 AUTHENTICATION UI HANDLE (Login/Logout)
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const authBtn = document.getElementById("authBtn");
+    const userEmail = localStorage.getItem("userEmail");
+
+    if (userEmail && authBtn) {
+        let userName = userEmail.split('@')[0];
+        // Naam agar bada ho toh trim karo
+        if (userName.length > 12) userName = userName.substring(0, 10) + "..";
+
+        authBtn.classList.add("logout-mode");
+        authBtn.href = "#";
+
+        // 👇 YAHAN CHANGE HAI (Classes match karayi hain CSS se)
+        authBtn.innerHTML = `
+            <span class="user-text"><i class="fas fa-user-circle"></i> ${userName}</span>
+            <span class="logout-text"><i class="fas fa-sign-out-alt"></i> Logout</span>
+        `;
+
+        authBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to Logout?")) {
+                localStorage.removeItem("userEmail");
+                window.location.reload();
+            }
         });
     }
 });

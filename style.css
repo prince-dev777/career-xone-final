@@ -95,12 +95,95 @@
         .sub-dropdown:hover > a { background-color: #eff6ff; color: var(--primary-color); }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+/* ============================================================================================================================================================== */
         /* --- LOGIN BUTTON --- */
         .login-btn { text-decoration: none; color: var(--primary-color); border: 2px solid var(--primary-color); padding: 8px 24px; border-radius: 50px; font-weight: 700; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .login-btn:hover { background-color: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3); }
 
-        /* --- 🔥 PREMIUM TICKER CSS 🔥 --- */
+/* --- FIXED PREMIUM BUTTON (No Glitch) --- */
+.logout-mode {
+    position: relative !important; /* Zaroori hai */
+    background: linear-gradient(135deg, #0f172a 0%, #001f3f 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 31, 63, 0.3) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    
+    /* Fixed Size to prevent cutting */
+    font-size: 12px !important;       /* Text thoda chhota */
+    height: 34px !important;          /* Height kam ki */
+    min-width: 90px !important;      /* Chaudai kam ki */
+    padding: 0 8px !important;
+    border-radius: 50px !important;
+    
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+    text-decoration: none !important;
+}
+
+/* Hover Effect: Background Red */
+.logout-mode:hover {
+    background: #dc2626 !important;
+    border-color: #dc2626 !important;
+    box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* --- TEXT ANIMATION LOGIC --- */
+.user-text, .logout-text {
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important; /* Bouncy Effect */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+/* 1. Default: User Name dikhega */
+.user-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 2. Default: Logout chupa rahega (Absolute Positioning) */
+.logout-text {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.5); /* Chhota hoke chup */
+    opacity: 0;
+}
+
+/* --- HOVER STATE (Jadoo) --- */
+/* Name upar gayab hoga */
+.logout-mode:hover .user-text {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* Logout Zoom hoke aayega */
+.logout-mode:hover .logout-text {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ============================================================================================================================================ */
+                                                     /* --- 🔥 PREMIUM TICKER CSS 🔥 --- */
         .ticker-wrap {
             width: 100%;
             overflow: hidden;
@@ -1586,7 +1669,6 @@
     }
 }
     
-
 
 
 

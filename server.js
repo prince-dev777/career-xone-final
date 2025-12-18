@@ -10,8 +10,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// ✅ STATIC FILES FIX (Sabse Zaroori)
-// Ye line tumhare folder ki HTML, CSS, Images ko sahi se serve karegi
+// ✅ STATIC FILES FIX
 app.use(express.static(__dirname));
 
 // --- DATABASE CONNECTION ---
@@ -20,9 +19,12 @@ const DB_URI = "mongodb+srv://botxone5_db_user:zsZowDgeuRg5nWy5@cluster0.l60r7uk
 mongoose.connect(DB_URI)
     .then(() => console.log('✅ MongoDB Cloud Connected! (Database Ready)'))
     .catch((err) => console.error('❌ MongoDB Error:', err));
+
 // ================================================================
-// 📝 SCHEMAS (Forms ka Data Design)
+// 📝 SCHEMAS (Database Design)
 // ================================================================
+
+// 1. Forms Data Schemas
 const ContactSchema = new mongoose.Schema({ name: String, phone: String, message: String, date: { type: Date, default: Date.now } });
 const Contact = mongoose.model('Contact', ContactSchema);
 
@@ -35,28 +37,76 @@ const TestSeries = mongoose.model('TestSeries', TestSeriesSchema);
 const ScholarshipSchema = new mongoose.Schema({ name: String, phone: String, studentClass: String, preferredDate: String, date: { type: Date, default: Date.now } });
 const Scholarship = mongoose.model('Scholarship', ScholarshipSchema);
 
+// 2. 👤 USER SCHEMA (Student Login/Register ke liye)
+const UserSchema = new mongoose.Schema({
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true }, // Note: Real project me password hash karna chahiye
+    date: { type: Date, default: Date.now }
+});
+const User = mongoose.model('User', UserSchema);
+
+
 // ================================================================
 // 🛣️ ROUTES (Raaste)
 // ================================================================
 
-// 1. 🔒 ADMIN LOGIN CHECK (Password Checker)
+// ------------------------------------------------
+// A. ADMIN LOGIN SYSTEM
+// ------------------------------------------------
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    const SECRET_PASS = "admin123"; // Password sirf yahan rahega (Safe)
+    const SECRET_PASS = "admin123"; // Admin Password
 
     if (password === SECRET_PASS) {
-        // ✅ Change: Ab hum message ke saath TOKEN bhi bhej rahe hain
         res.json({ 
             success: true, 
             message: "Login Successful", 
-            token: SECRET_PASS // <--- Server ne diya token
+            token: SECRET_PASS 
         });
     } else {
         res.json({ success: false, message: "Wrong Password" });
     }
 });
 
-// 2. PAGE LOAD ROUTES (Browser ke liye)
+// ------------------------------------------------
+// B. STUDENT LOGIN & REGISTER SYSTEM (Ye Naya Hai) ✅
+// ------------------------------------------------
+
+// 1. Student Register
+app.post('/register', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.json({ success: false, message: "User already exists!" });
+        }
+        const newUser = new User({ email, password });
+        await newUser.save();
+        res.json({ success: true, message: "Registration Successful!" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+
+// 2. Student Login
+app.post('/user-login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await User.findOne({ email });
+        if (user && user.password === password) {
+            res.json({ success: true, message: "Login Successful", user: user.email });
+        } else {
+            res.json({ success: false, message: "Invalid Email or Password" });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+
+
+// ------------------------------------------------
+// C. PAGE LOAD ROUTES (Frontend Pages)
+// ------------------------------------------------
 app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
 });
@@ -65,108 +115,78 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-// --- FORM SUBMISSION ROUTES (Tumhare Forms ke liye) ---
+
+// ------------------------------------------------
+// D. FORM SUBMISSIONS (Public)
+// ------------------------------------------------
 app.post('/contact', async (req, res) => { try { await new Contact(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/admission', async (req, res) => { try { await new Admission(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/testseries', async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/scholarship', async (req, res) => { try { await new Scholarship(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 
-// --- ADMIN DATA FETCHING ---
-// --- 🔒 PROTECTED DATA ROUTES (Ab ye Password mangenge) ---
 
-const SECRET_PASS = "admin123"; // 🔑 Ye wahi password hai jo Login me use kiya
+// ------------------------------------------------
+// E. ADMIN DATA FETCHING (Protected 🔒)
+// ------------------------------------------------
+const SECRET_PASS = "admin123";
 
-// 1. Contacts Data
-app.get('/contacts', async (req, res) => {
+// Helper function to check auth
+const checkAuth = (req, res, next) => {
     const requestPass = req.headers['auth-token'];
     if (requestPass === SECRET_PASS) {
-        res.json(await Contact.find());
-    } else {
-        res.status(401).json({ error: "Unauthorized: Bhag yahan se!" });
-    }
-});
-
-// 2. Admissions Data
-app.get('/admissions', async (req, res) => {
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === SECRET_PASS) {
-        res.json(await Admission.find());
+        next();
     } else {
         res.status(401).json({ error: "Unauthorized" });
     }
+};
+
+// 1. Get Contacts
+app.get('/contacts', checkAuth, async (req, res) => {
+    res.json(await Contact.find());
 });
 
-// 3. Test Series Data
-app.get('/testseries', async (req, res) => {
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === SECRET_PASS) {
-        res.json(await TestSeries.find());
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+// 2. Get Admissions
+app.get('/admissions', checkAuth, async (req, res) => {
+    res.json(await Admission.find());
 });
 
-// 4. Scholarship Data
-app.get('/scholarships', async (req, res) => {
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === SECRET_PASS) {
-        res.json(await Scholarship.find());
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+// 3. Get Test Series
+app.get('/testseries', checkAuth, async (req, res) => {
+    res.json(await TestSeries.find());
+});
+
+// 4. Get Scholarships
+app.get('/scholarships', checkAuth, async (req, res) => {
+    res.json(await Scholarship.find());
+});
+
+// 5. Get Registered Users (Ye Naya Hai for Admin) ✅
+app.get('/users', checkAuth, async (req, res) => {
+    res.json(await User.find());
 });
 
 
-// ================================================================
-// 🗑️ DELETE ROUTES (Data hatane ke liye)
-// ================================================================
-
-// 1. Delete Contact
-app.delete('/contacts/:id', async (req, res) => {
-    const { id } = req.params;
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === "admin123") {
-        await Contact.findByIdAndDelete(id); // Database se gayab
-        res.json({ status: "Deleted" });
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+// ------------------------------------------------
+// F. DELETE ROUTES (Data Delete karne ke liye)
+// ------------------------------------------------
+app.delete('/contacts/:id', checkAuth, async (req, res) => {
+    await Contact.findByIdAndDelete(req.params.id);
+    res.json({ status: "Deleted" });
 });
 
-// 2. Delete Admission
-app.delete('/admissions/:id', async (req, res) => {
-    const { id } = req.params;
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === "admin123") {
-        await Admission.findByIdAndDelete(id);
-        res.json({ status: "Deleted" });
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+app.delete('/admissions/:id', checkAuth, async (req, res) => {
+    await Admission.findByIdAndDelete(req.params.id);
+    res.json({ status: "Deleted" });
 });
 
-// 3. Delete Test Series
-app.delete('/testseries/:id', async (req, res) => {
-    const { id } = req.params;
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === "admin123") {
-        await TestSeries.findByIdAndDelete(id);
-        res.json({ status: "Deleted" });
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+app.delete('/testseries/:id', checkAuth, async (req, res) => {
+    await TestSeries.findByIdAndDelete(req.params.id);
+    res.json({ status: "Deleted" });
 });
 
-// 4. Delete Scholarship
-app.delete('/scholarships/:id', async (req, res) => {
-    const { id } = req.params;
-    const requestPass = req.headers['auth-token'];
-    if (requestPass === "admin123") {
-        await Scholarship.findByIdAndDelete(id);
-        res.json({ status: "Deleted" });
-    } else {
-        res.status(401).json({ error: "Unauthorized" });
-    }
+app.delete('/scholarships/:id', checkAuth, async (req, res) => {
+    await Scholarship.findByIdAndDelete(req.params.id);
+    res.json({ status: "Deleted" });
 });
 
 // ================================================================
