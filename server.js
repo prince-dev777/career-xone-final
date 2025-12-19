@@ -128,7 +128,7 @@ app.post('/scholarship', async (req, res) => { try { await new Scholarship(req.b
 // ------------------------------------------------
 // E. ADMIN DATA FETCHING (Protected 🔒)
 // ------------------------------------------------
-const SECRET_PASS = "CareerXone{@2025$RohitJaa";
+const SECRET_PASS = "CareerXone{@2025$RohitJaa}";
 
 // Helper function to check auth
 const checkAuth = (req, res, next) => {
