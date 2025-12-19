@@ -456,12 +456,23 @@
 // --- DATA SECTION ---
         const students = [
             { name: "Mehak D.", exam: "JEE Advanced", rank: "AIR 45", info: "IIT Roorkee", type: "jee", img: "images/mehak.png" },
-            { name: "Anurag R.", exam: "NEET (UG)", rank: "695", info: "690 / 720", type: "neet", img: "images/Anurag.png" },
-            { name: "Achal C.", exam: "JEE Advanced", rank: "AIR 120", info: "IIT Delhi", type: "jee", img: "images/achal.png" },
-            { name: "Prerna H.", exam: "NEET (UG)", rank: "680", info: "695 / 720", type: "neet", img: "images/prerna.png" },
+            { name: "Anurag R.", exam: "NEET (UG)", rank: "695", info: "AIIMS Bhopal", type: "neet", img: "images/Anurag.png" },
+            { name: "Anant A.", exam: "JEE Advanced", rank: "AIR 120", info: "IIT Bombay", type: "jee", img: "images/anant.jpg" },
+            { name: "Prerna H.", exam: "NEET (UG)", rank: "680", info: "AIIMS Raipur", type: "neet", img: "images/prerna.png" },
+            { name: "Tanmay B.", exam: "JEE Advanced", rank: "AIR 210", info: "IIT Bombay", type: "jee", img: "images/tanmay.jpg" },
+            { name: "Harshita K.", exam: "NEET (UG)", rank: "672", info: "AIIMS Nagpur", type: "neet", img: "images/harshita.jpg" },
+            { name: "Pritesh D.", exam: "JEE Advanced", rank: "99.8%", info: "IIT Bombay", type: "jee", img: "images/pritesh.jpg" },
+            { name: "Sewak Avinash .T", exam: "NEET (UG)", rank: "672", info: "AIIMS Hydrabad", type: "neet", img: "images/sewak.jpg" },
+            
+            { name: "Mehak D.", exam: "JEE Advanced", rank: "AIR 45", info: "IIT Roorkee", type: "jee", img: "images/mehak.png" },
+            { name: "Sheekha H.", exam: "NEET (UG)", rank: "695", info: "AIIMS Nagpur", type: "neet", img: "images/sheekha.jpg" },
+            { name: "Anant A.", exam: "JEE Advanced", rank: "AIR 120", info: "IIT Bombay", type: "jee", img: "images/anant.jpg" },
+            { name: "Saurav M.", exam: "NEET (UG)", rank: "680", info: "AIIMS Delhi", type: "neet", img: "images/sourav.jpg" },
             { name: "Daniyal Khan", exam: "JEE Advanced", rank: "AIR 210", info: "IIT Kharagpur", type: "jee", img: "images/daniyal-khan.png" },
             { name: "Srisai K.", exam: "JEE Advanced", rank: "99.8%", info: "IIT BHU", type: "jee", img: "images/srisai.png" },
             { name: "Chanchal K.", exam: "NEET (UG)", rank: "672", info: "672 / 720", type: "neet", img: "images/chanchal.png" },
+            { name: "Srisai K.", exam: "JEE Advanced", rank: "99.8%", info: "IIT BHU", type: "jee", img: "images/srisai.png" },
+            
         ];
 
         // --- STEP 2: RENDER FUNCTION ---
@@ -492,7 +503,7 @@
                     <div class="student-name">${s.name}</div>
                     <div class="exam-name">${s.exam}</div>
                     <div class="result-tag ${s.type === 'jee' ? 'jee-tag' : 'neet-tag'}">
-                        ${s.type === 'jee' ? '<i class="fas fa-university"></i>' : '<i class="fas fa-trophy"></i>'} ${s.info}
+                        ${s.type === 'jee' ? '<i class="fas fa-university"></i>' : '<i class="fas fa-university"></i>'} ${s.info}
                     </div>
                 </div>
             `;
@@ -512,7 +523,21 @@
             track.style.animation = 'none';
             track.offsetHeight; /* Trigger reflow */
             track.innerHTML = cardsHTML;
-            track.style.animation = 'scroll 35s linear infinite';
+
+            // 👇👇 YAHAN MAGIC KIYA HAI (Dynamic Speed) 👇👇
+            
+            // 1. Total kitne cards ban gaye?
+            const totalCards = filteredList.length * loopCount;
+            
+            // 2. Ek card ko pass hone mein kitna time lagna chahiye? (Seconds)
+            // (Agar fast chahiye toh 2 karo, slow chahiye toh 4 karo)
+            const secondsPerCard = 3; 
+
+            // 3. Total duration calculate karo
+            const totalDuration = totalCards * secondsPerCard;
+
+            // 4. Ab apply karo calculated time
+            track.style.animation = `scroll ${totalDuration}s linear infinite`;
         }
 
         // Page load hote hi "All" dikhao
@@ -792,7 +817,7 @@
     <div class="enquiry-container">
         
         <div class="enquiry-text">
-            <!-- <h2>Still confused about the right path?</h2> -->
+            <h2>Unsure which direction to take?</h2>
             <p>
                 Talk to our senior academic counselors to get a personalized roadmap for your board exams and competitive preparation. We help you choose the best strategy.
             </p>
