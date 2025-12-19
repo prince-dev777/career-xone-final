@@ -65,7 +65,7 @@ if (contactBtn) {
 
         try {
             // Send Data to Server
-            const response = await fetch('http://localhost:5000/contact', {
+            const response = await fetch('https://career-xone-final.onrender.com/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, message })
@@ -143,7 +143,7 @@ if (registerBtn) {
 
         try {
             // Server ko data bhejein (/register route par)
-            const response = await fetch('http://localhost:5000/register', {
+            const response = await fetch('https://career-xone-final.onrender.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -194,7 +194,7 @@ if (admBtn) {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/admission', {
+            const response = await fetch('https://career-xone-final.onrender.com/admission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, school, course, phone, email, message })
@@ -234,7 +234,7 @@ if (testBtn) {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/testseries', {
+            const response = await fetch('https://career-xone-final.onrender.com/testseries', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, series })
@@ -275,7 +275,7 @@ if (catBtn) {
         }
 
         try {
-            const response = await fetch('http://localhost:5000/scholarship', {
+            const response = await fetch('https://career-xone-final.onrender.com/scholarship', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, studentClass, preferredDate })
