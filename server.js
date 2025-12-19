@@ -55,7 +55,7 @@ const User = mongoose.model('User', UserSchema);
 // ------------------------------------------------
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    const SECRET_PASS = "admin123"; // Admin Password
+    const SECRET_PASS = "CareerXone{@2025$RohitJaa}"; // Admin Password
 
     if (password === SECRET_PASS) {
         res.json({ 
