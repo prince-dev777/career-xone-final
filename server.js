@@ -55,7 +55,7 @@ const User = mongoose.model('User', UserSchema);
 // ------------------------------------------------
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    const SECRET_PASS = "CareerXone{@2025$RohitJaa}"; // Admin Password
+    const SECRET_PASS = "CareerXone@2025$RohitJaa"; // Admin Password
 
     if (password === SECRET_PASS) {
         res.json({ 
@@ -128,7 +128,7 @@ app.post('/scholarship', async (req, res) => { try { await new Scholarship(req.b
 // ------------------------------------------------
 // E. ADMIN DATA FETCHING (Protected 🔒)
 // ------------------------------------------------
-const SECRET_PASS = "CareerXone{@2025$RohitJaa}";
+const SECRET_PASS = "CareerXone@2025$RohitJaa";
 
 // Helper function to check auth
 const checkAuth = (req, res, next) => {
