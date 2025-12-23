@@ -1670,7 +1670,77 @@
 }
     
 
+/* ===================================================================================================================================================================== */
+                                                                              /* ---COMMING SOON SECTION --- */
+        :root {
+            --primary: #0066ff;
+            --secondary: #001f3f;
+            --text-muted: #64748b;
+            --bg-body: #ffffff;
+        }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); overflow-x: hidden; }
 
+        /* --- COMING SOON HERO STYLES --- */
+        .cs-hero {
+            /* Full Screen Height for perfect centering */
+            min-height: 80vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #eff6ff 0%, #ffffff 100%);
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .cs-content {
+            max-width: 600px;
+            z-index: 2;
+        }
+
+        .cs-icon {
+            font-size: 60px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .cs-title {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .cs-desc {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .cs-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
+        }
+        .cs-btn:hover {
+            transform: translateY(-3px);
+            background: #004ec2;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
 
