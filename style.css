@@ -46,7 +46,7 @@
         /* Using text for logo fallback if image fails, or just to look good */
         .logo-text { font-size: 24px; font-weight: 800; color: var(--secondary-color); letter-spacing: -0.5px; }
         .logo-text span { color: var(--primary-color); }
-        .nav-logo img { height: 80px; width: auto; cursor: pointer; object-fit: contain;}
+        .nav-logo img { height: 65px; width: auto; cursor: pointer; object-fit: contain;}
 
         /* Navigation Links (Centered) */
         .nav-links {
