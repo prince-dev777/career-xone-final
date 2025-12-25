@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - Career Xone</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* --- COPY CSS TO YOUR STYLE FILE --- */
+        :root {
+            --primary: #0066ff;
+            --secondary: #001f3f;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-body); color: var(--text-main); overflow-x: hidden; }
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            background: linear-gradient(135deg, #001f3f 0%, #003366 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .page-title { font-size: 42px; font-weight: 800; margin-bottom: 10px; }
+        .page-subtitle { font-size: 16px; opacity: 0.8; }
+        
+        .back-btn {
+            position: absolute; top: 30px; left: 30px; display: inline-flex; align-items: center; gap: 8px;
+            color: rgba(255, 255, 255, 0.9); text-decoration: none; font-weight: 600; font-size: 14px;
+            background: rgba(255, 255, 255, 0.15); padding: 10px 20px; border-radius: 50px;
+            backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* --- TERMS CONTENT --- */
+        .terms-container {
+            max-width: 900px;
+            margin: -40px auto 60px;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .terms-content h2 {
+            font-size: 22px;
+            color: var(--secondary);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+        }
+
+        .terms-content p {
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 15px;
+            text-align: justify;
+        }
+
+        .terms-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .terms-content li {
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 25px;
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .terms-content li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 12px;
+            top: 4px;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 14px;
+            display: flex;
+            gap: 10px;
+        }
+        .warning-box i { font-size: 18px; margin-top: 2px; }
+
+        .last-updated {
+            text-align: center;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .terms-container { padding: 30px 20px; margin-top: -20px; width: 90%; }
+            .back-btn { position: relative; top: 0; left: 0; margin-bottom: 20px; display: inline-flex; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE HERO -->
+    <section class="page-header">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        <h1 class="page-title">Terms & Conditions</h1>
+        <p class="page-subtitle">Rules and regulations for students enrolling at Career Xone.</p>
+    </section>
+
+    <!-- TERMS CONTENT -->
+    <div class="terms-container">
+        <div class="terms-content">
+            <p>Welcome to Career Xone. By enrolling in our institute, you agree to comply with and be bound by the following terms and conditions of use. Please read these terms carefully before admission.</p>
+
+            <h2>1. Admission & Fees</h2>
+            <p>The registration process involves the submission of required documents and payment of fees.</p>
+            <ul>
+                <li>The registration fee of <strong>₹20,000 is strictly non-refundable</strong> under any circumstances.</li>
+                <li>Tuition fees must be paid in installments as per the schedule provided at the time of admission.</li>
+                <li>Delay in fee payment may result in a penalty or suspension from classes.</li>
+            </ul>
+
+            <h2>2. Code of Conduct</h2>
+            <p>Students are expected to maintain discipline and decorum within the institute premises.</p>
+            <ul>
+                <li><strong>Mobile Phones & Electronic Gadgets:</strong> Use of mobile phones, earphones, or any entertainment devices is strictly prohibited in classrooms and library areas.</li>
+                <li><strong>Attendance:</strong> 85% attendance is mandatory. In case of absence, parents must inform the administration.</li>
+                <li>Any form of ragging, bullying, or misconduct will lead to immediate expulsion without a refund.</li>
+            </ul>
+
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Strict Note:</strong> Career Xone reserves the right to cancel the admission of any student found violating the disciplinary rules.
+                </div>
+            </div>
+
+            <h2>3. Study Material & Intellectual Property</h2>
+            <p>All study materials, including modules, DPPs, and test papers provided by Career Xone, are the intellectual property of the institute.</p>
+            <ul>
+                <li>Materials are for personal use only and must not be shared, copied, or distributed.</li>
+                <li>Unauthorized distribution of our content is a legal offense.</li>
+            </ul>
+
+            <h2>4. Test Series & Performance</h2>
+            <p>Regular tests are conducted to monitor student progress.</p>
+            <ul>
+                <li>Attendance in Sunday Tests (Part Test / Full Syllabus Test) is compulsory.</li>
+                <li>Test results and attendance reports will be shared with parents via our Mobile App / SMS.</li>
+                <li>Students performing consistently low may be called for special counseling sessions with parents.</li>
+            </ul>
+
+            <h2>5. Communication Policy</h2>
+            <p>We believe in transparent communication with parents regarding their ward's progress.</p>
+            <ul>
+                <li>We will contact parents via SMS, Phone Calls, and WhatsApp regarding attendance, fees, and test scores.</li>
+                <li>It is the parent's responsibility to update their contact details in case of any change.</li>
+            </ul>
+
+            <h2>6. Refund Policy</h2>
+            <p>Once admission is confirmed, the seat is reserved for the student for the entire academic year. Therefore, fees once paid are not refundable or transferable to another student.</p>
+
+            <h2>7. Jurisdiction</h2>
+            <p>Any dispute arising out of the admission process or institute rules is subject to the jurisdiction of the courts in Gondia, Maharashtra only.</p>
+        </div>
+
+        <div class="last-updated">
+            Last Updated: 25th December 2025
+        </div>
+    </div>
+
+</body>
+</html>
