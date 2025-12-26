@@ -100,6 +100,42 @@
         .login-btn { text-decoration: none; color: var(--primary-color); border: 2px solid var(--primary-color); padding: 8px 24px; border-radius: 50px; font-weight: 700; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .login-btn:hover { background-color: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3); }
 
+        /* --- MOBILE VIEW LOGIN BUTTON ADJUSTMENT (Ye Missing Tha) --- */
+/* --- MOBILE RESPONSIVE FIXES (UPDATED) --- */
+@media (max-width: 1024px) {
+    
+    /* 1. Logo ko chhota kiya taaki Button ke liye jagah bane */
+    .nav-logo img {
+        height: 40px;  /* Pehle 65px tha, ab chhota kiya */
+        width: auto;
+    }
+
+    /* 2. Login Button Adjustment */
+    .login-btn {
+        padding: 5px 12px;      /* Padding thodi aur kam ki */
+        font-size: 12px;        /* Font size perfect kiya */
+        height: 32px;           /* Height fix ki */
+        white-space: nowrap;
+    }
+
+    /* 3. Navbar Adjustment (Ab ye bracket ke andar hai, toh kaam karega) */
+    .navbar {
+        padding: 0 15px;       /* Side se thodi breathing space */
+        height: 60px;          /* Navbar ki height thodi kam ki mobile ke liye */
+    }
+
+    /* 4. Hamburger Icon Alignment */
+    .mobile-menu-btn {
+        font-size: 1.5rem;     /* Icon size adjust */
+    }
+
+} /* <--- Closing Bracket SABSE LAST MEIN aana chahiye */
+
+
+
+
+
+
 /* --- FIXED PREMIUM BUTTON (No Glitch) --- */
 .logout-mode {
     position: relative !important; /* Zaroori hai */
