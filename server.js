@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -14,7 +15,7 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 // --- DATABASE CONNECTION ---
-const DB_URI = "mongodb+srv://botxone5_db_user:zsZowDgeuRg5nWy5@cluster0.l60r7uk.mongodb.net/careerXoneDB?retryWrites=true&w=majority&appName=Cluster0";
+const DB_URI = process.env.MONGO_URI;
 
 mongoose.connect(DB_URI)
     .then(() => console.log('✅ MongoDB Cloud Connected! (Database Ready)'))
@@ -55,7 +56,7 @@ const User = mongoose.model('User', UserSchema);
 // ------------------------------------------------
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    const SECRET_PASS = "CareerXone{@2025$RohitJha}"; // Admin Password
+    const SECRET_PASS = process.env.ADMIN_PASSWORD; // Admin Password
 
     if (password === SECRET_PASS) {
         res.json({ 
@@ -128,7 +129,7 @@ app.post('/scholarship', async (req, res) => { try { await new Scholarship(req.b
 // ------------------------------------------------
 // E. ADMIN DATA FETCHING (Protected 🔒)
 // ------------------------------------------------
-const SECRET_PASS = "CareerXone{@2025$RohitJha}";
+const SECRET_PASS = process.env.ADMIN_PASSWORD;
 
 // Helper function to check auth
 const checkAuth = (req, res, next) => {
