@@ -306,16 +306,43 @@ if (catBtn) {
 // ======================================================
 // 8. MOBILE MENU TOGGLE (Final) 📱
 // ======================================================
+// DOM Elements Uthana
 const mobileBtn = document.getElementById('mobileBtn');
-// AB SAHI NAAM USE KAR RAHE HAIN:
-const navMenu = document.querySelector('.nav-links'); 
+const navLinks = document.querySelector('.nav-links');
 
+// 1. Toggle Menu (Khulna / Band hona)
 mobileBtn.addEventListener('click', () => {
-    // 1. Button X banega
-    mobileBtn.classList.toggle('active');
-    
-    // 2. Menu Khulega (Ab ye '.nav-links' ko target karega)
-    navMenu.classList.toggle('active'); 
+    mobileBtn.classList.toggle('active'); // Button Animation
+    navLinks.classList.toggle('active');  // Sidebar Slide
+});
+
+// 2. Dropdown Logic (Sirf Mobile ke liye)
+const dropbtns = document.querySelectorAll('.dropbtn');
+
+dropbtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        // Agar screen choti hai (Mobile/Tablet)
+        if (window.innerWidth <= 1024) {
+            e.preventDefault(); // Page reload rokega (Most Important)
+            
+            // Jispe click kiya, uska next element (.dropdown-content) dhundo
+            const content = this.nextElementSibling;
+            
+            // Dropdown Show/Hide toggle karo
+            content.classList.toggle('show');
+            
+            // Arrow icon ko ghumao
+            this.classList.toggle('active');
+        }
+    });
+});
+
+// 3. Screen ke bahar click karne par menu band (Optional Premium Feature)
+document.addEventListener('click', (e) => {
+    if (!navLinks.contains(e.target) && !mobileBtn.contains(e.target) && navLinks.classList.contains('active')) {
+        navLinks.classList.remove('active');
+        mobileBtn.classList.remove('active');
+    }
 });
 
 
