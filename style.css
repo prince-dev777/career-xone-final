@@ -1668,6 +1668,7 @@
 
     /* 3. DROPDOWN CONTENT (ACCORDION STYLE) */
     .dropdown-content {
+        position: static !important; 
         display: none; /* Default band */
         background-color: #f8f9fa; /* Light Grey BG */
         padding: 0;
