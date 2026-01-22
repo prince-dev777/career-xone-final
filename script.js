@@ -306,40 +306,52 @@ if (catBtn) {
 // ======================================================
 // 8. MOBILE MENU TOGGLE (Final) 📱
 // ======================================================
-// DOM Elements Uthana
+// 1. Elements Select Karna
 const mobileBtn = document.getElementById('mobileBtn');
 const navLinks = document.querySelector('.nav-links');
-
-// 1. Toggle Menu (Khulna / Band hona)
-mobileBtn.addEventListener('click', () => {
-    mobileBtn.classList.toggle('active'); // Button Animation
-    navLinks.classList.toggle('active');  // Sidebar Slide
-});
-
-// 2. Dropdown Logic (Sirf Mobile ke liye)
 const dropbtns = document.querySelectorAll('.dropbtn');
 
+// 2. Hamburger Menu Toggle (Menu Khulna/Band hona)
+if (mobileBtn) {
+    mobileBtn.addEventListener('click', () => {
+        mobileBtn.classList.toggle('active');
+        navLinks.classList.toggle('active');
+    });
+}
+
+// 3. Dropdown Accordion Logic (Premium Toggle)
 dropbtns.forEach(btn => {
     btn.addEventListener('click', function(e) {
-        // Agar screen choti hai (Mobile/Tablet)
+        
+        // Sirf Mobile/Tablet par ye chalega
         if (window.innerWidth <= 1024) {
-            e.preventDefault(); // Page reload rokega (Most Important)
+            e.preventDefault(); // Link par click hone se roko
             
-            // Jispe click kiya, uska next element (.dropdown-content) dhundo
+            // Jis button pe click kiya, uska content dhundo
             const content = this.nextElementSibling;
             
-            // Dropdown Show/Hide toggle karo
-            content.classList.toggle('show');
-            
-            // Arrow icon ko ghumao
-            this.classList.toggle('active');
+            // LOGIC: Kya ye pehle se khula hai?
+            if (content.classList.contains('show')) {
+                // Haan khula hai -> Toh BAND karo
+                content.classList.remove('show');
+                this.classList.remove('active');
+            } else {
+                // Nahi band hai -> Toh pehle BAAKI SAB band karo (Premium feel)
+                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
+                document.querySelectorAll('.dropbtn').forEach(el => el.classList.remove('active'));
+
+                // Phir sirf ISKO kholo
+                content.classList.add('show');
+                this.classList.add('active');
+            }
         }
     });
 });
 
-// 3. Screen ke bahar click karne par menu band (Optional Premium Feature)
+// 4. Screen ke bahar click karne par Menu Band (Optional)
 document.addEventListener('click', (e) => {
-    if (!navLinks.contains(e.target) && !mobileBtn.contains(e.target) && navLinks.classList.contains('active')) {
+    // Agar menu khula hai AUR click menu/button ke bahar hua hai
+    if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !mobileBtn.contains(e.target)) {
         navLinks.classList.remove('active');
         mobileBtn.classList.remove('active');
     }
