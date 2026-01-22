@@ -107,45 +107,14 @@
 
 
 
-/* ======================================================================================================================= */
-                                            /* toggle menu */
-
-
-        
-/* --- MOBILE RESPONSIVE FIXES (UPDATED) --- */
-@media (max-width: 1024px) {
-    
-    /* 1. Logo ko chhota kiya taaki Button ke liye jagah bane */
-    .nav-logo img {
-        height: 40px;  /* Pehle 65px tha, ab chhota kiya */
-        width: auto;
-    }
-
-    /* 2. Login Button Adjustment */
-    .login-btn {
-        padding: 5px 12px;      /* Padding thodi aur kam ki */
-        font-size: 12px;        /* Font size perfect kiya */
-        height: 32px;           /* Height fix ki */
-        white-space: nowrap;
-    }
-
-    /* 3. Navbar Adjustment (Ab ye bracket ke andar hai, toh kaam karega) */
-    .navbar {
-        padding: 0 15px;       /* Side se thodi breathing space */
-        height: 60px;          /* Navbar ki height thodi kam ki mobile ke liye */
-    }
-
-    /* 4. Hamburger Icon Alignment */
-    .mobile-menu-btn {
-        font-size: 1.5rem;     /* Icon size adjust */
-    }
-
-} /* <--- Closing Bracket SABSE LAST MEIN aana chahiye */
 
 
 
 
 
+
+/* ============================================================================================================ */
+                            /* Logout Button */
 
 /* --- FIXED PREMIUM BUTTON (No Glitch) --- */
 .logout-mode {
@@ -1649,7 +1618,7 @@
 
 
 /* =========================================================================================================================================== */
-                                                        /* tongle menu */
+                                                        /* toggle menu */
 /* =========================================
    PREMIUM MOBILE SIDEBAR (FINAL FIX) 🚀
    ========================================= */
@@ -1746,6 +1715,41 @@
     
     @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 }
+
+
+         /* ================================================================================================================================================                    */
+@media (max-width: 1024px) {
+    
+    /* 1. Logo ko chhota kiya taaki Button ke liye jagah bane */
+    .nav-logo img {
+        height: 40px;  /* Pehle 65px tha, ab chhota kiya */
+        width: auto;
+    }
+
+    /* 2. Login Button Adjustment */
+    .login-btn {
+        padding: 5px 12px;      /* Padeding thodi aur kam ki */
+        font-size: 12px;        /* Font size perfect kiya */
+        height: 32px;           /* Height fix ki */
+        white-space: nowrap;
+    }
+
+    /* 3. Navbar Adjustment (Ab ye bracket ke andar hai, toh kaam karega) */
+    .navbar {
+        padding: 0 15px;       /* Side se thodi breathing space */
+        height: 60px;          /* Navbar ki height thodi kam ki mobile ke liye */
+    }
+
+    /* 4. Hamburger Icon Alignment */
+    .mobile-menu-btn {
+        font-size: 1.5rem;     /* Icon size adjust */
+    }
+
+} 
+/* <--- Closing Bracket SABSE LAST MEIN aana chahiye */
+
+
+
     
 
 /* ===================================================================================================================================================================== */

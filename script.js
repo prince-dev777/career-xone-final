@@ -306,56 +306,88 @@ if (catBtn) {
 // ======================================================
 // 8. MOBILE MENU TOGGLE (Final) 📱
 // ======================================================
-// 1. Elements Select Karna
+/* ===============================
+   1. ELEMENTS SELECT
+================================ */
 const mobileBtn = document.getElementById('mobileBtn');
 const navLinks = document.querySelector('.nav-links');
 const dropbtns = document.querySelectorAll('.dropbtn');
 
-// 2. Hamburger Menu Toggle (Menu Khulna/Band hona)
-if (mobileBtn) {
-    mobileBtn.addEventListener('click', () => {
+/* ===============================
+   2. HAMBURGER MENU TOGGLE
+================================ */
+if (mobileBtn && navLinks) {
+    mobileBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // outside click se conflict na ho
         mobileBtn.classList.toggle('active');
         navLinks.classList.toggle('active');
+
+        // Agar menu band ho raha hai → sab dropdown bhi band
+        if (!navLinks.classList.contains('active')) {
+            closeAllDropdowns();
+        }
     });
 }
 
-// 3. Dropdown Accordion Logic (Premium Toggle)
+/* ===============================
+   3. DROPDOWN ACCORDION (MOBILE ONLY)
+================================ */
 dropbtns.forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        
-        // Sirf Mobile/Tablet par ye chalega
-        if (window.innerWidth <= 1024) {
-            e.preventDefault(); // Link par click hone se roko
-            
-            // Jis button pe click kiya, uska content dhundo
-            const content = this.nextElementSibling;
-            
-            // LOGIC: Kya ye pehle se khula hai?
-            if (content.classList.contains('show')) {
-                // Haan khula hai -> Toh BAND karo
-                content.classList.remove('show');
-                this.classList.remove('active');
-            } else {
-                // Nahi band hai -> Toh pehle BAAKI SAB band karo (Premium feel)
-                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
-                document.querySelectorAll('.dropbtn').forEach(el => el.classList.remove('active'));
+    btn.addEventListener('click', function (e) {
 
-                // Phir sirf ISKO kholo
-                content.classList.add('show');
-                this.classList.add('active');
-            }
+        if (window.innerWidth > 1024) return; // desktop ignore
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const dropdown = this.closest('.dropdown');
+        if (!dropdown) return;
+
+        const content = dropdown.querySelector('.dropdown-content');
+        if (!content) return;
+
+        const isOpen = content.classList.contains('show');
+
+        // Pehle sab band
+        closeAllDropdowns();
+
+        // Agar pehle open nahi tha → open karo
+        if (!isOpen) {
+            content.classList.add('show');
+            this.classList.add('active');
         }
     });
 });
 
-// 4. Screen ke bahar click karne par Menu Band (Optional)
+/* ===============================
+   4. OUTSIDE CLICK → MENU CLOSE
+================================ */
 document.addEventListener('click', (e) => {
-    // Agar menu khula hai AUR click menu/button ke bahar hua hai
-    if (navLinks.classList.contains('active') && !navLinks.contains(e.target) && !mobileBtn.contains(e.target)) {
+
+    if (
+        navLinks.classList.contains('active') &&
+        !navLinks.contains(e.target) &&
+        !mobileBtn.contains(e.target)
+    ) {
         navLinks.classList.remove('active');
         mobileBtn.classList.remove('active');
+        closeAllDropdowns();
     }
 });
+
+/* ===============================
+   5. HELPER FUNCTION
+================================ */
+function closeAllDropdowns() {
+    document
+        .querySelectorAll('.dropdown-content.show')
+        .forEach(el => el.classList.remove('show'));
+
+    document
+        .querySelectorAll('.dropbtn.active')
+        .forEach(el => el.classList.remove('active'));
+}
+
 
 
 
