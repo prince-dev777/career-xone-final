@@ -307,63 +307,60 @@ if (catBtn) {
 // 8. MOBILE MENU TOGGLE (Final) 📱
 // ======================================================
 /* ===============================
-   1. ELEMENTS SELECT
+   ELEMENTS
 ================================ */
 const mobileBtn = document.getElementById('mobileBtn');
-const navLinks = document.querySelector('.nav-links');
-const dropbtns = document.querySelectorAll('.dropbtn');
+const navLinks  = document.querySelector('.nav-links');
+const dropbtns  = document.querySelectorAll('.dropbtn');
 
 /* ===============================
-   2. HAMBURGER MENU TOGGLE
+   HAMBURGER TOGGLE
 ================================ */
-if (mobileBtn && navLinks) {
-    mobileBtn.addEventListener('click', (e) => {
-        e.stopPropagation(); // outside click se conflict na ho
-        mobileBtn.classList.toggle('active');
-        navLinks.classList.toggle('active');
+mobileBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    mobileBtn.classList.toggle('active');
+    navLinks.classList.toggle('active');
 
-        // Agar menu band ho raha hai → sab dropdown bhi band
-        if (!navLinks.classList.contains('active')) {
-            closeAllDropdowns();
-        }
-    });
-}
+    // menu band hua → sab dropdown band
+    if (!navLinks.classList.contains('active')) {
+        closeAllDropdowns();
+    }
+});
 
 /* ===============================
-   3. DROPDOWN ACCORDION (MOBILE ONLY)
+   MOBILE DROPDOWN TOGGLE (CORE FIX)
 ================================ */
 dropbtns.forEach(btn => {
     btn.addEventListener('click', function (e) {
 
-        if (window.innerWidth > 1024) return; // desktop ignore
+        if (window.innerWidth > 1024) return;
 
         e.preventDefault();
         e.stopPropagation();
 
         const dropdown = this.closest('.dropdown');
-        if (!dropdown) return;
-
-        const content = dropdown.querySelector('.dropdown-content');
-        if (!content) return;
+        const content  = dropdown.querySelector('.dropdown-content');
 
         const isOpen = content.classList.contains('show');
 
-        // Pehle sab band
-        closeAllDropdowns();
-
-        // Agar pehle open nahi tha → open karo
-        if (!isOpen) {
-            content.classList.add('show');
-            this.classList.add('active');
+        // 🔥 agar pehle se open hai → direct band
+        if (isOpen) {
+            content.classList.remove('show');
+            this.classList.remove('active');
+            return;
         }
+
+        // warna → pehle sab band, phir isko open
+        closeAllDropdowns();
+        content.classList.add('show');
+        this.classList.add('active');
     });
 });
 
 /* ===============================
-   4. OUTSIDE CLICK → MENU CLOSE
+   OUTSIDE CLICK → MENU CLOSE
 ================================ */
 document.addEventListener('click', (e) => {
-
     if (
         navLinks.classList.contains('active') &&
         !navLinks.contains(e.target) &&
@@ -376,17 +373,16 @@ document.addEventListener('click', (e) => {
 });
 
 /* ===============================
-   5. HELPER FUNCTION
+   HELPER
 ================================ */
 function closeAllDropdowns() {
-    document
-        .querySelectorAll('.dropdown-content.show')
+    document.querySelectorAll('.dropdown-content.show')
         .forEach(el => el.classList.remove('show'));
 
-    document
-        .querySelectorAll('.dropbtn.active')
+    document.querySelectorAll('.dropbtn.active')
         .forEach(el => el.classList.remove('active'));
 }
+
 
 
 
