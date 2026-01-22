@@ -314,9 +314,9 @@ const navLinks  = document.querySelector('.nav-links');
 const dropbtns  = document.querySelectorAll('.dropbtn');
 
 /* ===============================
-   HAMBURGER TOGGLE
+   HAMBURGER MENU
 ================================ */
-mobileBtn?.addEventListener('click', (e) => {
+mobileBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     mobileBtn.classList.toggle('active');
     navLinks.classList.toggle('active');
@@ -328,7 +328,7 @@ mobileBtn?.addEventListener('click', (e) => {
 });
 
 /* ===============================
-   MOBILE DROPDOWN TOGGLE (CORE FIX)
+   MOBILE DROPDOWN (FIXED TOGGLE)
 ================================ */
 dropbtns.forEach(btn => {
     btn.addEventListener('click', function (e) {
@@ -343,14 +343,14 @@ dropbtns.forEach(btn => {
 
         const isOpen = content.classList.contains('show');
 
-        // 🔥 agar pehle se open hai → direct band
+        // ✅ SAME BUTTON AGAIN → BAND
         if (isOpen) {
             content.classList.remove('show');
             this.classList.remove('active');
             return;
         }
 
-        // warna → pehle sab band, phir isko open
+        // warna → sab band karke isko kholo
         closeAllDropdowns();
         content.classList.add('show');
         this.classList.add('active');
@@ -382,6 +382,7 @@ function closeAllDropdowns() {
     document.querySelectorAll('.dropbtn.active')
         .forEach(el => el.classList.remove('active'));
 }
+
 
 
 
