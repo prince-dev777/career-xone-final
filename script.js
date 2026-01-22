@@ -306,17 +306,16 @@ if (catBtn) {
 // ======================================================
 // 8. MOBILE MENU TOGGLE (Final) 📱
 // ======================================================
-document.addEventListener('DOMContentLoaded', function() {
-    
-    const mobileBtn = document.getElementById('mobileBtn');
-    const navLinks = document.querySelector('.nav-links');
+const mobileBtn = document.getElementById('mobileBtn');
+// AB SAHI NAAM USE KAR RAHE HAIN:
+const navMenu = document.querySelector('.nav-links'); 
 
-    if (mobileBtn && navLinks) {
-        mobileBtn.addEventListener('click', () => {
-            // Menu ko Toggle karein
-            navLinks.classList.toggle('active');
-        });
-    }
+mobileBtn.addEventListener('click', () => {
+    // 1. Button X banega
+    mobileBtn.classList.toggle('active');
+    
+    // 2. Menu Khulega (Ab ye '.nav-links' ko target karega)
+    navMenu.classList.toggle('active'); 
 });
 
 
