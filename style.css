@@ -100,7 +100,18 @@
         .login-btn { text-decoration: none; color: var(--primary-color); border: 2px solid var(--primary-color); padding: 8px 24px; border-radius: 50px; font-weight: 700; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
         .login-btn:hover { background-color: var(--primary-color); color: white; box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3); }
 
-        /* --- MOBILE VIEW LOGIN BUTTON ADJUSTMENT (Ye Missing Tha) --- */
+
+
+
+
+
+
+
+/* ======================================================================================================================= */
+                                            /* toggle menu */
+
+
+        
 /* --- MOBILE RESPONSIVE FIXES (UPDATED) --- */
 @media (max-width: 1024px) {
     
