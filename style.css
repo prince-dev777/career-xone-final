@@ -1680,6 +1680,11 @@
         animation: fadeIn 0.3s;
     }
 
+    .dropdown .dropdown-content.show {
+        display: block !important;
+        animation: slideDown 0.3s ease;
+    }
+
     .dropdown-content a {
         display: block;
         padding: 12px 25px 12px 40px; /* Thoda andar (indent) */
