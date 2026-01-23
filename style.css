@@ -83,7 +83,26 @@
         .dropdown-content { display: none; position: absolute; background-color: #ffffff; min-width: 220px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); z-index: 100; border-radius: 12px; top: 100%; left: 0; padding: 8px; border: 1px solid #f1f5f9; animation: fadeIn 0.2s ease-out; }
         .dropdown-content a { color: var(--text-dark); padding: 10px 16px; text-decoration: none; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 500; border-radius: 8px; transition: all 0.2s; white-space: nowrap; }
         .dropdown-content a:hover { background-color: #eff6ff; color: var(--primary-color); transform: translateX(4px); }
-        .dropdown:hover .dropdown-content { display: block; animation: fadeIn 0.3s;}
+        @media (min-width: 1025px) {
+    
+         /* Hover karne par menu khule */
+          .dropdown:hover .dropdown-content {
+          display: block;
+          animation: fadeIn 0.3s ease;
+         }
+ 
+          /* Hover par arrow ghoome */
+          .dropdown:hover .dropbtn i {
+          transform: rotate(180deg);
+          }
+     
+           /* Sub-dropdown (Test Series ke liye) Desktop par */
+          .sub-dropdown:hover .sub-dropdown-content {
+          display: block; /* Desktop par side me khulega */
+           }
+        }
+
+
         .dropdown:hover .dropbtn { color: var(--primary-color); }
         .dropdown:hover .dropbtn i { transform: rotate(180deg); }
 
@@ -1674,9 +1693,14 @@
         padding: 0;
     }
 
+    /*  HOVER KILL SWITCH: Phone par Hover se kuch nahi khulega */
+    .dropdown:hover .dropdown-content {
+        display: none !important;
+    }
+
     /* Open Class (JS se lagegi) */
     .dropdown-content.show {
-        display: block;
+        display: block !important;
         animation: fadeIn 0.3s;
     }
 
@@ -1691,6 +1715,21 @@
         font-size: 15px;
         color: #555;
         border-bottom: 1px solid #eee;
+    }
+
+    .sub-dropdown-content {
+        position: static;
+        display: block; /* Hamesha dikhao agar parent khula hai */
+        padding-left: 20px;
+        background: #f1f1f1;
+        box-shadow: none;
+    }
+    
+    /* Sub-dropdown links thoda chota dikhe */
+    .sub-dropdown-content a {
+        font-size: 14px;
+        padding-left: 30px;
+        color: #666;
     }
 
     /* Arrow Icon Rotation */
