@@ -1871,3 +1871,32 @@
         }
 
 
+
+
+
+
+
+
+
+/* =========================================================
+   MOBILE TOUCH LOGIC: HOLD TO PAUSE, RELEASE TO PLAY 👆
+   (Copy this to the bottom of your CSS)
+   ========================================================= */
+
+@media (max-width: 1024px) {
+
+    /* 1. Reset: Mobile par 'Hover' hone par animation mat roko (Kyunki ye chipak jata hai) */
+    .ticker-wrap:hover .ticker,
+    .gallery-grid.is-auto-sliding:hover {
+        animation-play-state: running !important; 
+    }
+
+    /* 2. New Rule: Jab user daba ke rakhe (Active), tab roko */
+    .ticker-wrap:active .ticker {
+        animation-play-state: paused !important;
+    }
+    
+    .gallery-grid.is-auto-sliding:active {
+        animation-play-state: paused !important;
+    }
+}
