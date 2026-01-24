@@ -941,6 +941,41 @@
 
 
 
+    
+  /* MOBILE CHAMPIONS RESIZE FIX 📱
+   ========================================================= */
+
+@media (max-width: 768px) {
+    
+    /* 1. Card ki choudai (Width) kam ki */
+    .champions-section .champion-card {
+        width: 210px;  /* Pehle 260px tha */
+        padding: 8px;  /* Thodi padding bhi kam ki */
+    }
+
+    /* 2. Photo ki lambai (Height) kam ki */
+    .champions-section .student-photo-box {
+        height: 230px; /* Pehle 300px tha */
+        margin-bottom: 8px;
+    }
+
+    /* 3. Text thoda adjust kiya taaki card balance lage */
+    .champions-section .student-name {
+        font-size: 16px; /* Naam thoda chhota kiya */
+    }
+
+    .champions-section .rank-badge {
+        font-size: 11px; /* Badge text chhota */
+        padding: 4px 8px;
+    }
+}
+
+
+
+
+
+
+
 
 
 
