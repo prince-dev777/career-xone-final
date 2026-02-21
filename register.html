@@ -265,7 +265,7 @@
 
             try {
                 // Server ko data bhejo
-                const response = await fetch('https://cxjeeneet.com/register', {
+                const response = await fetch('/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password }) // Name agar backend me add karna ho toh yahan add karein

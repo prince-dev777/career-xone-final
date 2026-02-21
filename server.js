@@ -193,7 +193,7 @@ app.delete('/scholarships/:id', checkAuth, async (req, res) => {
 });
 
 // ================================================================
-// SERVER START-
+// SERVER START
 
 app.listen(PORT, () => {
     console.log(`Server chal gaya! Link: http://localhost:${PORT}/admin-login`);
