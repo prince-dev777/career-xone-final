@@ -21,7 +21,7 @@
 
             try {
              // 👇 YAHAN CHANGE KIYA HAI (Render ka Live Link dala hai)
-            const response = await fetch('https://career-xone-final.onrender.com/user-login', {
+            const response = await fetch('https://cxjeeneet.com/user-login', {
              method: 'POST',
          headers: { 'Content-Type': 'application/json' },
              body: JSON.stringify({ email, password })
@@ -65,7 +65,7 @@ if (contactBtn) {
 
         try {
             // Send Data to Server
-            const response = await fetch('https://career-xone-final.onrender.com/contact', {
+            const response = await fetch('https://cxjeeneet.com/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, message })
@@ -143,7 +143,7 @@ if (registerBtn) {
 
         try {
             // Server ko data bhejein (/register route par)
-            const response = await fetch('https://career-xone-final.onrender.com/register', {
+            const response = await fetch('https://cxjeeneet.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -194,7 +194,7 @@ if (admBtn) {
         }
 
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/admission', {
+            const response = await fetch('https://cxjeeneet.com/admission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, school, course, phone, email, message })
@@ -234,7 +234,7 @@ if (testBtn) {
         }
 
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/testseries', {
+            const response = await fetch('https://cxjeeneet.com/testseries', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, series })
@@ -275,7 +275,7 @@ if (catBtn) {
         }
 
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/scholarship', {
+            const response = await fetch('https://cxjeeneet.com/scholarship', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, studentClass, preferredDate })
