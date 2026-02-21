@@ -194,9 +194,7 @@ app.delete('/scholarships/:id', checkAuth, async (req, res) => {
 
 // ================================================================
 // SERVER START
-app.get("/", (req, res) => {
-  res.send("Career Xone Server is Live and Running! 🚀");
-});
+
 app.listen(PORT, () => {
     console.log(`Server chal gaya! Link: http://localhost:${PORT}/admin-login`);
 });
