@@ -5,6 +5,6 @@
     { "src": "**", "use": "@vercel/static" }
   ],
   "rewrites": [
-  { "source": "/(admission|contact|testseries|scholarships|admin-login|login|admin)(.*)", "destination": "/server.js" }
-]
+    { "source": "/(admin-login|admin|register|user-login|contact|contacts|admission|admissions|testseries|scholarship|scholarships|users)(.*)", "destination": "/server.js" }
+  ]
 }

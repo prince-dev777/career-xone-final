@@ -1,136 +1,60 @@
 // ======================================================
-//  CAREER XONE - FRONTEND LOGIC
+//   CAREER XONE - FRONTEND LOGIC
 // ======================================================
 
 // ------------------------------------------------------
-// 1. LOGIN FORM HANDLING (UPDATED)
+// 1. LOGIN FORM HANDLING
 // ------------------------------------------------------
-    const loginBtn = document.getElementById('loginBtn');
+const loginBtn = document.getElementById('loginBtn');
 
-    if (loginBtn) {
-        loginBtn.addEventListener('click', async (e) => {
-            e.preventDefault(); // Page reload roko
+if (loginBtn) {
+    loginBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); 
 
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
 
-            if (!email || !password) {
-                alert("Please fill all fields");
-                return;
-            }
-
-            try {
-             // 👇 YAHAN CHANGE KIYA HAI (Render ka Live Link dala hai)
-            const response = await fetch('https://cxjeeneet.com/user-login', {
-             method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-             body: JSON.stringify({ email, password })
-            });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    localStorage.setItem("userEmail", email);
-                    alert("Login Successful! 🎉");
-                    window.location.href = "index.html"; // Ya dashboard.html jahan bhejna ho
-                } else {
-                    alert("❌ Error: " + result.message);
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Server connection failed! Make sure backend is running on port 5000.");
-            }
-        });
-    }
-
-// ------------------------------------------------------
-// 2. CONTACT / INQUIRY FORM HANDLING
-// ------------------------------------------------------
-const contactBtn = document.getElementById('contactBtn');
-
-if (contactBtn) {
-    contactBtn.addEventListener('click', async (e) => {
-        e.preventDefault();
-
-        // Get Values
-        const name = document.getElementById('contactName').value;
-        const phone = document.getElementById('contactPhone').value;
-        const message = document.getElementById('contactMessage').value;
-
-        // VALIDATION
-        if (!name || !phone) {
-            alert("⚠️ Name and Phone Number are required!");
+        if (!email || !password) {
+            alert("Please fill all fields");
             return;
         }
 
         try {
-            // Send Data to Server
-            const response = await fetch('https://cxjeeneet.com/contact', {
+            const response = await fetch('https://cxjeeneet.com/user-login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, message })
+                body: JSON.stringify({ email, password })
             });
 
             const result = await response.json();
-            console.log("Server Response:", result);
-            
-            alert("✅ Thank you! Your message has been sent successfully.");
 
-            // Clear Form Fields
-            document.getElementById('contactName').value = '';
-            document.getElementById('contactPhone').value = '';
-            document.getElementById('contactMessage').value = '';
-
+            if (result.success) {
+                localStorage.setItem("userEmail", email); // ✅ Memory me save kiya
+                alert("Login Successful! 🎉");
+                window.location.href = "index.html"; 
+            } else {
+                alert("❌ Error: " + result.message);
+            }
         } catch (error) {
-            console.error("Contact Error:", error);
-            alert("❌ Failed to send message. Please check your connection.");
+            console.error("Error:", error);
+            alert("Server connection failed! Please check your connection.");
         }
     });
 }
 
-
 // ------------------------------------------------------
-// 3. CHECK LOGIN STATUS (UI UPDATE)
+// 2. REGISTRATION FORM HANDLING 
 // ------------------------------------------------------
-function updateNavbar() {
-    // Check karein ki memory me user hai ya nahi
-    const user = localStorage.getItem('loggedInUser');
-    
-    // Aapke Navbar me jo Login button hai (class="login-btn")
-    const navLoginBtn = document.querySelector('.login-btn'); 
-
-    if (user && navLoginBtn) {
-        // Agar user login hai, toh button ko change karein
-        navLoginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
-        navLoginBtn.href = "#"; // Link hata dein taaki click hone par page na bhage
-        
-        // Logout ka logic
-        navLoginBtn.addEventListener('click', () => {
-            localStorage.removeItem('loggedInUser'); // Memory saaf karein
-            alert("Logged Out Successfully!");
-            window.location.href = 'login.html'; // Wapas login page par bhej dein
-        });
-    }
-}
-
-// Jaise hi page load ho, ye function chale
-document.addEventListener('DOMContentLoaded', updateNavbar);
-
-// ======================================================
-// 4. REGISTRATION FORM HANDLING (New)
-// ======================================================
 const registerBtn = document.getElementById('registerBtn');
 
 if (registerBtn) {
     registerBtn.addEventListener('click', async (e) => {
-        e.preventDefault(); // Page refresh rokein
+        e.preventDefault(); 
 
-        // Values lein
         const email = document.getElementById('regEmail').value;
         const password = document.getElementById('regPassword').value;
         const confirmPassword = document.getElementById('regConfirmPassword').value;
 
-        // Basic Checks
         if (!email || !password || !confirmPassword) {
             alert("⚠️ Please fill all fields!");
             return;
@@ -142,7 +66,6 @@ if (registerBtn) {
         }
 
         try {
-            // Server ko data bhejein (/register route par)
             const response = await fetch('https://cxjeeneet.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -151,13 +74,12 @@ if (registerBtn) {
 
             const result = await response.json();
 
-            if (result.status === "success") {
+            if (result.success) {
                 alert("✅ Account Successfully Created! Ab Login karein.");
-                window.location.href = 'login.html'; // Login page par bhej dein
+                window.location.href = 'login.html'; 
             } else {
                 alert("❌ Registration Failed: " + result.message);
             }
-
         } catch (error) {
             console.error("Register Error:", error);
             alert("⚠️ Server Error. Please try again.");
@@ -165,22 +87,57 @@ if (registerBtn) {
     });
 }
 
+// ------------------------------------------------------
+// 3. CONTACT / INQUIRY FORM HANDLING
+// ------------------------------------------------------
+const contactBtn = document.getElementById('contactBtn');
 
+if (contactBtn) {
+    contactBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-// ============================================================================================================================================
-// admission form ------------------------------
+        const name = document.getElementById('contactName').value;
+        const phone = document.getElementById('contactPhone').value;
+        const message = document.getElementById('contactMessage').value;
 
+        if (!name || !phone) {
+            alert("⚠️ Name and Phone Number are required!");
+            return;
+        }
 
-// ======================================================
-// 5. ADMISSION FORM HANDLING (New)
-// ======================================================
+        try {
+            const response = await fetch('https://cxjeeneet.com/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, message })
+            });
+
+            const result = await response.json();
+            
+            if (result.status === "success") {
+                alert("✅ Thank you! Your message has been sent successfully.");
+                document.getElementById('contactName').value = '';
+                document.getElementById('contactPhone').value = '';
+                document.getElementById('contactMessage').value = '';
+            } else {
+                 alert("❌ Failed to send message.");
+            }
+        } catch (error) {
+            console.error("Contact Error:", error);
+            alert("❌ Server connection failed. Please check your connection.");
+        }
+    });
+}
+
+// ------------------------------------------------------
+// 4. ADMISSION FORM HANDLING
+// ------------------------------------------------------
 const admBtn = document.getElementById('admBtn');
 
 if (admBtn) {
     admBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        // Data ikhatta karein
         const name = document.getElementById('admName').value;
         const school = document.getElementById('admSchool').value;
         const course = document.getElementById('admCourse').value;
@@ -203,7 +160,7 @@ if (admBtn) {
             const result = await response.json();
             if (result.status === "success") {
                 alert("✅ Application Submitted Successfully!");
-                window.location.reload(); // Form reset karne ke liye reload
+                window.location.reload(); 
             } else {
                 alert("❌ Failed: " + result.message);
             }
@@ -213,11 +170,10 @@ if (admBtn) {
         }
     });
 }
-// ====================================================================================================================================================
 
-// ======================================================
-// 6. TEST SERIES FORM HANDLING (New)
-// ======================================================
+// ------------------------------------------------------
+// 5. TEST SERIES FORM HANDLING
+// ------------------------------------------------------
 const testBtn = document.getElementById('testBtn');
 
 if (testBtn) {
@@ -254,10 +210,9 @@ if (testBtn) {
     });
 }
 
-
-// ======================================================
-// 7. SCHOLARSHIP (CAT) FORM HANDLING (New)
-// ======================================================
+// ------------------------------------------------------
+// 6. SCHOLARSHIP (CAT) FORM HANDLING
+// ------------------------------------------------------
 const catBtn = document.getElementById('catBtn');
 
 if (catBtn) {
@@ -295,44 +250,56 @@ if (catBtn) {
     });
 }
 
+// ------------------------------------------------------
+// 7. AUTHENTICATION UI HANDLE (Login/Logout & Navbar)
+// ------------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+    const authBtn = document.getElementById("authBtn");
+    const userEmail = localStorage.getItem("userEmail"); // ✅ Sahi variable use kiya
 
+    if (userEmail && authBtn) {
+        let userName = userEmail.split('@')[0];
+        if (userName.length > 12) userName = userName.substring(0, 10) + "..";
 
+        authBtn.classList.add("logout-mode");
+        authBtn.href = "#";
 
+        authBtn.innerHTML = `
+            <span class="user-text"><i class="fas fa-user-circle"></i> ${userName}</span>
+            <span class="logout-text"><i class="fas fa-sign-out-alt"></i> Logout</span>
+        `;
 
+        authBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (confirm("Are you sure you want to Logout?")) {
+                localStorage.removeItem("userEmail"); // ✅ Memory clear
+                window.location.reload();
+            }
+        });
+    }
+});
 
-
-
-
-// ======================================================
-// 8. MOBILE MENU TOGGLE (Final) 📱
-// ======================================================
-/* ===============================
-   ELEMENTS
-================================ */
+// ------------------------------------------------------
+// 8. MOBILE MENU TOGGLE 📱
+// ------------------------------------------------------
 const mobileBtn = document.getElementById('mobileBtn');
 const navLinks  = document.querySelector('.nav-links');
 const dropbtns  = document.querySelectorAll('.dropbtn');
 
-/* ===============================
-   HAMBURGER MENU
-================================ */
-mobileBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    mobileBtn.classList.toggle('active');
-    navLinks.classList.toggle('active');
+if (mobileBtn && navLinks) {
+    mobileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        mobileBtn.classList.toggle('active');
+        navLinks.classList.toggle('active');
 
-    // menu band hua → sab dropdown band
-    if (!navLinks.classList.contains('active')) {
-        closeAllDropdowns();
-    }
-});
+        if (!navLinks.classList.contains('active')) {
+            closeAllDropdowns();
+        }
+    });
+}
 
-/* ===============================
-   MOBILE DROPDOWN (FIXED TOGGLE)
-================================ */
 dropbtns.forEach(btn => {
     btn.addEventListener('click', function (e) {
-
         if (window.innerWidth > 1024) return;
 
         e.preventDefault();
@@ -340,29 +307,23 @@ dropbtns.forEach(btn => {
 
         const dropdown = this.closest('.dropdown');
         const content  = dropdown.querySelector('.dropdown-content');
-
         const isOpen = content.classList.contains('show');
 
-        // ✅ SAME BUTTON AGAIN → BAND
         if (isOpen) {
             content.classList.remove('show');
             this.classList.remove('active');
             return;
         }
 
-        // warna → sab band karke isko kholo
         closeAllDropdowns();
         content.classList.add('show');
         this.classList.add('active');
     });
 });
 
-/* ===============================
-   OUTSIDE CLICK → MENU CLOSE
-================================ */
 document.addEventListener('click', (e) => {
     if (
-        navLinks.classList.contains('active') &&
+        navLinks && navLinks.classList.contains('active') &&
         !navLinks.contains(e.target) &&
         !mobileBtn.contains(e.target)
     ) {
@@ -372,9 +333,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-/* ===============================
-   HELPER
-================================ */
 function closeAllDropdowns() {
     document.querySelectorAll('.dropdown-content.show')
         .forEach(el => el.classList.remove('show'));
@@ -382,41 +340,3 @@ function closeAllDropdowns() {
     document.querySelectorAll('.dropbtn.active')
         .forEach(el => el.classList.remove('active'));
 }
-
-
-
-
-
-
-
-// ==========================================
-// 🔐 AUTHENTICATION UI HANDLE (Login/Logout)
-// ==========================================
-
-document.addEventListener("DOMContentLoaded", () => {
-    const authBtn = document.getElementById("authBtn");
-    const userEmail = localStorage.getItem("userEmail");
-
-    if (userEmail && authBtn) {
-        let userName = userEmail.split('@')[0];
-        // Naam agar bada ho toh trim karo
-        if (userName.length > 12) userName = userName.substring(0, 10) + "..";
-
-        authBtn.classList.add("logout-mode");
-        authBtn.href = "#";
-
-        // 👇 YAHAN CHANGE HAI (Classes match karayi hain CSS se)
-        authBtn.innerHTML = `
-            <span class="user-text"><i class="fas fa-user-circle"></i> ${userName}</span>
-            <span class="logout-text"><i class="fas fa-sign-out-alt"></i> Logout</span>
-        `;
-
-        authBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (confirm("Are you sure you want to Logout?")) {
-                localStorage.removeItem("userEmail");
-                window.location.reload();
-            }
-        });
-    }
-});
