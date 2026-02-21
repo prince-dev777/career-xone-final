@@ -20,7 +20,7 @@ if (loginBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/user-login', {
+            const response = await fetch('/user-login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -66,7 +66,7 @@ if (registerBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/register', {
+            const response = await fetch('/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -106,7 +106,7 @@ if (contactBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/contact', {
+            const response = await fetch('/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, message })
@@ -151,7 +151,7 @@ if (admBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/admission', {
+            const response = await fetch('/admission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, school, course, phone, email, message })
@@ -190,7 +190,7 @@ if (testBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/testseries', {
+            const response = await fetch('/testseries', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, series })
@@ -230,7 +230,7 @@ if (catBtn) {
         }
 
         try {
-            const response = await fetch('https://cxjeeneet.com/scholarship', {
+            const response = await fetch('/scholarship', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, studentClass, preferredDate })
