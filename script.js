@@ -340,3 +340,14 @@ function closeAllDropdowns() {
     document.querySelectorAll('.dropbtn.active')
         .forEach(el => el.classList.remove('active'));
 }
+
+
+
+
+// ------------------------------------------------------
+// 9. Google tag
+// ------------------------------------------------------
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-10783730743');
