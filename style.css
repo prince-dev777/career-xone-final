@@ -1941,3 +1941,136 @@
         animation-play-state: paused !important;
     }
 }
+
+
+
+
+
+
+
+/* =========================================================
+   YT SHORTS OR INSTA SHORTS
+   ========================================================= */
+
+
+/* --- SHORTS SECTION STYLES --- */
+        .shorts-section {
+            padding: 80px 20px;
+            background: #ffffff;
+            text-align: center;
+            position: relative;
+        }
+
+        .shorts-header {
+            margin-bottom: 40px;
+        }
+        
+        .shorts-header h2 {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 10px;
+        }
+
+        .shorts-header p {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        /* Platform Icons */
+        .platform-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            font-size: 24px;
+        }
+        .icon-yt { color: #ff0000; }
+        .icon-insta { color: #e1306c; }
+
+        /* --- SCROLL WRAPPER --- */
+        .shorts-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative; /* Arrows ke liye zaroori */
+        }
+
+        /* Scroll Container (Scrollbar hide kiya hai) */
+        .shorts-scroll-container {
+            display: flex;
+            gap: 25px;
+            overflow-x: auto;
+            padding: 10px 5px 30px; /* Shadow katne se bachane ke liye padding */
+            scroll-behavior: smooth;
+            /* Scrollbar chupane ka code */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE/Edge */
+        }
+        .shorts-scroll-container::-webkit-scrollbar { 
+            display: none; /* Chrome/Safari */
+        }
+
+        /* --- SHORT CARD (Vertical aspect ratio 9:16) --- */
+        .short-card {
+            width: 300px; /* Fixed width */
+            min-width: 300px;
+            height: 533px; /* 16:9 ratio ke hisab se height */
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            flex-shrink: 0; /* Shrink hone se roke */
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s ease;
+        }
+
+        .short-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* iframe styling taki wo poora card cover kare */
+        .short-card iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 20px;
+        }
+
+        /* --- NAVIGATION ARROWS --- */
+        .shorts-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 20;
+            transition: 0.3s;
+            border: 1px solid #e2e8f0;
+            color: var(--text-dark);
+            font-size: 20px;
+        }
+
+        .shorts-nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        #btn-left-short { left: -25px; }
+        #btn-right-short { right: -25px; }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .shorts-nav-btn { display: none; } /* Mobile me touch scroll hoga */
+            .short-card { width: 260px; min-width: 260px; height: 462px; } /* Mobile me thoda chhota */
+            .shorts-section { padding: 50px 10px; }
+        }

@@ -303,6 +303,155 @@
 
 
 
+
+
+
+
+
+
+
+
+
+<!--=================================================================🌟 SHORTS & REELS SECTION START 🌟==================================================== -->
+ 
+    <section class="shorts-section">
+        
+        <div class="shorts-header">
+            <h2>Trending Shorts & Reels</h2>
+            <p>Study tips, motivation, aur daily updates ke liye hamare videos dekhein.</p>
+            <div class="platform-icons">
+                <i class="fab fa-youtube icon-yt"></i>
+                <i class="fab fa-instagram icon-insta"></i>
+            </div>
+        </div>
+
+        <div class="shorts-wrapper">
+            
+            <!-- Left Arrow -->
+            <div id="btn-left-short" class="shorts-nav-btn" onclick="slideShorts('left')">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <!-- Right Arrow -->
+            <div id="btn-right-short" class="shorts-nav-btn" onclick="slideShorts('right')">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <!-- Scroll Container -->
+            <div class="shorts-scroll-container" id="shortsContainer">
+                
+                <!-- 1. YouTube Short Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.youtube.com/embed/5-fMl-Ri_XE?controls=1&rel=0&playsinline=1" 
+                        title="YouTube Short" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- 2. Instagram Reel Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.instagram.com/reel/DTiBxF4DNXd/embed" 
+                        scrolling="no" 
+                        allowtransparency="true" 
+                        allowfullscreen="true">
+                    </iframe>
+                </div>
+
+                <!-- 3. YouTube Short Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.youtube.com/embed/zPEYFMBclfE?controls=1&rel=0" 
+                        title="YouTube Short" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                 <!-- 4. Instagram Reel Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.instagram.com/reel/DSwEOHwDG8S/embed" 
+                        scrolling="no" 
+                        allowtransparency="true" 
+                        allowfullscreen="true">
+                    </iframe>
+                </div>
+
+                
+
+                <!--5. YouTube Short Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.youtube.com/embed/v7cn9yb2G74?controls=1&rel=0" 
+                        title="YouTube Short" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <!-- YouTube Short Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.youtube.com/embed/maGoqFqRWCM?controls=1&rel=0" 
+                        title="YouTube Short" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+                <!-- YouTube Short Example -->
+                <div class="short-card">
+                    <iframe 
+                        src="https://www.youtube.com/embed/Q4u6Fovp31I?controls=1&rel=0" 
+                        title="YouTube Short" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+
+               
+
+            </div>
+        </div>
+
+    </section>
+    <!-- SHORTS SECTION END -->
+
+    <!-- JS for Scrolling -->
+    <script>
+        function slideShorts(direction) {
+            const container = document.getElementById('shortsContainer');
+            const cardWidth = 300; // Card ki width
+            const gap = 25; // Cards ke beech ka gap
+            const scrollAmount = cardWidth + gap; // Ek bar me kitna scroll hoga
+
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- ==================================================================================================================================================== -->
 
                                                                              <!-- IMAGE GALLERY SECTION START -->
