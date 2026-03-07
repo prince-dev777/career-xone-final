@@ -2,6 +2,37 @@
 //   CAREER XONE - FRONTEND LOGIC
 // ======================================================
 
+
+// DOMContentLoaded ke andar daalne se ye error nahi dega
+document.addEventListener("DOMContentLoaded", function() {
+
+    // 1. Sabhi images ko lazy load aur async karne ke liye
+    document.querySelectorAll('img').forEach(img => {
+        img.setAttribute('loading', 'lazy'); // Bandwidth bachayega
+        img.setAttribute('decoding', 'async'); // Page load speed badhayega
+    });
+
+    // 2. Basic Bot Blocking (Vercel ke bharose nahi rehna padega)
+    const forbiddenBots = ['HeadlessChrome', 'Puppeteer', 'Bot', 'Crawler', 'Lighthouse'];
+    const userAgent = navigator.userAgent;
+
+    if (forbiddenBots.some(bot => userAgent.includes(bot))) {
+        window.stop(); // Bot ki activity turant rok dega
+        document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>Access Denied for Bots</h1>";
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
 // ------------------------------------------------------
 // 1. LOGIN FORM HANDLING
 // ------------------------------------------------------
