@@ -1,6 +1,6 @@
 # 🚀 Career Xone - JEE/NEET Aspirant Platform
 
-![Career Xone Banner](https://cxjeeneet.com/assets/banner.png) 
+![Career Xone Banner](https://cxjeeneet.com/assets/banner.webp) 
 **Career Xone** is a comprehensive full-stack web platform designed to streamline the journey of JEE and NEET aspirants. It provides resources, guidance, and tools to help students aim for top institutes like IITs, NITs, and AIIMS.
 
 🔴 **Live Demo:** [Click Here to Visit Career Xone](https://cxjeeneet.com/)
