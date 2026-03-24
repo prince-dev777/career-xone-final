@@ -51,7 +51,7 @@ if (loginBtn) {
         }
 
         try {
-            const response = await fetch('/user-login', {
+            const response = await fetch('https://career-xone-final.onrender.com/user-login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -97,7 +97,7 @@ if (registerBtn) {
         }
 
         try {
-            const response = await fetch('/register', {
+            const response = await fetch('https://career-xone-final.onrender.com/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -137,7 +137,7 @@ if (contactBtn) {
         }
 
         try {
-            const response = await fetch('/contact', {
+            const response = await fetch('https://career-xone-final.onrender.com/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, message })
@@ -182,7 +182,7 @@ if (admBtn) {
         }
 
         try {
-            const response = await fetch('/admission', {
+            const response = await fetch('https://career-xone-final.onrender.com/admission', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, school, course, phone, email, message })
@@ -221,7 +221,7 @@ if (testBtn) {
         }
 
         try {
-            const response = await fetch('/testseries', {
+            const response = await fetch('https://career-xone-final.onrender.com/testseries', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, series })
@@ -261,7 +261,7 @@ if (catBtn) {
         }
 
         try {
-            const response = await fetch('/scholarship', {
+            const response = await fetch('https://career-xone-final.onrender.com/scholarship', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, studentClass, preferredDate })
