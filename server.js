@@ -145,6 +145,16 @@ const checkAuth = (req, res, next) => {
     }
 };
 
+const token = sessionStorage.getItem("adminToken"); // Login ke waqt jo save kiya tha
+
+const response = await fetch('https://career-xone-final.onrender.com/contacts', {
+    method: 'GET',
+    headers: {
+        'auth-token': token, // Ye key 'server.js' ki key se match honi chahiye
+        'Content-Type': 'application/json'
+    }
+});
+
 // 1. Get Contacts
 app.get('/contacts', checkAuth, async (req, res) => {
     res.json(await Contact.find());
@@ -201,3 +211,12 @@ app.listen(PORT, () => {
     console.log(`Server chal gaya! Link: http://localhost:${PORT}/admin-login`);
 });
 module.exports = app;
+
+// Server ko har 10-14 minute mein ping karne ke liye
+const axios = require('axios'); // npm install axios kar lena
+
+setInterval(() => {
+    axios.get('https://career-xone-final.onrender.com/admin-login')
+        .then(() => console.log("Keeping the server alive..."))
+        .catch((err) => console.log("Ping failed, but that's okay."));
+}, 840000); // Har 14 minute mein ek baar (Render 15 min mein sota hai)
