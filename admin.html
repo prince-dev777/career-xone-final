@@ -10,12 +10,11 @@
 
     <script>
         if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
-            window.location.href = "/admin-login"; // Galat aadmi ko bhaga do
+            window.location.href = "/admin-login";
         }
     </script>
     
     <style>
-        /* --- YOUR THEME VARIABLES --- */
         :root {
             --primary: #0066ff;
             --primary-dark: #004ec2;
@@ -28,10 +27,8 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
         body { background: var(--bg-light); padding-bottom: 50px; }
         
-        /* --- HEADER --- */
         .admin-header {
             background: linear-gradient(135deg, #0f172a 0%, #001f3f 100%);
             padding: 15px 40px;
@@ -46,7 +43,6 @@
         }
 
         .header-left { display: flex; align-items: center; gap: 15px; }
-        
         .admin-logo-box {
             width: 45px; height: 45px;
             background: rgba(255, 255, 255, 0.1);
@@ -55,13 +51,10 @@
             font-size: 20px; color: #fbbf24;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
         .header-left h1 { font-size: 22px; font-weight: 700; margin: 0; }
         .badge-pro { background: #0066ff; font-size: 11px; padding: 2px 8px; border-radius: 4px; vertical-align: middle; text-transform: uppercase; margin-left: 5px; }
         .subtitle { font-size: 13px; color: #94a3b8; margin: 0; }
-
         .header-right { display: flex; align-items: center; gap: 25px; }
-        
         .logout-btn {
             background: linear-gradient(to right, #ef4444, #dc2626);
             color: white; border: none; padding: 10px 24px;
@@ -70,32 +63,27 @@
         }
         .logout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4); }
 
-        /* --- SECTIONS & TABLES --- */
         .content-wrapper { padding: 40px; max-width: 1400px; margin: 0 auto; }
-
         .section-title {
             margin-top: 40px; margin-bottom: 20px;
             color: var(--secondary); font-size: 1.4rem; font-weight: 700;
             display: flex; align-items: center; gap: 10px;
         }
-        
         .table-container {
             background: white; padding: 0; border-radius: 16px;
             box-shadow: var(--card-shadow); overflow-x: auto;
             border: 1px solid #e2e8f0;
         }
-
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
         thead { background: #f1f5f9; border-bottom: 2px solid #e2e8f0; }
-        
         th { padding: 18px 25px; text-align: left; color: var(--secondary); font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
         td { padding: 16px 25px; border-bottom: 1px solid #f1f5f9; color: var(--text-light); font-size: 14px; vertical-align: middle; }
-        
         tr:last-child td { border-bottom: none; }
         tr:hover { background-color: #f8fafc; }
-
         .badge { padding: 5px 10px; border-radius: 50px; font-size: 12px; font-weight: 700; display: inline-block; }
         .loading-text { text-align: center; padding: 30px; font-weight: 600; color: var(--primary); }
+        .delete-btn { background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; }
+        .delete-btn:hover { background: #dc2626; }
     </style>
 </head>
 <body>
@@ -120,100 +108,92 @@
     <h2 class="section-title"><i class="fas fa-envelope-open-text"></i> New Enquiries</h2>
     <div class="table-container">
         <table>
-            <thead>
-                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Message</th><th>Action</th></tr>
-            </thead>
-            <tbody id="contactsTableBody">
-                <tr><td colspan="4" class="loading-text">Loading...</td></tr>
-            </tbody>
+            <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Message</th><th>Action</th></tr></thead>
+            <tbody id="contactsTableBody"><tr><td colspan="5" class="loading-text">Loading...</td></tr></tbody>
         </table>
     </div>
 
     <h2 class="section-title"><i class="fas fa-user-graduate"></i> Admission Applications</h2>
     <div class="table-container">
         <table>
-            <thead>
-                <tr><th>Date</th><th>Name</th><th>Course</th><th>School</th><th>Phone</th><th>Email</th><th>Action</th></tr>
-            </thead>
-            <tbody id="admissionsTableBody">
-                <tr><td colspan="6" class="loading-text">Loading...</td></tr>
-            </tbody>
+            <thead><tr><th>Date</th><th>Name</th><th>Course</th><th>School</th><th>Phone</th><th>Email</th><th>Action</th></tr></thead>
+            <tbody id="admissionsTableBody"><tr><td colspan="7" class="loading-text">Loading...</td></tr></tbody>
         </table>
     </div>
 
     <h2 class="section-title"><i class="fas fa-book-reader"></i> Test Series Requests</h2>
     <div class="table-container">
         <table>
-            <thead>
-                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Selected Series</th><th>Action</th></tr>
-            </thead>
-            <tbody id="testTableBody">
-                <tr><td colspan="4" class="loading-text">Loading...</td></tr>
-            </tbody>
+            <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Selected Series</th><th>Action</th></tr></thead>
+            <tbody id="testTableBody"><tr><td colspan="5" class="loading-text">Loading...</td></tr></tbody>
         </table>
     </div>
 
     <h2 class="section-title"><i class="fas fa-trophy"></i> Scholarship (CAT) Registrations</h2>
     <div class="table-container">
         <table>
-            <thead>
-                <tr><th>Date</th><th>Name</th><th>Phone</th><th>Class</th><th>Preferred Slot</th><th>Action</th></tr>
-            </thead>
-            <tbody id="scholarshipTableBody">
-                <tr><td colspan="5" class="loading-text">Loading...</td></tr>
-            </tbody>
+            <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Class</th><th>Preferred Slot</th><th>Action</th></tr></thead>
+            <tbody id="scholarshipTableBody"><tr><td colspan="6" class="loading-text">Loading...</td></tr></tbody>
         </table>
     </div>
+
     <h2 class="section-title"><i class="fas fa-users"></i> Registered Users</h2>
-<div class="table-container">
-    <table>
-        <thead>
-            <tr><th>Date</th><th>Email</th><th>Password</th></tr>
-        </thead>
-        <tbody id="usersTableBody">
-            <tr><td colspan="3" class="loading-text">Loading...</td></tr>
-        </tbody>
-    </table>
-</div>
+    <div class="table-container">
+        <table>
+            <thead><tr><th>Date</th><th>Email</th><th>Password</th></tr></thead>
+            <tbody id="usersTableBody"><tr><td colspan="3" class="loading-text">Loading...</td></tr></tbody>
+        </table>
+    </div>
 
 </div>
-
 
 <script>
-    // 1. Logout Function
+    // ✅ Render ka Base URL — ek jagah se sab control hoga
+    const BASE_URL = "https://career-xone-final.onrender.com";
+
+    // 1. Logout
     function logoutAdmin() {
         sessionStorage.clear();
         window.location.href = "/admin-login";
     }
 
-    // 2. Helper: Secure Data Fetcher
-    async function fetchData(url) {
+    // 2. Secure Data Fetcher — ab BASE_URL use karega
+    async function fetchData(endpoint) {
         const token = sessionStorage.getItem("adminToken");
-        if (!token) return null;
+        if (!token) {
+            console.error("❌ Token nahi mila! Phir se login karo.");
+            window.location.href = "/admin-login";
+            return [];
+        }
         try {
-            const response = await fetch(url, {
+            const response = await fetch(`${BASE_URL}${endpoint}`, {
                 method: 'GET',
                 headers: { 'auth-token': token }
             });
+            if (response.status === 401) {
+                alert("Session expire ho gaya! Phir se login karo.");
+                window.location.href = "/admin-login";
+                return [];
+            }
             if (response.ok) return await response.json();
-        } catch (error) { console.error("Fetch Error:", error); }
+        } catch (error) {
+            console.error("Fetch Error:", error);
+        }
         return [];
     }
 
-    // 🔥 3. DELETE FUNCTION (Ye Naya Hai)
+    // 3. Delete Function — ab BASE_URL use karega
     async function deleteItem(type, id) {
-        if (!confirm("⚠️ Are you sure? Ye data wapas nahi aayega!")) return; // Confirmation
+        if (!confirm("⚠️ Are you sure? Ye data wapas nahi aayega!")) return;
 
         const token = sessionStorage.getItem("adminToken");
         try {
-            const response = await fetch(`/${type}/${id}`, {
+            const response = await fetch(`${BASE_URL}/${type}/${id}`, {
                 method: 'DELETE',
                 headers: { 'auth-token': token }
             });
-
             if (response.ok) {
-                // Delete hone ke baad table refresh karo
-                loadAllData();
+                loadAllData(); // Refresh
             } else {
                 alert("❌ Delete nahi hua. Server Error.");
             }
@@ -223,97 +203,82 @@
         }
     }
 
-    // 4. Load All Data Function (Ab isme Delete Button bhi hai)
+    // 4. Load All Data
     async function loadAllData() {
+
         // --- A. Contacts ---
         const contacts = await fetchData('/contacts');
         const contactBody = document.getElementById('contactsTableBody');
-        if (contacts && contacts.length > 0) {
-            contactBody.innerHTML = contacts.map((item) => `
+        contactBody.innerHTML = contacts.length > 0
+            ? contacts.map(item => `
                 <tr>
-                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
                     <td><strong>${item.name}</strong></td>
                     <td>${item.phone}</td>
-                    <td>${item.message}</td>
-                    <td>
-                        <button onclick="deleteItem('contacts', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`).join('');
-        } else { contactBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No Enquiries Found</td></tr>`; }
+                    <td>${item.message || '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteItem('contacts', '${item._id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>`).join('')
+            : `<tr><td colspan="5" style="text-align:center;padding:20px;">No Enquiries Found</td></tr>`;
 
         // --- B. Admissions ---
         const admissions = await fetchData('/admissions');
         const adminBody = document.getElementById('admissionsTableBody');
-        if (admissions && admissions.length > 0) {
-            adminBody.innerHTML = admissions.map(item => `
+        adminBody.innerHTML = admissions.length > 0
+            ? admissions.map(item => `
                 <tr>
-                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
                     <td><strong>${item.name}</strong></td>
-                    <td><span class="badge" style="background:#e0f2fe; color:#0369a1;">${item.course}</span></td>
-                    <td>${item.school}</td>
+                    <td><span class="badge" style="background:#e0f2fe;color:#0369a1;">${item.course}</span></td>
+                    <td>${item.school || '-'}</td>
                     <td>${item.phone}</td>
-                    <td>${item.email}</td>
-                    <td>
-                        <button onclick="deleteItem('admissions', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`).join('');
-        } else { adminBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:20px;">No Admissions Found</td></tr>`; }
+                    <td>${item.email || '-'}</td>
+                    <td><button class="delete-btn" onclick="deleteItem('admissions', '${item._id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>`).join('')
+            : `<tr><td colspan="7" style="text-align:center;padding:20px;">No Admissions Found</td></tr>`;
 
         // --- C. Test Series ---
         const tests = await fetchData('/testseries');
         const testBody = document.getElementById('testTableBody');
-        if (tests && tests.length > 0) {
-            testBody.innerHTML = tests.map(item => `
+        testBody.innerHTML = tests.length > 0
+            ? tests.map(item => `
                 <tr>
-                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
                     <td><strong>${item.name}</strong></td>
                     <td>${item.phone}</td>
-                    <td><span class="badge" style="background:#fef3c7; color:#b45309;">${item.series}</span></td>
-                    <td>
-                        <button onclick="deleteItem('testseries', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`).join('');
-        } else { testBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:20px;">No Test Requests</td></tr>`; }
+                    <td><span class="badge" style="background:#fef3c7;color:#b45309;">${item.series}</span></td>
+                    <td><button class="delete-btn" onclick="deleteItem('testseries', '${item._id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>`).join('')
+            : `<tr><td colspan="5" style="text-align:center;padding:20px;">No Test Requests</td></tr>`;
 
         // --- D. Scholarships ---
         const scholarships = await fetchData('/scholarships');
         const scholarBody = document.getElementById('scholarshipTableBody');
-        if (scholarships && scholarships.length > 0) {
-            scholarBody.innerHTML = scholarships.map(item => `
+        scholarBody.innerHTML = scholarships.length > 0
+            ? scholarships.map(item => `
                 <tr>
-                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
                     <td><strong>${item.name}</strong></td>
                     <td>${item.phone}</td>
                     <td>${item.studentClass}</td>
-                    <td><span class="badge" style="background:#d1fae5; color:#065f46;">${item.preferredDate}</span></td>
-                    <td>
-                        <button onclick="deleteItem('scholarships', '${item._id}')" style="background:#ef4444; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>`).join('');
-        } else { scholarBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:20px;">No Scholarships Found</td></tr>`; }
+                    <td><span class="badge" style="background:#d1fae5;color:#065f46;">${item.preferredDate || '-'}</span></td>
+                    <td><button class="delete-btn" onclick="deleteItem('scholarships', '${item._id}')"><i class="fas fa-trash"></i></button></td>
+                </tr>`).join('')
+            : `<tr><td colspan="6" style="text-align:center;padding:20px;">No Scholarships Found</td></tr>`;
 
-        // --- E. Users (loadAllData function ke andar last me add karo) ---
-const users = await fetchData('/users');
-const usersBody = document.getElementById('usersTableBody');
-if (users && users.length > 0) {
-    usersBody.innerHTML = users.map(item => `
-        <tr>
-            <td>${new Date(item.date).toLocaleDateString()}</td>
-            <td><strong>${item.email}</strong></td>
-            <td>${item.password}</td> 
-        </tr>`).join('');
-} else { usersBody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px;">No Users Registered</td></tr>`; }
+        // --- E. Users ---
+        const users = await fetchData('/users');
+        const usersBody = document.getElementById('usersTableBody');
+        usersBody.innerHTML = users.length > 0
+            ? users.map(item => `
+                <tr>
+                    <td>${new Date(item.date).toLocaleDateString('en-IN')}</td>
+                    <td><strong>${item.email}</strong></td>
+                    <td>${item.password}</td>
+                </tr>`).join('')
+            : `<tr><td colspan="3" style="text-align:center;padding:20px;">No Users Registered</td></tr>`;
     }
 
-    // Page Load hote hi sab chalao
+    // Page load hote hi chalao
     window.onload = loadAllData;
 </script>
 
