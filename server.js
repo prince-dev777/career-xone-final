@@ -6,7 +6,9 @@ const path = require('path');
 
 const app = express();
 app.use(cors({
-    origin: ["https://cxjeeneet.com", "http://localhost:3000"] 
+    origin: 'https://www.cxjeeneet.com',
+    methods: ['GET', 'POST'],
+    credentials: true
 }));
 const PORT = process.env.PORT || 5000;
 
