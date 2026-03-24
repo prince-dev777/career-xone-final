@@ -49,48 +49,55 @@
 <body>
 
     <div class="login-box">
-        <h2>🔒 Admin Login</h2>
-        <input type="password" id="adminPass" placeholder="Enter Admin Password">
-        <button onclick="checkLogin()">Login Access</button>
-        <p class="error" id="errorMsg">❌ Wrong Password!</p>
-    </div>
-        <script>
-        async function checkLogin() {
-            const pass = document.getElementById('adminPass').value;
-            const errorMsg = document.getElementById('errorMsg');
+    <h2>🔒 Admin Login</h2>
+    <form id="adminForm">
+        <input type="password" id="adminPass" placeholder="Enter Admin Password" required>
+        <button type="submit" id="loginBtn">Login Access</button>
+    </form>
+    <p class="error" id="errorMsg">❌ Wrong Password!</p>
+</div>
 
-            try {
-                // 1. Server se baat karo (Fetch)
-                const response = await fetch('/admin-login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password: pass })
-                });
+<script>
+    const adminForm = document.getElementById('adminForm');
+    
+    adminForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // ✅ Page reload hone se rokega
+        
+        const pass = document.getElementById('adminPass').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const loginBtn = document.getElementById('loginBtn');
 
-                // 2. Jawab (Result) nikalo
-                const result = await response.json();
+        loginBtn.innerText = "Checking..."; // User ko lagega process ho raha hai
+        errorMsg.style.display = "none";
 
-                // 3. Ab tumhara wala secure logic chalega
-                if (result.success) {
-                    // ✅ Token save karo (Asli Chabi)
-                    sessionStorage.setItem("isAdminLoggedIn", "true");
-                    
-                    // Server ne jo token bheja, wo save karo (Secure)
-                    sessionStorage.setItem("adminToken", result.token); 
-                    
-                    // Admin page par jao
-                    window.location.href = "/admin"; 
-                } else {
-                    // ❌ Galat password
-                    errorMsg.style.display = "block";
-                    errorMsg.innerText = "❌ " + result.message;
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Server connect nahi ho raha!");
+        try {
+            // ✅ Render ka pura URL use karo (Vercel se Render connect karne ke liye)
+            const response = await fetch('https://career-xone-final.onrender.com/admin-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: pass })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // ✅ Securely storage mein save karo
+                sessionStorage.setItem("isAdminLoggedIn", "true");
+                sessionStorage.setItem("adminToken", result.token); 
+                
+                window.location.href = "/admin"; 
+            } else {
+                errorMsg.style.display = "block";
+                errorMsg.innerText = "❌ " + result.message;
+                loginBtn.innerText = "Login Access";
             }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Server connect nahi ho raha! Check Render backend logs.");
+            loginBtn.innerText = "Login Access";
         }
-    </script>
+    });
+</script>
 
 </body>
 </html>
