@@ -3,19 +3,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const axios = require('axios'); // ✅ FIX 1: Upar le aaya
 
 const app = express();
 app.use(cors({
     origin: 'https://www.cxjeeneet.com',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'DELETE'],
     credentials: true
 }));
 const PORT = process.env.PORT || 5000;
 
 // --- MIDDLEWARE ---
 app.use(express.json());
-
-// ✅ STATIC FILES FIX
 app.use(express.static(__dirname));
 
 // --- DATABASE CONNECTION ---
@@ -26,10 +25,9 @@ mongoose.connect(DB_URI)
     .catch((err) => console.error('❌ MongoDB Error:', err));
 
 // ================================================================
-// 📝 SCHEMAS (Database Design)
+// 📝 SCHEMAS
 // ================================================================
 
-// 1. Forms Data Schemas
 const ContactSchema = new mongoose.Schema({ name: String, phone: String, message: String, date: { type: Date, default: Date.now } });
 const Contact = mongoose.model('Contact', ContactSchema);
 
@@ -42,49 +40,40 @@ const TestSeries = mongoose.model('TestSeries', TestSeriesSchema);
 const ScholarshipSchema = new mongoose.Schema({ name: String, phone: String, studentClass: String, preferredDate: String, date: { type: Date, default: Date.now } });
 const Scholarship = mongoose.model('Scholarship', ScholarshipSchema);
 
-// 2. 👤 USER SCHEMA (Student Login/Register ke liye)
 const UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }, // Note: Real project me password hash karna chahiye
+    password: { type: String, required: true },
     date: { type: Date, default: Date.now }
 });
 const User = mongoose.model('User', UserSchema);
 
 
 // ================================================================
-// 🛣️ ROUTES (Raaste)
+// 🛣️ ROUTES
 // ================================================================
 
 // ------------------------------------------------
-// A. ADMIN LOGIN SYSTEM
+// A. ADMIN LOGIN
 // ------------------------------------------------
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    const SECRET_PASS = process.env.ADMIN_PASSWORD; // Admin Password
+    const SECRET_PASS = process.env.ADMIN_PASSWORD;
 
     if (password === SECRET_PASS) {
-        res.json({ 
-            success: true, 
-            message: "Login Successful", 
-            token: SECRET_PASS 
-        });
+        res.json({ success: true, message: "Login Successful", token: SECRET_PASS });
     } else {
         res.json({ success: false, message: "Wrong Password" });
     }
 });
 
 // ------------------------------------------------
-// B. STUDENT LOGIN & REGISTER SYSTEM (Ye Naya Hai) ✅
+// B. STUDENT LOGIN & REGISTER
 // ------------------------------------------------
-
-// 1. Student Register
 app.post('/register', async (req, res) => {
     const { email, password } = req.body;
     try {
         const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.json({ success: false, message: "User already exists!" });
-        }
+        if (existingUser) return res.json({ success: false, message: "User already exists!" });
         const newUser = new User({ email, password });
         await newUser.save();
         res.json({ success: true, message: "Registration Successful!" });
@@ -93,7 +82,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// 2. Student Login
 app.post('/user-login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -108,9 +96,8 @@ app.post('/user-login', async (req, res) => {
     }
 });
 
-
 // ------------------------------------------------
-// C. PAGE LOAD ROUTES (Frontend Pages)
+// C. PAGE ROUTES
 // ------------------------------------------------
 app.get('/admin-login', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin-login.html'));
@@ -120,22 +107,19 @@ app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-
 // ------------------------------------------------
-// D. FORM SUBMISSIONS (Public)
+// D. FORM SUBMISSIONS
 // ------------------------------------------------
 app.post('/contact', async (req, res) => { try { await new Contact(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/admission', async (req, res) => { try { await new Admission(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/testseries', async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 app.post('/scholarship', async (req, res) => { try { await new Scholarship(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
 
-
 // ------------------------------------------------
 // E. ADMIN DATA FETCHING (Protected 🔒)
 // ------------------------------------------------
 const SECRET_PASS = process.env.ADMIN_PASSWORD;
 
-// Helper function to check auth
 const checkAuth = (req, res, next) => {
     const requestPass = req.headers['auth-token'];
     if (requestPass === SECRET_PASS) {
@@ -145,78 +129,36 @@ const checkAuth = (req, res, next) => {
     }
 };
 
-const token = sessionStorage.getItem("adminToken"); // Login ke waqt jo save kiya tha
+// ✅ FIX 2: Ye browser wali lines hata di (sessionStorage + fetch server pe nahi chalti)
+// const token = sessionStorage.getItem("adminToken");  ← HATAYA
+// const response = await fetch(...);                   ← HATAYA
 
-const response = await fetch('https://career-xone-final.onrender.com/contacts', {
-    method: 'GET',
-    headers: {
-        'auth-token': token, // Ye key 'server.js' ki key se match honi chahiye
-        'Content-Type': 'application/json'
-    }
-});
-
-// 1. Get Contacts
-app.get('/contacts', checkAuth, async (req, res) => {
-    res.json(await Contact.find());
-});
-
-// 2. Get Admissions
-app.get('/admissions', checkAuth, async (req, res) => {
-    res.json(await Admission.find());
-});
-
-// 3. Get Test Series
-app.get('/testseries', checkAuth, async (req, res) => {
-    res.json(await TestSeries.find());
-});
-
-// 4. Get Scholarships
-app.get('/scholarships', checkAuth, async (req, res) => {
-    res.json(await Scholarship.find());
-});
-
-// 5. Get Registered Users (Ye Naya Hai for Admin) ✅
-app.get('/users', checkAuth, async (req, res) => {
-    res.json(await User.find());
-});
-
+app.get('/contacts', checkAuth, async (req, res) => { res.json(await Contact.find()); });
+app.get('/admissions', checkAuth, async (req, res) => { res.json(await Admission.find()); });
+app.get('/testseries', checkAuth, async (req, res) => { res.json(await TestSeries.find()); });
+app.get('/scholarships', checkAuth, async (req, res) => { res.json(await Scholarship.find()); });
+app.get('/users', checkAuth, async (req, res) => { res.json(await User.find()); });
 
 // ------------------------------------------------
-// F. DELETE ROUTES (Data Delete karne ke liye)
+// F. DELETE ROUTES
 // ------------------------------------------------
-app.delete('/contacts/:id', checkAuth, async (req, res) => {
-    await Contact.findByIdAndDelete(req.params.id);
-    res.json({ status: "Deleted" });
-});
-
-app.delete('/admissions/:id', checkAuth, async (req, res) => {
-    await Admission.findByIdAndDelete(req.params.id);
-    res.json({ status: "Deleted" });
-});
-
-app.delete('/testseries/:id', checkAuth, async (req, res) => {
-    await TestSeries.findByIdAndDelete(req.params.id);
-    res.json({ status: "Deleted" });
-});
-
-app.delete('/scholarships/:id', checkAuth, async (req, res) => {
-    await Scholarship.findByIdAndDelete(req.params.id);
-    res.json({ status: "Deleted" });
-});
+app.delete('/contacts/:id', checkAuth, async (req, res) => { await Contact.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
+app.delete('/admissions/:id', checkAuth, async (req, res) => { await Admission.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
+app.delete('/testseries/:id', checkAuth, async (req, res) => { await TestSeries.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
+app.delete('/scholarships/:id', checkAuth, async (req, res) => { await Scholarship.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
 
 // ================================================================
-// SERVER START
-
+// ✅ FIX 3: module.exports BAAD mein, axios PEHLE
+// ================================================================
 app.listen(PORT, () => {
     console.log(`Server chal gaya! Link: http://localhost:${PORT}/admin-login`);
 });
+
 module.exports = app;
 
-// Server ko har 10-14 minute mein ping karne ke liye
-const axios = require('axios'); // npm install axios kar lena
-
+// Server ko har 14 minute mein ping karo (Render sleep se bachao)
 setInterval(() => {
     axios.get('https://career-xone-final.onrender.com/admin-login')
-        .then(() => console.log("Keeping the server alive..."))
-        .catch((err) => console.log("Ping failed, but that's okay."));
-}, 840000); // Har 14 minute mein ek baar (Render 15 min mein sota hai)
+        .then(() => console.log("✅ Server alive ping sent!"))
+        .catch(() => console.log("⚠️ Ping failed, but okay."));
+}, 840000);
