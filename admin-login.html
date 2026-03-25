@@ -234,19 +234,20 @@
 
         <div class="divider"></div>
 
-        <label>Admin Password</label>
-        <div class="input-wrap">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="adminPass" placeholder="Enter your password" autocomplete="off">
-            <button class="toggle-pass" type="button" onclick="togglePass()">
-                <i class="fas fa-eye" id="eyeIcon"></i>
+        <form onsubmit="doLogin(); return false;">
+            <label>Admin Password</label>
+            <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="adminPass" placeholder="Enter your password" autocomplete="current-password">
+                <button class="toggle-pass" type="button" onclick="togglePass()">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+            </div>
+            <button class="login-btn" id="loginBtn" type="submit">
+                <div class="spinner"></div>
+                <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i> Login to Dashboard</span>
             </button>
-        </div>
-
-        <button class="login-btn" id="loginBtn" onclick="doLogin()">
-            <div class="spinner"></div>
-            <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i> Login to Dashboard</span>
-        </button>
+        </form>
 
         <div class="error-box" id="errorBox">
             <i class="fas fa-circle-xmark"></i>
