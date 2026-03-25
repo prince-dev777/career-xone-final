@@ -3,101 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Career Xone</title>
+    <title>Admin Login — Career Xone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0fdf4; /* Light Green Bg */
+            min-height: 100vh;
+            background: #070b12;
+            font-family: 'DM Sans', sans-serif;
             display: flex;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+
+        /* Animated background orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            animation: float 8s ease-in-out infinite;
+        }
+        .orb1 { width:400px; height:400px; background:#f5c542; top:-100px; right:-100px; animation-delay:0s; }
+        .orb2 { width:300px; height:300px; background:#3b82f6; bottom:-80px; left:-80px; animation-delay:3s; }
+        .orb3 { width:200px; height:200px; background:#22c55e; top:50%; left:50%; animation-delay:5s; }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-30px) scale(1.05); }
+        }
+
+        /* Grid pattern */
+        body::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(14,20,32,0.9);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 24px;
+            padding: 48px 40px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            z-index: 10;
+            animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        @keyframes slideUp {
+            from { opacity:0; transform:translateY(30px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* Gold top border */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 40px; right: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #f5c542, transparent);
+            border-radius: 2px;
+        }
+
+        .logo-area {
             text-align: center;
-            width: 300px;
+            margin-bottom: 36px;
         }
-        h2 { color: #333; margin-bottom: 20px; }
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
+
+        .logo-icon {
+            width: 60px; height: 60px;
+            background: rgba(245,197,66,0.12);
+            border: 1px solid rgba(245,197,66,0.25);
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center; justify-content: center;
+            font-size: 24px; color: #f5c542;
+            margin-bottom: 16px;
         }
-        button {
+
+        .logo-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px; font-weight: 800;
+            color: white; letter-spacing: -0.5px;
+        }
+        .logo-title span { color: #f5c542; }
+
+        .logo-sub {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.06);
+            margin: 24px 0;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #475569;
+            font-size: 14px;
+        }
+
+        input[type="password"] {
             width: 100%;
-            padding: 12px;
-            background-color: #0066ff;
+            padding: 14px 44px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
             color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px;
+            transition: all 0.2s;
+            outline: none;
         }
-        button:hover { background-color: #0052cc; }
-        .error { color: red; font-size: 14px; margin-top: 10px; display: none; }
+
+        input[type="password"]:focus {
+            border-color: rgba(245,197,66,0.4);
+            background: rgba(245,197,66,0.04);
+            box-shadow: 0 0 0 3px rgba(245,197,66,0.08);
+        }
+
+        .toggle-pass {
+            position: absolute;
+            right: 14px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none;
+            color: #475569; cursor: pointer;
+            font-size: 14px; padding: 4px;
+            transition: color 0.2s;
+        }
+        .toggle-pass:hover { color: #94a3b8; }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f5c542, #e6a817);
+            border: none; border-radius: 12px;
+            color: #000;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 15px; font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            position: relative; overflow: hidden;
+        }
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(245,197,66,0.3);
+        }
+        .login-btn:active { transform: translateY(0); }
+        .login-btn.loading { opacity: 0.8; pointer-events: none; }
+
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            display: none;
+        }
+        .login-btn.loading .spinner { display: block; }
+        .login-btn.loading .btn-text { display: none; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-box {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 10px;
+            color: #fca5a5;
+            font-size: 13px;
+            display: none;
+            align-items: center; gap: 8px;
+        }
+        .error-box.show { display: flex; }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+            color: #334155;
+        }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-    <h2>🔒 Admin Login</h2>
-    <form id="adminForm">
-        <input type="password" id="adminPass" placeholder="Enter Admin Password" required>
-        <button type="submit" id="loginBtn">Login Access</button>
-    </form>
-    <p class="error" id="errorMsg">❌ Wrong Password!</p>
-</div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <div class="card">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-shield-halved"></i></div>
+            <div class="logo-title">Career <span>Xone</span></div>
+            <div class="logo-sub">Secure Admin Portal</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <label>Admin Password</label>
+        <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="adminPass" placeholder="Enter your password" autocomplete="off">
+            <button class="toggle-pass" type="button" onclick="togglePass()">
+                <i class="fas fa-eye" id="eyeIcon"></i>
+            </button>
+        </div>
+
+        <button class="login-btn" id="loginBtn" onclick="doLogin()">
+            <div class="spinner"></div>
+            <span class="btn-text"><i class="fas fa-arrow-right-to-bracket"></i> Login to Dashboard</span>
+        </button>
+
+        <div class="error-box" id="errorBox">
+            <i class="fas fa-circle-xmark"></i>
+            <span id="errorMsg">Wrong password!</span>
+        </div>
+
+        <div class="footer-note">Career Xone &copy; 2025 · Admin Only</div>
+    </div>
 
 <script>
-    const adminForm = document.getElementById('adminForm');
-    
-    adminForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // ✅ Page reload hone se rokega
-        
-        const pass = document.getElementById('adminPass').value;
-        const errorMsg = document.getElementById('errorMsg');
-        const loginBtn = document.getElementById('loginBtn');
+    const RENDER_URL = "https://career-xone-final.onrender.com";
 
-        loginBtn.innerText = "Checking..."; // User ko lagega process ho raha hai
-        errorMsg.style.display = "none";
+    // Enter key support
+    document.getElementById('adminPass').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doLogin();
+    });
+
+    function togglePass() {
+        const inp = document.getElementById('adminPass');
+        const ico = document.getElementById('eyeIcon');
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            ico.className = 'fas fa-eye-slash';
+        } else {
+            inp.type = 'password';
+            ico.className = 'fas fa-eye';
+        }
+    }
+
+    async function doLogin() {
+        const pass = document.getElementById('adminPass').value.trim();
+        const btn  = document.getElementById('loginBtn');
+        const errBox = document.getElementById('errorBox');
+
+        if (!pass) {
+            showError("Password enter karo!");
+            return;
+        }
+
+        btn.classList.add('loading');
+        errBox.classList.remove('show');
 
         try {
-            // ✅ Render ka pura URL use karo (Vercel se Render connect karne ke liye)
-            const response = await fetch('https://career-xone-final.onrender.com/admin-login', {
-                method: 'POST',
+            const res    = await fetch(`${RENDER_URL}/admin-login`, {
+                method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pass })
+                body:    JSON.stringify({ password: pass })
             });
-
-            const result = await response.json();
+            const result = await res.json();
 
             if (result.success) {
-                // ✅ Securely storage mein save karo
+                // ✅ Token aur login flag dono save karo
                 sessionStorage.setItem("isAdminLoggedIn", "true");
-                sessionStorage.setItem("adminToken", result.token); 
-                
-                window.location.href = "/admin"; 
+                sessionStorage.setItem("adminToken", result.token);
+                window.location.href = "/admin";
             } else {
-                errorMsg.style.display = "block";
-                errorMsg.innerText = "❌ " + result.message;
-                loginBtn.innerText = "Login Access";
+                showError(result.message || "Wrong password!");
+                btn.classList.remove('loading');
             }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Server connect nahi ho raha! Check Render backend logs.");
-            loginBtn.innerText = "Login Access";
+        } catch (err) {
+            console.error(err);
+            showError("Server se connect nahi ho pa raha. Thodi der baad try karo.");
+            btn.classList.remove('loading');
         }
-    });
-</script>
+    }
 
+    function showError(msg) {
+        const errBox = document.getElementById('errorBox');
+        document.getElementById('errorMsg').textContent = msg;
+        errBox.classList.add('show');
+    }
+</script>
 </body>
 </html>
