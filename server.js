@@ -55,12 +55,16 @@ const User = mongoose.model('User', UserSchema);
 // ------------------------------------------------
 // A. ADMIN LOGIN
 // ------------------------------------------------
+// ✅ FIX: Password ke special chars header mein toot jaate hain
+//         isliye ek safe static token bhej rahe hain
+const SAFE_TOKEN = "cxadmin_secure_token_2025"; // Ye internal token hai
+
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
     const SECRET_PASS = process.env.ADMIN_PASSWORD;
 
     if (password === SECRET_PASS) {
-        res.json({ success: true, message: "Login Successful", token: SECRET_PASS });
+        res.json({ success: true, message: "Login Successful", token: SAFE_TOKEN });
     } else {
         res.json({ success: false, message: "Wrong Password" });
     }
@@ -122,7 +126,7 @@ const SECRET_PASS = process.env.ADMIN_PASSWORD;
 
 const checkAuth = (req, res, next) => {
     const requestPass = req.headers['auth-token'];
-    if (requestPass === SECRET_PASS) {
+    if (requestPass === SAFE_TOKEN) { // ✅ Ab SAFE_TOKEN se match hoga
         next();
     } else {
         res.status(401).json({ error: "Unauthorized" });
