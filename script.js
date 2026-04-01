@@ -36,42 +36,108 @@ document.addEventListener("DOMContentLoaded", function() {
 // ------------------------------------------------------
 // 1. LOGIN FORM HANDLING
 // ------------------------------------------------------
-const loginBtn = document.getElementById('loginBtn');
+const form = document.getElementById('loginForm');
 
-if (loginBtn) {
-    loginBtn.addEventListener('click', async (e) => {
-        e.preventDefault(); 
-
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-
-        if (!email || !password) {
-            alert("Please fill all fields");
-            return;
-        }
-
-        try {
-            const response = await fetch('https://career-xone-final.onrender.com/user-login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password })
-            });
-
-            const result = await response.json();
-
-            if (result.success) {
-                localStorage.setItem("userEmail", email); // ✅ Memory me save kiya
-                alert("Login Successful! 🎉");
-                window.location.href = "index.html"; 
-            } else {
-                alert("❌ Error: " + result.message);
-            }
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Server connection failed! Please check your connection.");
-        }
-    });
+if (form) {
+    form.addEventListener('submit', handleLogin);
 }
+
+async function handleLogin(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if (!validateInputs(email, password)) return;
+
+    toggleLoading(true);
+
+    try {
+        const data = await loginRequest(email, password);
+
+        handleSuccess(data);
+
+    } catch (error) {
+        handleError(error);
+    } finally {
+        toggleLoading(false);
+    }
+}
+
+// ------------------ FUNCTIONS ------------------
+
+function validateInputs(email, password) {
+    if (!email || !password) {
+        showMessage("All fields required", "error");
+        return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        showMessage("Invalid email", "error");
+        return false;
+    }
+
+    return true;
+}
+
+async function loginRequest(email, password) {
+
+    const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:5000' : 'https://career-xone-final.onrender.com'
+    const res = await fetch(`${API_URL}/user-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    });
+
+    if (!res.ok) {
+        throw new Error("HTTP Error");
+    }
+
+    return res.json();
+}
+
+function handleSuccess(data) {
+    if (data.success) {
+        localStorage.setItem("token", data.token);
+        showMessage("Login Success 🎉", "success");
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 1000);
+    } else {
+        showMessage(data.message, "error");
+    }
+}
+
+function handleError(error) {
+    console.error(error);
+    showMessage("Server error. Try again.", "error");
+}
+
+function toggleLoading(isLoading) {
+    const btn = document.getElementById('loginBtn');
+
+    btn.disabled = isLoading;
+    btn.innerText = isLoading ? "Logging in..." : "Login";
+}
+
+function showMessage(msg, type) {
+    const box = document.getElementById("messageBox");
+
+    if (box) {
+        box.innerText = msg;
+        box.className = type;
+    } else {
+        alert(msg);
+    }
+}
+
+
+
+
+
 
 // ------------------------------------------------------
 // 2. REGISTRATION FORM HANDLING 
