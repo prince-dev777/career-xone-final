@@ -1676,27 +1676,42 @@
 /* =========================================
    PREMIUM MOBILE SIDEBAR (FINAL FIX) 🚀
    ========================================= */
+/* Hide mobile login wrapper on desktop by default */
+.mobile-login-wrapper {
+    display: none;
+}
+
 @media (max-width: 1024px) {
     
-    /* 1. SIDEBAR CONTAINER */
+    /* 1. SIDEBAR CONTAINER (Premium Apple-like frosted drawer) */
     .nav-links {
-        display: block; /* Flex hata diya taaki scrolling sahi ho */
+        display: flex;
+        flex-direction: column;
         position: fixed;
         top: 0;
-        right: -100%; /* Default hidden */
-        width: 80%;   /* 80% screen cover karega */
-        height: 100dvh; /* Dynamic Height (Browser bar fix) */
+        right: -100%; 
+        width: 85%;
+        max-width: 400px;
+        height: 100dvh; 
         
-        background: #ffffff;
+        background: rgba(255, 255, 255, 0.85); /* Extremely highly translucent */
+        backdrop-filter: blur(25px) saturate(150%);
+        -webkit-backdrop-filter: blur(25px) saturate(150%);
         z-index: 9998;
-        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: -15px 0 50px rgba(0, 0, 0, 0.1), inset 1px 0 0 rgba(255, 255, 255, 0.5);
+        border-left: 1px solid rgba(255,255,255,0.7);
 
-        /* SCROLLING MAGIC START */
-        overflow-y: auto; /* Scroll enable */
-        padding-top: 80px; /* Upar jagah */
-        padding-bottom: 150px; /* Niche extra jagah taaki last link na kate */
-        /* SCROLLING MAGIC END */
+        padding-top: 100px; /* Upar jagah */
+        padding-bottom: 20px;
+        
+        overflow-y: auto; /* IMPORTANT: Enables scrolling */
+        -webkit-overflow-scrolling: touch; /* Extra smooth scroll on iOS */
+    }
+
+    /* Prevent items from squishing due to flexbox */
+    .nav-links > * {
+        flex-shrink: 0;
     }
 
     /* Active State (Open) */
@@ -1704,100 +1719,251 @@
         right: 0;
     }
 
+    /* Header for Sidebar via CSS */
+    .nav-links::before {
+        content: "CAREER XONE"; 
+        display: block;
+        font-size: 13px;
+        font-weight: 800;
+        color: #64748b;
+        letter-spacing: 2px;
+        padding: 0 10px 10px 10px;
+        margin-bottom: 10px;
+        border-bottom: 2px solid rgba(0,0,0,0.03); 
+        margin-left: 30px;
+        margin-right: 30px;
+        width: calc(100% - 60px);
+        box-sizing: border-box;
+    }
+
     /* 2. LINKS STYLING */
     .nav-links > a, 
     .nav-links .dropdown .dropbtn {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
-        padding: 15px 25px;
-        font-size: 17px;
-        font-weight: 500;
-        color: #333;
-        border-bottom: 1px solid #f1f1f1;
+        padding: 14px 20px;
+        margin: 4px 20px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #0f172a;
+        background: transparent;
+        border-radius: 14px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        width: calc(100% - 40px);
+        box-sizing: border-box;
         text-decoration: none;
-        width: 100%; /* Pura area clickable */
-        box-sizing: border-box; /* Padding height me count hogi */
+        border: none;
+    }
+    
+    .nav-links > a:hover, 
+    .nav-links .dropdown .dropbtn:hover,
+    .nav-links .dropdown .dropbtn.active {
+        background: rgba(0, 102, 255, 0.08); /* Soft blue rounded background */
+        color: #0066ff;
+        transform: scale(1.02);
+    }
+    .nav-links > a:hover::before,
+    .nav-links .dropdown .dropbtn:hover::before,
+    .nav-links .dropdown .dropbtn.active::before {
+        color: #0066ff;
     }
 
-    /* 3. DROPDOWN CONTENT (ACCORDION STYLE) */
+    /* Icons using CSS */
+    .nav-links > a::before,
+    .nav-links .dropdown .dropbtn::before {
+        font-family: "Font Awesome 6 Free", "Font Awesome 5 Free";
+        font-weight: 900;
+        margin-right: 15px;
+        color: #94a3b8;
+        font-size: 18px;
+        transition: color 0.3s ease;
+        width: 25px; /* Ensures text aligns perfectly */
+        text-align: center;
+    }
+    
+    /* Specific Link Icons */
+    .nav-links > a[href="index.html"]::before { content: "\f015"; } /* Home */
+    .nav-links > a[href="admission.html"]::before { content: "\f574"; } /* Admission */
+    .nav-links > a[href="scholarship.html"]::before { content: "\f559"; } /* Scholarship */
+    .nav-links > a[href="https://test.cxjeeneet.com"]::before { content: "\f109"; } /* New Test Series */
+
+    /* Dropdown icons fallback */
+    .nav-links > div:nth-of-type(1) .dropbtn::before { content: "\f19d"; } /* Courses */
+    .nav-links > div:nth-of-type(2) .dropbtn::before { content: "\f091"; } /* Results */
+    .nav-links > div:nth-of-type(3) .dropbtn::before { content: "\f109"; } /* Test Series */
+    .nav-links > div:nth-of-type(4) .dropbtn::before { content: "\f141"; } /* More */
+
+    /* 3. DROPDOWN CONTENT (PREMIUM NESTED STYLE) */
     .dropdown-content {
         position: static !important; 
-        display: none; /* Default band */
-        background-color: #f8f9fa; /* Light Grey BG */
-        padding: 0;
+        display: none; 
+        background: transparent; 
+        margin: 0 20px 10px 20px;
+        padding-left: 25px;
+        border-left: 2px solid rgba(0, 102, 255, 0.15); /* Sleek connector line */
+        box-shadow: none;
+        border-radius: 0;
+        border-top: none; border-bottom: none; border-right: none;
     }
 
-    /*  HOVER KILL SWITCH: Phone par Hover se kuch nahi khulega */
-    .dropdown:hover .dropdown-content {
-        display: none !important;
-    }
+    .dropdown:hover .dropdown-content { display: none !important; }
 
-    /* Open Class (JS se lagegi) */
-    .dropdown-content.show {
-        display: block !important;
-        animation: fadeIn 0.3s;
-    }
-
+    .dropdown-content.show,
     .dropdown .dropdown-content.show {
         display: block !important;
-        animation: slideDown 0.3s ease;
+        animation: slideDown 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .dropdown-content a {
         display: block;
-        padding: 12px 25px 12px 40px; /* Thoda andar (indent) */
+        padding: 12px 20px;
         font-size: 15px;
-        color: #555;
-        border-bottom: 1px solid #eee;
+        color: #475569;
+        font-weight: 600;
+        margin: 4px 0;
+        border-radius: 10px;
+        background: transparent;
+        transition: 0.3s;
+        border: none;
+    }
+    .dropdown-content a:hover {
+        background: rgba(0,102,255,0.05);
+        color: #0066ff;
+        transform: translateX(5px);
     }
 
     .sub-dropdown-content {
         position: static;
-        display: block; /* Hamesha dikhao agar parent khula hai */
+        display: block; 
         padding-left: 20px;
-        background: #f1f1f1;
+        background: transparent;
         box-shadow: none;
+        border: none;
+        margin-top: 5px;
+        border-left: 2px solid rgba(0, 102, 255, 0.08); /* Inner connector line */
     }
     
-    /* Sub-dropdown links thoda chota dikhe */
     .sub-dropdown-content a {
         font-size: 14px;
-        padding-left: 30px;
-        color: #666;
+        padding-left: 15px; /* Less indentation to make it fit */
+        color: #64748b;
     }
 
-    /* Arrow Icon Rotation */
+    /* Arrow Icon Rotation - Pushed to the right automatically */
     .dropbtn i {
         transition: transform 0.3s;
+        font-size: 14px;
+        color: #94a3b8;
+        margin-left: auto; /* Push to the extreme right */
+        background: transparent;
+        padding: 0;
     }
     .dropbtn.active i {
-        transform: rotate(180deg); /* Arrow ghoomega */
+        transform: rotate(180deg);
+        color: #0066ff;
     }
 
-    /* 4. HAMBURGER BUTTON (FIXED) */
+    /* 4. HAMBURGER BUTTON (Slightly larger hit area) */
     .mobile-menu-btn {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 30px;
-        height: 22px;
+        width: 32px;
+        height: 24px;
         cursor: pointer;
         z-index: 9999;
         margin-left: 15px;
     }
     .mobile-menu-btn span {
-        height: 3px; width: 100%; background: #000; border-radius: 3px; transition: 0.4s;
+        height: 3px; width: 100%; background: #0f172a; border-radius: 4px; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    .mobile-menu-btn.active .bar1 { transform: translateY(9px) rotate(45deg); background: #d32f2f; }
+    .mobile-menu-btn.active .bar1 { transform: translateY(10.5px) rotate(45deg); background: #ef4444; }
     .mobile-menu-btn.active .bar2 { opacity: 0; }
-    .mobile-menu-btn.active .bar3 { transform: translateY(-9px) rotate(-45deg); background: #d32f2f; }
+    .mobile-menu-btn.active .bar3 { transform: translateY(-10.5px) rotate(-45deg); background: #ef4444; }
     
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* STAGGERED FADE-IN ANIMATION FOR LINKS */
+    .nav-links.active > a,
+    .nav-links.active > .dropdown {
+        animation: flyIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    /* Dynamic delays using nth-child */
+    .nav-links.active > a:nth-child(1) { animation-delay: 0.1s; }
+    .nav-links.active > a:nth-child(2) { animation-delay: 0.15s; }
+    .nav-links.active > div:nth-child(3) { animation-delay: 0.2s; }
+    .nav-links.active > a:nth-child(4) { animation-delay: 0.25s; }
+    .nav-links.active > div:nth-child(5) { animation-delay: 0.3s; }
+    .nav-links.active > div:nth-child(6) { animation-delay: 0.35s; }
+    .nav-links.active > a:nth-child(7) { animation-delay: 0.4s; }
+    .nav-links.active > div:nth-child(8) { animation-delay: 0.45s; }
+    
+    .nav-links.active > .mobile-login-wrapper {
+        animation: flyInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        opacity: 0;
+        transform: translateY(30px);
+        animation-delay: 0.5s;
+    }
+
+    @keyframes flyIn {
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes flyInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* MOBILE LOGIN BUTTON EXCLUSIVE (Glowing bottom section) */
+    .mobile-login-wrapper {
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 60px; /* Provides enough room at bottom */
+        padding: 0 30px 20px 30px;
+        width: 100%;
+        box-sizing: border-box;
+        background: transparent;
+    }
+    .mobile-login-btn {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 20px;
+        font-size: 16px;
+        font-weight: 700;
+        background: #0066ff; /* Bright visible blue */
+        color: #ffffff !important; /* Force white text */
+        border-radius: 14px;
+        box-shadow: 0 5px 20px rgba(0, 102, 255, 0.4);
+        text-align: center;
+        border: none;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+    .mobile-login-btn:hover {
+        background: #004ec2;
+        box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
+        transform: translateY(-2px);
+        color: #ffffff !important;
+    }
+    .mobile-login-btn:active {
+        transform: scale(0.97); 
+    }
+    .mobile-login-btn i {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #ffffff;
+    }
+    #authBtn {
+        display: none !important;
+    }
 }
 
-
-         /* ================================================================================================================================================                    */
+/* ================================================================================================================================================ */
 @media (max-width: 1024px) {
     
     /* 1. Logo ko chhota kiya taaki Button ke liye jagah bane */
