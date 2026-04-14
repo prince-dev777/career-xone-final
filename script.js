@@ -351,27 +351,29 @@ if (catBtn) {
 // 7. AUTHENTICATION UI HANDLE (Login/Logout & Navbar)
 // ------------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
-    const authBtn = document.getElementById("authBtn");
+    const authBtns = [document.getElementById("authBtn"), document.getElementById("mobileAuthBtn")].filter(Boolean);
     const userEmail = localStorage.getItem("userEmail"); // ✅ Sahi variable use kiya
 
-    if (userEmail && authBtn) {
+    if (userEmail && authBtns.length > 0) {
         let userName = userEmail.split('@')[0];
         if (userName.length > 12) userName = userName.substring(0, 10) + "..";
 
-        authBtn.classList.add("logout-mode");
-        authBtn.href = "#";
+        authBtns.forEach(authBtn => {
+            authBtn.classList.add("logout-mode");
+            authBtn.href = "#";
 
-        authBtn.innerHTML = `
-            <span class="user-text"><i class="fas fa-user-circle"></i> ${userName}</span>
-            <span class="logout-text"><i class="fas fa-sign-out-alt"></i> Logout</span>
-        `;
+            authBtn.innerHTML = `
+                <span class="user-text"><i class="fas fa-user-circle"></i> ${userName}</span>
+                <span class="logout-text"><i class="fas fa-sign-out-alt"></i> Logout</span>
+            `;
 
-        authBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            if (confirm("Are you sure you want to Logout?")) {
-                localStorage.removeItem("userEmail"); // ✅ Memory clear
-                window.location.reload();
-            }
+            authBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (confirm("Are you sure you want to Logout?")) {
+                    localStorage.removeItem("userEmail"); // ✅ Memory clear
+                    window.location.reload();
+                }
+            });
         });
     }
 });
