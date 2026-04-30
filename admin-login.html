@@ -302,7 +302,7 @@
                 // ✅ Token aur login flag dono save karo
                 sessionStorage.setItem("isAdminLoggedIn", "true");
                 sessionStorage.setItem("adminToken", result.token);
-                window.location.href = "/admin";
+                window.location.href = "admin.html";
             } else {
                 showError(result.message || "Wrong password!");
                 btn.classList.remove('loading');
