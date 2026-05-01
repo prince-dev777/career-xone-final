@@ -615,7 +615,7 @@
         }
 
         @media (max-width: 768px) {
-            .gallery-item { width: 90vw; min-width: 90vw; height: 120vw; }
+            .gallery-item { width: 250px; min-width: 250px; height: 350px; }
             .section-header .main-title { font-size: 28px; }
         }
 
@@ -779,7 +779,7 @@
                 text-align: center;
             }
             .section-header .main-title {
-                font-size: 32px;
+                font-size: 28px;
             }
             .courses-grid {
                  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -787,13 +787,13 @@
             }
             .course-card {
                 min-height: 120px;
-                padding: 20px 10px;
+                padding: 15px 10px;
             }
             .course-icon {
-                font-size: 30px;
+                font-size: 26px;
             }
             .course-title {
-                font-size: 15px;
+                font-size: 14px;
             }
         }
 
@@ -947,26 +947,37 @@
 
 @media (max-width: 768px) {
     
-    /* 1. Card ki choudai (Width) kam ki */
     .champions-section .champion-card {
-        width: 210px;  /* Pehle 260px tha */
-        padding: 8px;  /* Thodi padding bhi kam ki */
+        width: 160px;
+        padding: 6px;
     }
 
-    /* 2. Photo ki lambai (Height) kam ki */
     .champions-section .student-photo-box {
-        height: 230px; /* Pehle 300px tha */
-        margin-bottom: 8px;
+        height: 180px;
+        margin-bottom: 6px;
     }
 
-    /* 3. Text thoda adjust kiya taaki card balance lage */
     .champions-section .student-name {
-        font-size: 16px; /* Naam thoda chhota kiya */
+        font-size: 14px;
+    }
+    
+    .champions-section .exam-name {
+        font-size: 10px;
+        margin-bottom: 4px;
     }
 
     .champions-section .rank-badge {
-        font-size: 11px; /* Badge text chhota */
-        padding: 4px 8px;
+        font-size: 10px;
+        padding: 3px 6px;
+    }
+    
+    .champions-section .section-title {
+        font-size: 26px;
+    }
+    
+    .champions-section .result-tag {
+        font-size: 11px;
+        padding: 5px;
     }
 }
 
@@ -1174,6 +1185,12 @@
         .vid-nav-btn { display: none; } /* Hide arrows on tablet/mobile */
         #video-scroll-container { padding: 0 20px 20px 20px; }
         .vid-card { width: 300px; min-width: 300px; height: 200px; }
+    }
+    
+    @media (max-width: 768px) {
+        .vid-card { width: 250px; min-width: 250px; height: 150px; }
+        #video-gallery-header h2 { font-size: 28px; }
+        #video-gallery-header p { font-size: 14px; }
     }
 
     /* 7. Modal (Popup) */
@@ -2239,4 +2256,9 @@
             .shorts-nav-btn { display: none; } /* Mobile me touch scroll hoga */
             .short-card { width: 260px; min-width: 260px; height: 462px; } /* Mobile me thoda chhota */
             .shorts-section { padding: 50px 10px; }
+        }
+        @media (max-width: 768px) {
+            .short-card { width: 200px; min-width: 200px; height: 355px; } 
+            .shorts-header h2 { font-size: 28px; }
+            .shorts-header p { font-size: 14px; }
         }
