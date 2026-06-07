@@ -1,8 +1,8 @@
-require('dotenv').config();
+const path       = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express    = require('express');
 const mongoose   = require('mongoose');
 const cors       = require('cors');
-const path       = require('path');
 const axios      = require('axios');
 
 const app  = express();
@@ -81,7 +81,17 @@ const checkAuth = (req, res, next) => {
 // ================================================================
 app.post('/admin-login', (req, res) => {
     const { password } = req.body;
-    if (password === process.env.ADMIN_PASSWORD) {
+    const correctPassword = process.env.ADMIN_PASSWORD;
+
+    if (!correctPassword) {
+        console.error("❌ ADMIN_PASSWORD is not set in environment variables!");
+        return res.json({ 
+            success: false, 
+            message: "Server configuration error: ADMIN_PASSWORD is not set in env." 
+        });
+    }
+
+    if (password === correctPassword) {
         // ✅ Password verify hota hai env se, but TOKEN alag safe string bhejte hain
         res.json({ success: true, message: "Login Successful", token: ADMIN_TOKEN });
     } else {
