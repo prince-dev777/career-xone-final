@@ -544,7 +544,9 @@
 
 <script>
 // ✅ RENDER URL — sab requests yahan jaayengi
-const RENDER_URL = window.location.protocol.startsWith('http') ? window.location.origin : "http://localhost:5000";
+const RENDER_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:'
+    ? 'http://localhost:5000'
+    : 'https://career-xone-final.onrender.com';
 
 // ── Sidebar navigation
 function showSec(name, el) {
