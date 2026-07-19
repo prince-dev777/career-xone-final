@@ -1,2 +1,3 @@
 node_modules/
-.env
+MONGO_URI=mongodb+srv://botxone5_db_user:helloaicom@cluster0.l60r7uk.mongodb.net/?appName=Cluster0
+ADMIN_PASSWORD=cxadmin2025secure
