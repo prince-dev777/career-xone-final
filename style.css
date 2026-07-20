@@ -413,6 +413,9 @@
             z-index: 2;
             overflow: hidden;
             background: #f1f5f9; /* Placeholder bg */
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         /* Slide Images */
@@ -424,10 +427,63 @@
             object-fit: cover;
             opacity: 0;
             transition: opacity 1s ease-in-out; 
+            pointer-events: none;
         }
 
         .hero-slide.active {
             opacity: 1;
+        }
+
+        /* Slide Dot Indicators */
+        .hero-slide-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+            padding: 6px 12px;
+            background: rgba(0, 15, 35, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .hero-dot:hover {
+            background: rgba(255, 255, 255, 0.85);
+            transform: scale(1.2);
+        }
+
+        .hero-dot.active {
+            width: 28px;
+            border-radius: 10px;
+            background: var(--primary, #0066ff);
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            .hero-slide-dots {
+                bottom: 10px;
+                padding: 4px 10px;
+                gap: 6px;
+            }
+            .hero-dot { width: 8px; height: 8px; }
+            .hero-dot.active { width: 22px; }
         }
 
         /* Responsive */

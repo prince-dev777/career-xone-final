@@ -267,7 +267,7 @@
 
                 <div class="trust-stats">
                     <div class="stat-item">
-                        <h3>47 MBBS in NEET 2025 </h3>
+                        <h3>53+ MBBS in NEET 2026 </h3>
 
                     </div>
                     <div class="stat-item">
@@ -280,7 +280,7 @@
 
             <!-- Right: Image Slideshow (1470x980 Ratio) -->
             <div class="hero-image-wrapper">
-                <div class="hero-slideshow">
+                <div class="hero-slideshow" id="heroSlideshow">
                     <!-- Image 1 -->
 
                     <img src="https://res.cloudinary.com/ddmmsdond/image/upload/q_auto/f_auto/v1780570406/heroPhoto0.webp"
@@ -296,6 +296,9 @@
                     <!-- Image 3 ---- -->
                     <img src="https://res.cloudinary.com/ddmmsdond/image/upload/q_auto/f_auto/v1780571626/heroPhoto3.webp"
                         class="hero-slide" alt="CX Building">
+
+                    <!-- Dot Indicators -->
+                    <div class="hero-slide-dots" id="heroSlideDots"></div>
                 </div>
             </div>
 
@@ -303,19 +306,115 @@
     </section>
     <!-- HERO SECTION END -->
 
-    <!-- ✅ SLIDESHOW SCRIPT ✅ -->
+    <!-- ✅ MANUAL & AUTO SLIDESHOW SCRIPT ✅ -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const slideshow = document.getElementById('heroSlideshow');
             const slides = document.querySelectorAll('.hero-slide');
+            const dotsContainer = document.getElementById('heroSlideDots');
             let currentSlide = 0;
+            let slideInterval = null;
 
-            if (slides.length > 0) {
-                setInterval(() => {
-                    slides[currentSlide].classList.remove('active');
-                    currentSlide = (currentSlide + 1) % slides.length;
-                    slides[currentSlide].classList.add('active');
-                }, 3000); // 3 Seconds timer
+            if (!slides || slides.length === 0) return;
+
+            // Generate Dot Indicators
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                slides.forEach((_, idx) => {
+                    const dot = document.createElement('button');
+                    dot.classList.add('hero-dot');
+                    if (idx === 0) dot.classList.add('active');
+                    dot.setAttribute('aria-label', `Go to slide ${idx + 1}`);
+                    dot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        goToSlide(idx);
+                        resetTimer();
+                    });
+                    dotsContainer.appendChild(dot);
+                });
             }
+
+            const getDots = () => document.querySelectorAll('.hero-dot');
+
+            function goToSlide(index) {
+                const dots = getDots();
+                slides[currentSlide].classList.remove('active');
+                if (dots[currentSlide]) dots[currentSlide].classList.remove('active');
+
+                currentSlide = (index + slides.length) % slides.length;
+
+                slides[currentSlide].classList.add('active');
+                if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                goToSlide(currentSlide + 1);
+            }
+
+            function prevSlide() {
+                goToSlide(currentSlide - 1);
+            }
+
+            function startTimer() {
+                stopTimer();
+                slideInterval = setInterval(() => {
+                    nextSlide();
+                }, 5500); // 5 Seconds Auto-slide
+            }
+
+            function stopTimer() {
+                if (slideInterval) {
+                    clearInterval(slideInterval);
+                    slideInterval = null;
+                }
+            }
+
+            function resetTimer() {
+                startTimer();
+            }
+
+            // Click manual slide (Right half = Next, Left half = Prev)
+            if (slideshow) {
+                slideshow.addEventListener('click', (e) => {
+                    if (e.target.closest('.hero-slide-dots')) return;
+
+                    const rect = slideshow.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+
+                    if (clickX > rect.width / 2) {
+                        nextSlide();
+                    } else {
+                        prevSlide();
+                    }
+                    resetTimer();
+                });
+
+                // Touch Swipe Logic for Mobile & Touch Devices
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                slideshow.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                slideshow.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diffX = touchEndX - touchStartX;
+                    const threshold = 30; // minimum swipe distance
+                    if (Math.abs(diffX) > threshold) {
+                        if (diffX < 0) {
+                            nextSlide();
+                        } else {
+                            prevSlide();
+                        }
+                        resetTimer();
+                    }
+                }, { passive: true });
+            }
+
+            // Start continuous auto-sliding
+            startTimer();
         });
     </script>
 
@@ -371,7 +470,18 @@
             <!-- hello -->
             <div class="shorts-scroll-container" id="shortsContainer">
 
-                <!-- 1. YouTube Short Example -->
+                <!-- 1. Instagram Reel Example -->
+                <div class="short-card">
+                    <iframe src="https://www.instagram.com/reel/DbAgOUuImms/embed" loading="lazy" scrolling="no"
+                        allowtransparency="true" allowfullscreen="true">
+                    </iframe>
+                </div>
+                <!-- 1. Instagram Reel Example -->
+                <div class="short-card">
+                    <iframe src="https://www.instagram.com/reel/Da_7KRvydJX/embed" loading="lazy" scrolling="no"
+                        allowtransparency="true" allowfullscreen="true">
+                    </iframe>
+                </div>
                 <div class="short-card">
                     <iframe src="https://www.youtube.com/embed/5-fMl-Ri_XE?controls=1&rel=0&playsinline=1"
                         loading="lazy" title="YouTube Short"
@@ -899,7 +1009,7 @@
 
     <section id="video-gallery-section">
         <div id="video-gallery-header">
-            <h2>Watch Success Stories 2025 </h2>
+            <h2>Watch Success Stories</h2>
             <p>Real stories from our Toppers & Parents</p>
         </div>
 
@@ -921,6 +1031,52 @@
 
             <div id="video-scroll-container">
                 <div id="video-grid-box">
+                    <!-- Card  -->
+                    <div class="vid-card" onclick="openYtVideo('RlwhXuxeerQ')">
+                        <img src="https://img.youtube.com/vi/RlwhXuxeerQ/maxresdefault.jpg" loading="lazy"
+                            alt="Video">
+                        <div class="vid-play-icon">
+                            <svg viewBox="0 0 448 512">
+                                <path
+                                    d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" />
+                            </svg>
+                        </div>
+                        <div class="vid-info">
+                            <span class="vid-tag">Harshita Khalari</span>
+                            <div class="vid-title">Selected for AIIMS Nagpur</div>
+                        </div>
+                    </div>
+                    <!-- Card  -->
+                    <div class="vid-card" onclick="openYtVideo('uIWbEq4D65k')">
+                        <img src="https://img.youtube.com/vi/uIWbEq4D65k/maxresdefault.jpg" loading="lazy"
+                            alt="Video">
+                        <div class="vid-play-icon">
+                            <svg viewBox="0 0 448 512">
+                                <path
+                                    d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" />
+                            </svg>
+                        </div>
+                        <div class="vid-info">
+                            <span class="vid-tag">Harshita Khalari</span>
+                            <div class="vid-title">Selected for AIIMS Nagpur</div>
+                        </div>
+                    </div>
+
+                    <!-- Card  -->
+                    <div class="vid-card" onclick="openYtVideo('70FZfrUJdV0')">
+                        <img src="https://img.youtube.com/vi/70FZfrUJdV0/maxresdefault.jpg" loading="lazy"
+                            alt="Video">
+                        <div class="vid-play-icon">
+                            <svg viewBox="0 0 448 512">
+                                <path
+                                    d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z" />
+                            </svg>
+                        </div>
+                        <div class="vid-info">
+                            <span class="vid-tag">Harshita Khalari</span>
+                            <div class="vid-title">Selected for AIIMS Nagpur</div>
+                        </div>
+                    </div>
 
 
                     <!-- Card  -->
