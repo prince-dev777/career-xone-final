@@ -2200,6 +2200,7 @@
     }
     
     /* Specific Link Icons */
+    .nav-links > a[href="/"]::before,
     .nav-links > a[href="index.html"]::before { content: "\f015"; } /* Home */
     .nav-links > a[href="admission.html"]::before { content: "\f574"; } /* Admission */
     .nav-links > a[href="scholarship.html"]::before { content: "\f559"; } /* Scholarship */

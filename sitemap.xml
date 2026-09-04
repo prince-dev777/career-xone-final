@@ -2,27 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://cxjeeneet.com/</loc>
-    <lastmod>2026-01-19</lastmod>
+    <lastmod>2026-09-04</lastmod>
     <priority>1.00</priority>
   </url>
   <url>
-    <loc>https://cxjeeneet.com/index.html</loc>
+    <loc>https://cxjeeneet.com/all-courses</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/jee</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/neet</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/foundation</loc>
+    <lastmod>2026-09-04</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://cxjeeneet.com/jee.html</loc>
+    <loc>https://cxjeeneet.com/admission</loc>
+    <lastmod>2026-09-04</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://cxjeeneet.com/neet.html</loc>
+    <loc>https://cxjeeneet.com/scholarship</loc>
+    <lastmod>2026-09-04</lastmod>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://cxjeeneet.com/foundation.html</loc>
+    <loc>https://cxjeeneet.com/results-jee</loc>
+    <lastmod>2026-09-04</lastmod>
     <priority>0.80</priority>
   </url>
-   <url>
-    <loc>https://cxjeeneet.com/admission.html</loc>
+  <url>
+    <loc>https://cxjeeneet.com/results-neet</loc>
+    <lastmod>2026-09-04</lastmod>
     <priority>0.80</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/about</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.70</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/gallery</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.60</priority>
+  </url>
+  <url>
+    <loc>https://cxjeeneet.com/blog</loc>
+    <lastmod>2026-09-04</lastmod>
+    <priority>0.60</priority>
   </url>
 </urlset>
