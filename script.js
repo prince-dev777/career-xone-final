@@ -12,13 +12,20 @@ document.addEventListener("DOMContentLoaded", function() {
         img.setAttribute('decoding', 'async'); // Page load speed badhayega
     });
 
-    // 2. Basic Bot Blocking (Vercel ke bharose nahi rehna padega)
-    const forbiddenBots = ['HeadlessChrome', 'Puppeteer', 'Bot', 'Crawler', 'Lighthouse'];
-    const userAgent = navigator.userAgent;
+    // 2. Heavy Anti-Bot & Selenium Shield (Googlebot & Search Engines strictly Allowed)
+    const isSearchBot = /googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|twitterbot|facebookexternalhit/i.test(navigator.userAgent);
+    const isAutomatedBot = !isSearchBot && (
+        navigator.webdriver ||
+        window.document.documentElement.getAttribute("webdriver") ||
+        window.callPhantom ||
+        window._phantom ||
+        window.__nightmare ||
+        ['HeadlessChrome', 'Puppeteer', 'Selenium', 'Playwright'].some(bot => navigator.userAgent.includes(bot))
+    );
 
-    if (forbiddenBots.some(bot => userAgent.includes(bot))) {
-        window.stop(); // Bot ki activity turant rok dega
-        document.body.innerHTML = "<h1 style='text-align:center; margin-top:50px;'>Access Denied for Bots</h1>";
+    if (isAutomatedBot) {
+        window.stop(); // Stop all asset loading to save bandwidth
+        document.body.innerHTML = "<div style='background:#090d16;color:#f87171;padding:60px 20px;font-family:sans-serif;text-align:center;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;'><h1 style='font-size:2rem;margin-bottom:12px;'>🛡️ Access Denied</h1><p style='color:#94a3b8;'>Automated browsing tools and scrapers (Selenium, Puppeteer) are blocked.</p></div>";
     }
 });
 

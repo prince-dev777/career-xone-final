@@ -9,8 +9,55 @@ const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ================================================================
-// MIDDLEWARE
+// MIDDLEWARE & HEAVY-DUTY ANTI-BOT SHIELD
 // ================================================================
+app.disable('x-powered-by');
+
+// 1. Whitelist legitimate search engine crawlers & WhatsApp preview for SEO
+const ALLOWED_SEARCH_BOTS = /googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|telegrambot|facebookexternalhit|twitterbot/i;
+
+// 2. Blacklist automated scrapers, headless browsers, and bandwidth leechers
+const BLOCKED_SCRAPERS = /selenium|puppeteer|playwright|webdriver|headlesschrome|phantomjs|python-requests|aiohttp|urllib|scrapy|wget|curl|libwww|httpclient|java|go-http-client|apache-httpclient|bytespider|gptbot|ccbot|claudebot|diffbot|ahrefsbot|semrushbot|dotbot|petalbot|dataforseobot/i;
+
+const ipRequestTrack = new Map();
+
+function heavyBotShield(req, res, next) {
+    const ua = req.headers['user-agent'] || '';
+
+    // Always allow legitimate search engine crawlers for SEO
+    if (ALLOWED_SEARCH_BOTS.test(ua)) {
+        return next();
+    }
+
+    // Instantly reject automated headless crawlers, scrapers, and bot libraries (0 bandwidth wasted!)
+    if (!ua || BLOCKED_SCRAPERS.test(ua)) {
+        return res.status(403).type('text/plain').send('403 Forbidden: Automated scraper access is blocked.');
+    }
+
+    // Bandwidth preservation rate limiter (Max 120 requests/minute per client IP)
+    const forwarded = req.headers['x-forwarded-for'];
+    const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.ip || req.socket?.remoteAddress || 'unknown';
+    if (ip !== '127.0.0.1' && ip !== '::1' && ip !== 'localhost') {
+        const now = Date.now();
+        let track = ipRequestTrack.get(ip);
+        if (track) {
+            if (now - track.startTime > 60000) {
+                ipRequestTrack.set(ip, { count: 1, startTime: now });
+            } else {
+                track.count += 1;
+                if (track.count > 120) {
+                    return res.status(429).type('text/plain').send('429 Too Many Requests: Bandwidth protection limit reached.');
+                }
+            }
+        } else {
+            ipRequestTrack.set(ip, { count: 1, startTime: now });
+        }
+    }
+
+    next();
+}
+
+app.use(heavyBotShield);
 app.use(cors({
     origin: ['https://www.cxjeeneet.com', 'https://cxjeeneet.com'],
     methods: ['GET', 'POST', 'DELETE'],
