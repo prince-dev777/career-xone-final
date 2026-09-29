@@ -649,30 +649,277 @@
         });
     </script>
 
-    <!-- ========================================== 🌟 NEW RESULT SECTION 🌟 ========================================== -->
-    <section class="new-result-section">
+    <!-- ========================================== 🌟 NEW RESULT SECTION (SLIDER) 🌟 ========================================== -->
+    <section class="new-result-section" id="latestResultSection">
         <div class="result-container">
             <div class="result-header">
                 <h2>Our Latest Result</h2>
-                <p>Consistent results, Year after Year. Celebrating our toppers!</p>
+                <p>Consistent results, Year after Year. Celebrating our NEET &amp; JEE toppers!</p>
             </div>
-            <div class="result-image-card">
-                <img src="./images/reneet2026.webp"
-                    alt="Career Xone NEET Topper Result" class="result-a4-image" loading="lazy">
+
+            <!-- Category Switcher Tabs -->
+            <div class="result-tabs-container" role="tablist" aria-label="Result Categories">
+                <button class="result-tab-btn active" data-slide="0" role="tab" aria-selected="true" aria-controls="resultSlide0" id="resultTab0">
+                    <i class="fa-solid fa-stethoscope"></i>
+                    <span>NEET (UG) 2026</span>
+                    <span class="tab-badge">MBBS</span>
+                </button>
+                <button class="result-tab-btn" data-slide="1" role="tab" aria-selected="false" aria-controls="resultSlide1" id="resultTab1">
+                    <i class="fa-solid fa-atom"></i>
+                    <span>IIT-JEE Adv. 2026</span>
+                    <span class="tab-badge">IIT / NIT</span>
+                </button>
             </div>
-            <div class="result-note-box">
-                <div class="note-badge">🚀 Target NEET / Repeaters 2027</div>
-                <p class="note-text">NEET Repeater (Dropper) Batch started from <strong>26th July</strong>. Admissions
-                    Open!</p>
-                <div class="result-calls-container">
-                    <a href="tel:+919673383561" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91
-                        96733 83561</a>
-                    <a href="tel:+919145481323" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91
-                        91454 81323</a>
+
+            <!-- Slider Wrapper -->
+            <div class="result-slider-wrapper" id="resultSliderWrapper">
+                <!-- Outer Stage with Floating Arrows on Desktop -->
+                <div class="result-stage-outer">
+                    <button class="result-stage-arrow prev" id="resultStagePrev" aria-label="Previous Result">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="result-slides-stage" id="resultSlidesStage">
+                        <!-- Slide 0: NEET -->
+                        <div class="result-slide active" data-index="0" id="resultSlide0" role="tabpanel" aria-labelledby="resultTab0">
+                            <div class="result-image-card result-card-neet" onclick="openResultModal('./images/reneet2026.webp', 'Career Xone NEET 2026 Toppers Result')">
+                                <img src="./images/reneet2026.webp"
+                                    alt="Career Xone NEET Topper Result - 53+ Eligible for MBBS" class="result-slide-img" loading="lazy">
+                                <div class="result-zoom-hint">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom
+                                </div>
+                            </div>
+                            <div class="result-note-box">
+                                <div class="note-badge">🩺 Target NEET / Repeaters 2027</div>
+                                <p class="note-text">NEET Repeater (Dropper) Batch started from <strong>26th July</strong>. Admissions Open!</p>
+                                <div class="result-calls-container">
+                                    <a href="tel:+919673383561" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91 96733 83561</a>
+                                    <a href="tel:+919145481323" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91 91454 81323</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Slide 1: JEE -->
+                        <div class="result-slide" data-index="1" id="resultSlide1" role="tabpanel" aria-labelledby="resultTab1">
+                            <div class="result-image-card result-card-jee" onclick="openResultModal('./images/jee2026.webp', 'Career Xone IIT JEE Advanced 2026 Toppers Result')">
+                                <img src="./images/jee2026.webp"
+                                    alt="Career Xone IIT JEE Advanced 2026 Alloted &amp; Top Selections Result" class="result-slide-img" loading="lazy">
+                                <div class="result-zoom-hint">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i> Click to Zoom
+                                </div>
+                            </div>
+                            <div class="result-note-box">
+                                <div class="note-badge">🚀 Target JEE / Repeaters 2027</div>
+                                <p class="note-text">JEE Repeater (Dropper) Batch admissions ongoing for <strong>JEE 2027</strong>. Admissions Open!</p>
+                                <div class="result-calls-container">
+                                    <a href="tel:+919673383561" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91 96733 83561</a>
+                                    <a href="tel:+919145481323" class="btn-primary call-btn"><i class="fa-solid fa-phone"></i> Call: +91 91454 81323</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="result-stage-arrow next" id="resultStageNext" aria-label="Next Result">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Controls (Dots & Mobile Arrows) -->
+                <div class="result-controls-bar">
+                    <button class="result-nav-btn prev" id="resultNavPrev" aria-label="Previous Result">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="result-dots" id="resultDots">
+                        <button class="result-dot active" data-slide="0" aria-label="NEET Results Slide">
+                            <span class="dot-fill"></span>
+                        </button>
+                        <button class="result-dot" data-slide="1" aria-label="JEE Results Slide">
+                            <span class="dot-fill"></span>
+                        </button>
+                    </div>
+                    <button class="result-nav-btn next" id="resultNavNext" aria-label="Next Result">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- Lightbox Modal for Full View -->
+        <div class="result-lightbox" id="resultLightbox" onclick="closeResultModal(event)">
+            <div class="lightbox-content">
+                <button class="lightbox-close" onclick="closeResultModal(event)" aria-label="Close Preview">&times;</button>
+                <img src="" alt="Result Full View" id="lightboxImg">
+            </div>
+        </div>
     </section>
+
+    <!-- 🌟 RESULT SLIDER INTERACTION SCRIPT 🌟 -->
+    <script>
+        (function() {
+            const section = document.getElementById('latestResultSection');
+            if (!section) return;
+
+            const slides = section.querySelectorAll('.result-slide');
+            const tabs = section.querySelectorAll('.result-tab-btn');
+            const dots = section.querySelectorAll('.result-dot');
+            const prevBtns = [
+                document.getElementById('resultStagePrev'),
+                document.getElementById('resultNavPrev')
+            ].filter(Boolean);
+            const nextBtns = [
+                document.getElementById('resultStageNext'),
+                document.getElementById('resultNavNext')
+            ].filter(Boolean);
+
+            let currentIndex = 0;
+            let autoTimer = null;
+            let isHovered = false;
+            const DURATION = 5000; // 5 seconds per slide
+
+            function updateSlide(index) {
+                if (index < 0) index = slides.length - 1;
+                if (index >= slides.length) index = 0;
+                currentIndex = index;
+
+                slides.forEach((slide, i) => {
+                    const active = (i === currentIndex);
+                    slide.classList.toggle('active', active);
+                    slide.setAttribute('aria-hidden', !active);
+                });
+
+                tabs.forEach((tab, i) => {
+                    const active = (i === currentIndex);
+                    tab.classList.toggle('active', active);
+                    tab.setAttribute('aria-selected', active);
+                });
+
+                dots.forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentIndex);
+                });
+            }
+
+            function nextSlide() {
+                updateSlide(currentIndex + 1);
+            }
+
+            function prevSlide() {
+                updateSlide(currentIndex - 1);
+            }
+
+            function startTimer() {
+                stopTimer();
+                autoTimer = setInterval(() => {
+                    if (!isHovered) {
+                        nextSlide();
+                    }
+                }, DURATION);
+            }
+
+            function stopTimer() {
+                if (autoTimer) {
+                    clearInterval(autoTimer);
+                    autoTimer = null;
+                }
+            }
+
+            function restartTimer() {
+                startTimer();
+            }
+
+            // Click Handlers
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = parseInt(tab.getAttribute('data-slide'), 10);
+                    updateSlide(target);
+                    restartTimer();
+                });
+            });
+
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const target = parseInt(dot.getAttribute('data-slide'), 10);
+                    updateSlide(target);
+                    restartTimer();
+                });
+            });
+
+            prevBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    prevSlide();
+                    restartTimer();
+                });
+            });
+
+            nextBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    nextSlide();
+                    restartTimer();
+                });
+            });
+
+            // Pause auto-sliding when mouse is hovering the card or controls
+            const wrapper = document.getElementById('resultSliderWrapper');
+            if (wrapper) {
+                wrapper.addEventListener('mouseenter', () => { isHovered = true; });
+                wrapper.addEventListener('mouseleave', () => { isHovered = false; });
+            }
+
+            // Touch Swipe Support for Mobile
+            let touchStartX = 0;
+            let touchEndX = 0;
+            const stage = document.getElementById('resultSlidesStage');
+
+            if (stage) {
+                stage.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                }, { passive: true });
+
+                stage.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const diff = touchEndX - touchStartX;
+                    if (Math.abs(diff) > 40) {
+                        if (diff < 0) {
+                            nextSlide();
+                        } else {
+                            prevSlide();
+                        }
+                        restartTimer();
+                    }
+                }, { passive: true });
+            }
+
+            // Start auto rotation
+            updateSlide(0);
+            startTimer();
+        })();
+
+        // Lightbox Functions (Global for onclick handlers)
+        function openResultModal(src, alt) {
+            const modal = document.getElementById('resultLightbox');
+            const img = document.getElementById('lightboxImg');
+            if (!modal || !img) return;
+            img.src = src;
+            img.alt = alt || 'Result Full View';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeResultModal(e) {
+            if (e && e.target && e.target.id === 'lightboxImg') return;
+            const modal = document.getElementById('resultLightbox');
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeResultModal();
+            }
+        });
+    </script>
     <!--=================================================================🌟 SHORTS & REELS SECTION START 🌟==================================================== -->
 
     <section class="shorts-section">
