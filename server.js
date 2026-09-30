@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.disable('x-powered-by');
 
 // 1. Whitelist legitimate search engine crawlers & WhatsApp preview for SEO
-const ALLOWED_SEARCH_BOTS = /googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|telegrambot|facebookexternalhit|twitterbot/i;
+const ALLOWED_SEARCH_BOTS = /google|googlebot|google-inspectiontool|google-site-verification|chrome-lighthouse|storebot-google|google-read-aloud|apis-google|mediapartners-google|adsbot-google|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|telegrambot|facebookexternalhit|twitterbot/i;
 
 // 2. Blacklist automated scrapers, headless browsers, and bandwidth leechers
 const BLOCKED_SCRAPERS = /selenium|puppeteer|playwright|webdriver|headlesschrome|phantomjs|python-requests|aiohttp|urllib|scrapy|wget|curl|libwww|httpclient|java|go-http-client|apache-httpclient|bytespider|gptbot|ccbot|claudebot|diffbot|ahrefsbot|semrushbot|dotbot|petalbot|dataforseobot/i;
