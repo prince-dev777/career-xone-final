@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", function() {
         img.setAttribute('decoding', 'async'); // Page load speed badhayega
     });
 
-    // 2. Heavy Anti-Bot & Selenium Shield (Googlebot & Search Engines strictly Allowed)
-    const isSearchBot = /googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|twitterbot|facebookexternalhit/i.test(navigator.userAgent);
-    const isAutomatedBot = !isSearchBot && (
+    // 2. Heavy Anti-Bot & Selenium Shield (Googlebot, Google-InspectionTool & Search Engines strictly Allowed)
+    const isSearchBot = /google|googlebot|google-inspectiontool|google-site-verification|chrome-lighthouse|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|twitterbot|facebookexternalhit/i.test(navigator.userAgent);
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const isAutomatedBot = !isSearchBot && !isLocalhost && (
         navigator.webdriver ||
         window.document.documentElement.getAttribute("webdriver") ||
         window.callPhantom ||

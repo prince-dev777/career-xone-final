@@ -501,6 +501,7 @@
             -webkit-text-fill-color: #fbbf24;
             filter: drop-shadow(0 0 6px rgba(251,191,36,0.5));
         }
+        .hero-badge span,
         .hero-badge h1 {
             font-size: 13px;
             font-weight: 800;
@@ -2871,10 +2872,10 @@
     aspect-ratio: 2402 / 3464;
 }
 
-/* JEE aspect ratio (Landscape Widescreen 2560x1780) */
+/* JEE aspect ratio (Portrait A4 2400x3450) */
 .result-card-jee {
-    max-width: 980px;
-    aspect-ratio: 2560 / 1780;
+    max-width: 520px;
+    aspect-ratio: 2400 / 3450;
 }
 
 .result-slide-img {

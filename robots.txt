@@ -1,5 +1,14 @@
-# Allow Googlebot and legitimate search engine spiders
+# Allow Google Search Console Inspection Tool & Search Engine Spiders
+User-agent: Google-InspectionTool
+Allow: /
+
 User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Mobile
+Allow: /
+
+User-agent: Googlebot-Image
 Allow: /
 
 User-agent: Bingbot
