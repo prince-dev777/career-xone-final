@@ -3166,3 +3166,635 @@
         justify-content: center;
     }
 }
+
+
+/* ==================== SCHOLARSHIP BUTTON PULSE ANIMATION ==================== */
+@keyframes scholarshipPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); transform: scale(1); }
+    50% { box-shadow: 0 0 20px 8px rgba(245, 158, 11, 0.2); transform: scale(1.03); }
+}
+
+.btn-scholarship-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-scholarship-hero::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%);
+    animation: scholarshipShine 3s ease-in-out infinite;
+}
+
+@keyframes scholarshipShine {
+    0% { transform: translateX(-100%) rotate(25deg); }
+    100% { transform: translateX(100%) rotate(25deg); }
+}
+
+
+/* ==========================================================================
+   📱 360° MASTER MOBILE RESPONSIVENESS OVERRIDES (PHONES & TABLETS)
+   Surgically scales down all oversized elements, text, padding & cards
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Global & Ticker */
+    .ticker-wrap {
+        padding: 7px 0 !important;
+    }
+    .ticker-item {
+        font-size: 11.5px !important;
+        padding: 0 1.5rem !important;
+    }
+    .ticker-new {
+        font-size: 9px !important;
+        padding: 2px 6px !important;
+    }
+
+    /* 2. Hero Section (Home Page) */
+    .hero-section {
+        padding: 35px 14px 45px !important;
+        min-height: auto !important;
+    }
+    .hero-container {
+        gap: 25px !important;
+    }
+    .hero-badge {
+        font-size: 11px !important;
+        padding: 6px 14px !important;
+        margin-bottom: 14px !important;
+    }
+    .hero-badge span,
+    .hero-badge h1 {
+        font-size: 11px !important;
+    }
+    .hero-badge i {
+        font-size: 12px !important;
+    }
+    .hero-title {
+        font-size: 26px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 14px !important;
+        letter-spacing: -0.5px !important;
+    }
+    .hero-title span {
+        font-size: 23px !important;
+        letter-spacing: 0.5px !important;
+    }
+    .hero-desc {
+        font-size: 13.5px !important;
+        line-height: 1.55 !important;
+        margin-bottom: 22px !important;
+    }
+    .hero-btns {
+        display: flex !important;
+        gap: 8px !important;
+        margin-bottom: 24px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+    .hero-btns .btn-primary,
+    .btn-scholarship-hero {
+        padding: 10px 16px !important;
+        font-size: 12.5px !important;
+        border-radius: 10px !important;
+        box-shadow: 0 6px 16px rgba(0, 102, 255, 0.25) !important;
+    }
+    .trust-stats {
+        gap: 16px !important;
+        padding-top: 16px !important;
+        justify-content: center !important;
+    }
+    .stat-item h3 {
+        font-size: 12.5px !important;
+        line-height: 1.4 !important;
+    }
+
+    /* 3. Latest Result Section */
+    .new-result-section {
+        padding: 30px 12px !important;
+    }
+    .result-container {
+        gap: 16px !important;
+    }
+    .result-header h2 {
+        font-size: 24px !important;
+        margin-bottom: 6px !important;
+    }
+    .result-header p {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+    .result-tabs-container {
+        padding: 4px !important;
+        gap: 6px !important;
+    }
+    .result-tab-btn {
+        padding: 7px 10px !important;
+        font-size: 12px !important;
+    }
+    .result-note-box {
+        padding: 14px 12px !important;
+        border-radius: 14px !important;
+    }
+    .note-badge {
+        font-size: 11px !important;
+        padding: 4px 10px !important;
+    }
+    .note-text {
+        font-size: 13px !important;
+    }
+    .note-text strong {
+        font-size: 14px !important;
+    }
+    .result-calls-container {
+        gap: 8px !important;
+        flex-direction: column !important;
+    }
+    .call-btn {
+        padding: 10px 14px !important;
+        font-size: 12.5px !important;
+        border-radius: 8px !important;
+    }
+
+    /* 4. Shorts Section */
+    .shorts-section {
+        padding: 35px 12px !important;
+    }
+    .shorts-header {
+        margin-bottom: 20px !important;
+    }
+    .shorts-header h2 {
+        font-size: 24px !important;
+        margin-bottom: 6px !important;
+    }
+    .shorts-header p {
+        font-size: 13px !important;
+    }
+    .short-card {
+        width: 190px !important;
+        min-width: 190px !important;
+        height: 338px !important;
+        border-radius: 14px !important;
+    }
+    .shorts-scroll-container {
+        gap: 14px !important;
+        padding: 5px 5px 15px !important;
+    }
+
+    /* 5. Gallery Section */
+    .gallery-section {
+        padding: 35px 12px !important;
+    }
+    .section-header {
+        margin-bottom: 20px !important;
+        text-align: center !important;
+    }
+    .section-header .main-title {
+        font-size: 24px !important;
+        margin-bottom: 8px !important;
+    }
+    .filter-controls {
+        margin-bottom: 16px !important;
+    }
+    .gallery-item {
+        width: 210px !important;
+        min-width: 210px !important;
+        height: 300px !important;
+        border-radius: 12px !important;
+    }
+
+    /* 6. Champions Section */
+    .champions-section {
+        padding: 35px 0 !important;
+    }
+    .champions-section .section-title {
+        font-size: 24px !important;
+        margin-bottom: 14px !important;
+    }
+    .champions-section .filter-container {
+        gap: 6px !important;
+        margin-bottom: 18px !important;
+    }
+    .champions-section .filter-btn {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+    }
+    .champions-section .champion-card {
+        width: 145px !important;
+        padding: 6px !important;
+        border-radius: 10px !important;
+    }
+    .champions-section .student-photo-box {
+        height: 160px !important;
+        border-radius: 8px !important;
+    }
+    .champions-section .student-name {
+        font-size: 12.5px !important;
+    }
+    .champions-section .exam-name {
+        font-size: 9.5px !important;
+    }
+    .champions-section .rank-badge {
+        font-size: 9.5px !important;
+        padding: 2px 5px !important;
+    }
+
+    /* 7. Explore Courses Section */
+    .courses-section {
+        padding: 35px 12px !important;
+    }
+    .courses-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)) !important;
+        gap: 10px !important;
+    }
+    .course-card {
+        min-height: 105px !important;
+        padding: 12px 8px !important;
+        border-radius: 10px !important;
+    }
+    .course-icon {
+        font-size: 22px !important;
+        margin-bottom: 6px !important;
+    }
+    .course-title {
+        font-size: 13px !important;
+    }
+
+    /* 8. Video Gallery Section */
+    #video-gallery-section {
+        padding: 35px 12px !important;
+    }
+    #video-gallery-header {
+        margin-bottom: 20px !important;
+    }
+    #video-gallery-header h2 {
+        font-size: 24px !important;
+        margin-bottom: 6px !important;
+    }
+    #video-gallery-header p {
+        font-size: 13px !important;
+    }
+    .vid-card {
+        width: 220px !important;
+        min-width: 220px !important;
+        height: 135px !important;
+        border-radius: 10px !important;
+    }
+
+    /* 9. Location Section */
+    .location-section {
+        padding: 35px 12px !important;
+    }
+    .loc-header {
+        margin-bottom: 20px !important;
+    }
+    .loc-header h2 {
+        font-size: 24px !important;
+        margin-bottom: 6px !important;
+    }
+    .loc-header p {
+        font-size: 13px !important;
+    }
+    .loc-grid {
+        gap: 15px !important;
+    }
+    .loc-card {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+    }
+    .loc-item {
+        gap: 10px !important;
+        margin-bottom: 12px !important;
+        font-size: 12.5px !important;
+    }
+    .loc-icon {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+    }
+    .direction-btn {
+        padding: 10px 14px !important;
+        font-size: 12.5px !important;
+        border-radius: 8px !important;
+    }
+    .map-box {
+        height: 240px !important;
+        border-radius: 12px !important;
+    }
+
+    /* 10. Enquiry / Callback Section */
+    .enquiry-section {
+        padding: 35px 12px !important;
+    }
+    .enquiry-container {
+        gap: 20px !important;
+    }
+    .enquiry-text {
+        margin-bottom: 15px !important;
+    }
+    .enquiry-text h2 {
+        font-size: 23px !important;
+        line-height: 1.3 !important;
+        margin-bottom: 10px !important;
+    }
+    .enquiry-text p {
+        font-size: 13px !important;
+        margin-bottom: 16px !important;
+        line-height: 1.5 !important;
+    }
+    .contact-box {
+        padding: 10px 14px !important;
+        border-radius: 10px !important;
+        gap: 10px !important;
+    }
+    .phone-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 15px !important;
+    }
+    .glass-card {
+        padding: 18px 14px !important;
+        border-radius: 14px !important;
+    }
+    .form-header {
+        font-size: 17px !important;
+        margin-bottom: 14px !important;
+    }
+    .form-group {
+        margin-bottom: 10px !important;
+    }
+    .input-box {
+        padding: 10px 12px 10px 34px !important;
+        font-size: 12.5px !important;
+        border-radius: 8px !important;
+    }
+    .input-icon {
+        font-size: 13px !important;
+        left: 11px !important;
+    }
+    .submit-btn {
+        padding: 11px !important;
+        font-size: 13.5px !important;
+        border-radius: 8px !important;
+    }
+
+    /* 11. Footer */
+    .footer-section {
+        padding: 35px 15px 20px !important;
+    }
+    .footer-container {
+        gap: 25px !important;
+    }
+    .footer-desc {
+        font-size: 12.5px !important;
+        line-height: 1.5 !important;
+        margin-bottom: 15px !important;
+    }
+    .footer-heading {
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+    }
+    .footer-links li {
+        margin-bottom: 6px !important;
+        font-size: 12px !important;
+    }
+    .contact-item {
+        gap: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    .contact-icon {
+        font-size: 14px !important;
+    }
+    .contact-text {
+        font-size: 12px !important;
+        line-height: 1.4 !important;
+    }
+    .copyright-bar {
+        margin-top: 25px !important;
+        font-size: 11.5px !important;
+        padding-top: 15px !important;
+        gap: 8px !important;
+    }
+
+    /* =========================================================================
+       12. ALL SUBPAGES (JEE, NEET, FOUNDATION, ADMISSION, RESULTS, TEST SERIES)
+       ========================================================================= */
+    body .course-hero,
+    body .page-hero,
+    body .adm-hero,
+    body .about-hero {
+        padding: 45px 14px 65px !important;
+        clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%) !important;
+    }
+    body .course-title,
+    body .page-title,
+    body .adm-title,
+    body .about-title {
+        font-size: 23px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 8px !important;
+        letter-spacing: -0.5px !important;
+    }
+    body .course-subtitle,
+    body .page-subtitle,
+    body .adm-subtitle,
+    body .about-subtitle {
+        font-size: 12.5px !important;
+        line-height: 1.5 !important;
+        max-width: 100% !important;
+    }
+    body .course-badge,
+    body .page-badge,
+    body .adm-badge,
+    body .about-badge {
+        font-size: 10.5px !important;
+        padding: 4px 12px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Subpage Highlights Float Grid */
+    body .highlights-container,
+    body .content-container {
+        margin: -35px auto 30px !important;
+        padding: 0 10px !important;
+    }
+    body .highlights-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+    body .highlight-card {
+        padding: 12px 8px !important;
+        border-radius: 10px !important;
+        border-bottom-width: 3px !important;
+    }
+    body .h-icon {
+        font-size: 20px !important;
+        margin-bottom: 6px !important;
+    }
+    body .h-title {
+        font-size: 12px !important;
+        margin-bottom: 2px !important;
+    }
+    body .h-desc {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+    }
+
+    /* Subpage Cards, Batches & Content */
+    body .content-card,
+    body .scholarship-box,
+    body .batch-card,
+    body .info-card {
+        padding: 16px 12px !important;
+        border-radius: 12px !important;
+        margin-bottom: 14px !important;
+    }
+    body .content-title,
+    body .scholarship-title,
+    body .batch-title,
+    body .section-title,
+    body .section-heading h2 {
+        font-size: 16px !important;
+        margin-bottom: 10px !important;
+    }
+    body .info-grid,
+    body .batches-wrapper,
+    body .strategy-list {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        margin-top: 20px !important;
+    }
+    body .schedule-row {
+        padding: 8px 0 !important;
+    }
+    body .sch-time {
+        font-size: 12.5px !important;
+    }
+    body .sch-activity {
+        font-size: 12px !important;
+    }
+    body .timeline-item {
+        margin-bottom: 10px !important;
+    }
+    body .tl-time {
+        font-size: 11px !important;
+        min-width: 65px !important;
+    }
+    body .tl-title {
+        font-size: 12px !important;
+    }
+    body .tl-desc {
+        font-size: 11px !important;
+    }
+    body .strategy-list li,
+    body .criteria-list li {
+        font-size: 12px !important;
+        margin-bottom: 8px !important;
+        line-height: 1.45 !important;
+    }
+
+    /* Admission & Forms on Subpages */
+    body .adm-cta-box {
+        flex-direction: column !important;
+        gap: 10px !important;
+        padding: 12px 14px !important;
+        border-radius: 10px !important;
+    }
+    body .form-container {
+        padding: 18px 14px !important;
+        border-radius: 12px !important;
+    }
+    body .form-title {
+        font-size: 20px !important;
+        margin-bottom: 6px !important;
+    }
+    body .form-subtitle {
+        font-size: 12.5px !important;
+        margin-bottom: 18px !important;
+    }
+    body .admission-form .form-input,
+    body .form-input {
+        padding: 10px 12px !important;
+        font-size: 12.5px !important;
+        border-radius: 7px !important;
+    }
+
+    /* About page specials */
+    body .story-section,
+    body .director-section {
+        padding: 35px 12px !important;
+    }
+    body .story-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    body .story-content h2 {
+        font-size: 22px !important;
+        margin-bottom: 12px !important;
+    }
+    body .story-content p {
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+        margin-bottom: 12px !important;
+    }
+    body .director-box {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+        padding: 22px 16px !important;
+        border-radius: 16px !important;
+        gap: 18px !important;
+    }
+    body .director-img {
+        width: 150px !important;
+        height: 150px !important;
+        margin: 0 auto !important;
+    }
+    body .dir-content h3 {
+        font-size: 20px !important;
+        margin-bottom: 12px !important;
+    }
+    body .dir-content p {
+        font-size: 12.5px !important;
+        line-height: 1.6 !important;
+        margin-bottom: 12px !important;
+    }
+    body .dir-name {
+        font-size: 18px !important;
+    }
+}
+
+/* Extra small mobile adjustments (e.g. 360px - 400px screens) */
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 23px !important;
+    }
+    .hero-title span {
+        font-size: 20px !important;
+    }
+    .hero-btns .btn-primary,
+    .btn-scholarship-hero {
+        padding: 9px 13px !important;
+        font-size: 11.5px !important;
+    }
+    .short-card {
+        width: 165px !important;
+        min-width: 165px !important;
+        height: 295px !important;
+    }
+    .gallery-item {
+        width: 180px !important;
+        min-width: 180px !important;
+        height: 250px !important;
+    }
+    .champions-section .champion-card {
+        width: 130px !important;
+    }
+    .champions-section .student-photo-box {
+        height: 145px !important;
+    }
+}
