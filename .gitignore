@@ -1,3 +1,16 @@
+# Dependencies
 node_modules/
-MONGO_URI=# MONGO_URI_REDACTED
-# ADMIN_PASSWORD_REDACTED
+
+# Environment variables (Never commit!)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
