@@ -75,11 +75,11 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error('❌ MongoDB Error:', err));
 
 // ================================================================
-// AUTH — Simple hardcoded token (no special chars, no env mismatch)
+// AUTH — Simple token (no special chars, no env mismatch)
 // ================================================================
 // ✅ KEY FIX: Token alag hai, password alag hai
 // Token HTTP headers mein safe characters wala hai
-const ADMIN_TOKEN = "REDACTED_ADMIN_TOKEN";
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "cx_admin_session_auth_token_2025";
 
 // ================================================================
 // SCHEMAS
