@@ -89,11 +89,15 @@ function validateInputs(email, password) {
     return true;
 }
 
-async function loginRequest(email, password) {
+// ------------------------------------------------------
+// API CONFIGURATION (Vercel Serverless / Same-Origin)
+// ------------------------------------------------------
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000'
+    : '';
 
-    const API_URL = window.location.hostname === 'localhost'
-    ? 'http://localhost:5000' : 'https://career-xone-final.onrender.com'
-    const res = await fetch(`${API_URL}/user-login`, {
+async function loginRequest(email, password) {
+    const res = await fetch(`${API_BASE}/user-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -156,7 +160,7 @@ if (registerBtn) {
     registerBtn.addEventListener('click', async (e) => {
         e.preventDefault(); 
 
-        const email = document.getElementById('regEmail').value;
+        const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value;
         const confirmPassword = document.getElementById('regConfirmPassword').value;
 
@@ -170,8 +174,12 @@ if (registerBtn) {
             return;
         }
 
+        const originalText = registerBtn.innerText;
+        registerBtn.disabled = true;
+        registerBtn.innerText = "Registering...";
+
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/register', {
+            const response = await fetch(`${API_BASE}/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -183,11 +191,14 @@ if (registerBtn) {
                 alert("✅ Account Successfully Created! Ab Login karein.");
                 window.location.href = 'login.html'; 
             } else {
-                alert("❌ Registration Failed: " + result.message);
+                alert("❌ Registration Failed: " + (result.message || "Unknown error"));
             }
         } catch (error) {
             console.error("Register Error:", error);
             alert("⚠️ Server Error. Please try again.");
+        } finally {
+            registerBtn.disabled = false;
+            registerBtn.innerText = originalText;
         }
     });
 }
@@ -201,8 +212,8 @@ if (contactBtn) {
     contactBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('contactName').value;
-        const phone = document.getElementById('contactPhone').value;
+        const name = document.getElementById('contactName').value.trim();
+        const phone = document.getElementById('contactPhone').value.trim();
         const message = document.getElementById('contactMessage').value;
 
         if (!name || !phone) {
@@ -210,8 +221,12 @@ if (contactBtn) {
             return;
         }
 
+        const originalText = contactBtn.innerText;
+        contactBtn.disabled = true;
+        contactBtn.innerText = "Sending...";
+
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/contact', {
+            const response = await fetch(`${API_BASE}/contact`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, message })
@@ -225,11 +240,14 @@ if (contactBtn) {
                 document.getElementById('contactPhone').value = '';
                 document.getElementById('contactMessage').value = '';
             } else {
-                 alert("❌ Failed to send message.");
+                alert("❌ Failed to send message: " + (result.message || "Please try again."));
             }
         } catch (error) {
             console.error("Contact Error:", error);
             alert("❌ Server connection failed. Please check your connection.");
+        } finally {
+            contactBtn.disabled = false;
+            contactBtn.innerText = originalText;
         }
     });
 }
@@ -243,20 +261,24 @@ if (admBtn) {
     admBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('admName').value;
-        const school = document.getElementById('admSchool').value;
+        const name = document.getElementById('admName').value.trim();
+        const school = document.getElementById('admSchool').value.trim();
         const course = document.getElementById('admCourse').value;
-        const phone = document.getElementById('admPhone').value;
-        const email = document.getElementById('admEmail').value;
-        const message = document.getElementById('admMessage').value;
+        const phone = document.getElementById('admPhone').value.trim();
+        const email = document.getElementById('admEmail').value.trim();
+        const message = document.getElementById('admMessage').value.trim();
 
         if (!name || !phone || !course) {
             alert("⚠️ Name, Phone and Course are required!");
             return;
         }
 
+        const originalText = admBtn.innerText;
+        admBtn.disabled = true;
+        admBtn.innerText = "Submitting...";
+
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/admission', {
+            const response = await fetch(`${API_BASE}/admission`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, school, course, phone, email, message })
@@ -264,14 +286,17 @@ if (admBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
-                alert("✅ Application Submitted Successfully!");
+                alert("✅ Application Submitted Successfully! We will contact you soon.");
                 window.location.reload(); 
             } else {
-                alert("❌ Failed: " + result.message);
+                alert("❌ Failed: " + (result.message || "Please try again."));
             }
         } catch (error) {
-            console.error(error);
-            alert("⚠️ Server Error");
+            console.error("Admission Error:", error);
+            alert("⚠️ Server Error. Please try again.");
+        } finally {
+            admBtn.disabled = false;
+            admBtn.innerText = originalText;
         }
     });
 }
@@ -285,8 +310,8 @@ if (testBtn) {
     testBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('testName').value;
-        const phone = document.getElementById('testPhone').value;
+        const name = document.getElementById('testName').value.trim();
+        const phone = document.getElementById('testPhone').value.trim();
         const series = document.getElementById('testSeries').value;
 
         if (!name || !phone || !series) {
@@ -294,8 +319,12 @@ if (testBtn) {
             return;
         }
 
+        const originalText = testBtn.innerText;
+        testBtn.disabled = true;
+        testBtn.innerText = "Sending...";
+
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/testseries', {
+            const response = await fetch(`${API_BASE}/testseries`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, series })
@@ -306,36 +335,48 @@ if (testBtn) {
                 alert("✅ Request Sent! We will call you shortly.");
                 window.location.reload(); 
             } else {
-                alert("❌ Failed: " + result.message);
+                alert("❌ Failed: " + (result.message || "Please try again."));
             }
         } catch (error) {
-            console.error(error);
-            alert("⚠️ Server Error");
+            console.error("Test Series Error:", error);
+            alert("⚠️ Server Error. Please try again.");
+        } finally {
+            testBtn.disabled = false;
+            testBtn.innerText = originalText;
         }
     });
 }
 
 // ------------------------------------------------------
-// 6. SCHOLARSHIP (CAT) FORM HANDLING
+// 6. SCHOLARSHIP (SAT / CAT) FORM HANDLING
 // ------------------------------------------------------
-const catBtn = document.getElementById('catBtn');
+const scholarshipBtn = document.getElementById('SATBtn') || document.getElementById('catBtn');
 
-if (catBtn) {
-    catBtn.addEventListener('click', async (e) => {
+if (scholarshipBtn) {
+    scholarshipBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById('catName').value;
-        const phone = document.getElementById('catPhone').value;
-        const studentClass = document.getElementById('catClass').value;
-        const preferredDate = document.getElementById('catDate').value;
+        const nameEl = document.getElementById('SATName') || document.getElementById('catName');
+        const phoneEl = document.getElementById('SATPhone') || document.getElementById('catPhone');
+        const classEl = document.getElementById('SATClass') || document.getElementById('catClass');
+        const dateEl = document.getElementById('SATDate') || document.getElementById('catDate');
+
+        const name = nameEl ? nameEl.value.trim() : '';
+        const phone = phoneEl ? phoneEl.value.trim() : '';
+        const studentClass = classEl ? classEl.value : '';
+        const preferredDate = dateEl ? dateEl.value : '';
 
         if (!name || !phone || !studentClass) {
-            alert("⚠️ Please fill all required fields!");
+            alert("⚠️ Please fill all required fields (Name, Mobile, Class)!");
             return;
         }
 
+        const originalText = scholarshipBtn.innerText;
+        scholarshipBtn.disabled = true;
+        scholarshipBtn.innerText = "Booking Slot...";
+
         try {
-            const response = await fetch('https://career-xone-final.onrender.com/scholarship', {
+            const response = await fetch(`${API_BASE}/scholarship`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, phone, studentClass, preferredDate })
@@ -343,14 +384,17 @@ if (catBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
-                alert("✅ CAT Slot Booked Successfully!");
+                alert("✅ CXSAT Scholarship Test Slot Booked Successfully!");
                 window.location.reload(); 
             } else {
-                alert("❌ Failed: " + result.message);
+                alert("❌ Failed: " + (result.message || "Please try again."));
             }
         } catch (error) {
-            console.error(error);
-            alert("⚠️ Server Error");
+            console.error("Scholarship Error:", error);
+            alert("⚠️ Server Error. Please try again.");
+        } finally {
+            scholarshipBtn.disabled = false;
+            scholarshipBtn.innerText = originalText;
         }
     });
 }

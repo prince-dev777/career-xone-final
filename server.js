@@ -22,6 +22,11 @@ const BLOCKED_SCRAPERS = /selenium|puppeteer|playwright|webdriver|headlesschrome
 const ipRequestTrack = new Map();
 
 function heavyBotShield(req, res, next) {
+    // Always permit legitimate form POST requests
+    if (req.method === 'POST') {
+        return next();
+    }
+
     const ua = req.headers['user-agent'] || '';
 
     // Always allow legitimate search engine crawlers for SEO
@@ -29,12 +34,12 @@ function heavyBotShield(req, res, next) {
         return next();
     }
 
-    // Instantly reject automated headless crawlers, scrapers, and bot libraries (0 bandwidth wasted!)
-    if (!ua || BLOCKED_SCRAPERS.test(ua)) {
+    // Instantly reject automated headless crawlers, scrapers, and bot libraries
+    if (BLOCKED_SCRAPERS.test(ua)) {
         return res.status(403).type('text/plain').send('403 Forbidden: Automated scraper access is blocked.');
     }
 
-    // Bandwidth preservation rate limiter (Max 120 requests/minute per client IP)
+    // Rate limiter (Max 120 requests/minute per client IP)
     const forwarded = req.headers['x-forwarded-for'];
     const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.ip || req.socket?.remoteAddress || 'unknown';
     if (ip !== '127.0.0.1' && ip !== '::1' && ip !== 'localhost') {
@@ -46,7 +51,7 @@ function heavyBotShield(req, res, next) {
             } else {
                 track.count += 1;
                 if (track.count > 120) {
-                    return res.status(429).type('text/plain').send('429 Too Many Requests: Bandwidth protection limit reached.');
+                    return res.status(429).type('text/plain').send('429 Too Many Requests: Rate limit reached.');
                 }
             }
         } else {
@@ -59,8 +64,8 @@ function heavyBotShield(req, res, next) {
 
 app.use(heavyBotShield);
 app.use(cors({
-    origin: ['https://www.cxjeeneet.com', 'https://cxjeeneet.com'],
-    methods: ['GET', 'POST', 'DELETE'],
+    origin: true,
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'auth-token'],
     credentials: true
 }));
@@ -68,17 +73,62 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 // ================================================================
-// DATABASE
+// DATABASE (Cached Connection for Vercel Serverless & Node)
 // ================================================================
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('✅ MongoDB Connected!'))
-    .catch(err => console.error('❌ MongoDB Error:', err));
+let cachedDbPromise = null;
+
+async function connectToDatabase() {
+    if (mongoose.connection.readyState >= 1) {
+        return mongoose.connection;
+    }
+
+    const uri = process.env.MONGO_URI;
+    if (!uri) {
+        console.error("❌ CRITICAL: MONGO_URI environment variable is missing!");
+        throw new Error("MONGO_URI environment variable is not configured.");
+    }
+
+    if (!cachedDbPromise) {
+        cachedDbPromise = mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 8000,
+        }).then(m => {
+            console.log('✅ MongoDB Connected successfully!');
+            return m;
+        }).catch(err => {
+            cachedDbPromise = null;
+            console.error('❌ MongoDB Connection Error:', err.message);
+            throw err;
+        });
+    }
+
+    return cachedDbPromise;
+}
+
+// Database Connection Middleware for all API routes
+app.use(async (req, res, next) => {
+    const apiRoutes = [
+        '/contact', '/admission', '/testseries', '/scholarship',
+        '/register', '/user-login', '/admin-login',
+        '/contacts', '/admissions', '/scholarships', '/users'
+    ];
+    const isApi = apiRoutes.some(p => req.path === p || req.path.startsWith(p + '/'));
+    if (isApi) {
+        try {
+            await connectToDatabase();
+        } catch (err) {
+            return res.status(500).json({
+                status: "error",
+                message: "Database connection failed. Please ensure MONGO_URI is set in environment variables."
+            });
+        }
+    }
+    next();
+});
 
 // ================================================================
-// AUTH — Simple token (no special chars, no env mismatch)
+// AUTH — Safe session token
 // ================================================================
-// ✅ KEY FIX: Token alag hai, password alag hai
-// Token HTTP headers mein safe characters wala hai
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || "cx_admin_session_auth_token_2025";
 
 // ================================================================
@@ -139,7 +189,6 @@ app.post('/admin-login', (req, res) => {
     }
 
     if (password === correctPassword) {
-        // ✅ Password verify hota hai env se, but TOKEN alag safe string bhejte hain
         res.json({ success: true, message: "Login Successful", token: ADMIN_TOKEN });
     } else {
         res.json({ success: false, message: "Wrong Password" });
@@ -157,7 +206,7 @@ app.post('/register', async (req, res) => {
         await new User({ email, password }).save();
         res.json({ success: true, message: "Registration Successful!" });
     } catch (e) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        res.status(500).json({ success: false, message: "Server Error: " + e.message });
     }
 });
 
@@ -170,7 +219,7 @@ app.post('/user-login', async (req, res) => {
         else
             res.json({ success: false, message: "Invalid Email or Password" });
     } catch (e) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        res.status(500).json({ success: false, message: "Server Error: " + e.message });
     }
 });
 
@@ -183,19 +232,19 @@ app.get('/admin',       (req, res) => res.sendFile(path.join(__dirname, 'admin.h
 // ================================================================
 // ROUTES — PUBLIC FORM SUBMISSIONS
 // ================================================================
-app.post('/contact',    async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
-app.post('/admission',  async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
-app.post('/testseries', async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
-app.post('/scholarship',async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error" }); } });
+app.post('/contact',    async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post('/admission',  async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post('/testseries', async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post('/scholarship',async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 
 // ================================================================
 // ROUTES — ADMIN DATA (Protected)
 // ================================================================
-app.get('/contacts',    checkAuth, async (req, res) => { try { res.json(await Contact.find().sort({ date: -1 }));    } catch (e) { res.status(500).json({ error: "DB Error" }); } });
-app.get('/admissions',  checkAuth, async (req, res) => { try { res.json(await Admission.find().sort({ date: -1 }));  } catch (e) { res.status(500).json({ error: "DB Error" }); } });
-app.get('/testseries',  checkAuth, async (req, res) => { try { res.json(await TestSeries.find().sort({ date: -1 })); } catch (e) { res.status(500).json({ error: "DB Error" }); } });
-app.get('/scholarships',checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error" }); } });
-app.get('/users',       checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error" }); } });
+app.get('/contacts',    checkAuth, async (req, res) => { try { res.json(await Contact.find().sort({ date: -1 }));    } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get('/admissions',  checkAuth, async (req, res) => { try { res.json(await Admission.find().sort({ date: -1 }));  } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get('/testseries',  checkAuth, async (req, res) => { try { res.json(await TestSeries.find().sort({ date: -1 })); } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get('/scholarships',checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get('/users',       checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 
 // ================================================================
 // ROUTES — DELETE (Protected)
@@ -208,13 +257,16 @@ app.delete('/scholarships/:id',checkAuth, async (req, res) => { await Scholarshi
 // ================================================================
 // SERVER START
 // ================================================================
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+}
 
 module.exports = app;
 
-// Keep-alive ping (Render free tier ke liye)
-setInterval(() => {
-    axios.get('https://career-xone-final.onrender.com/admin-login')
-        .then(() => console.log("✅ Keep-alive ping sent"))
-        .catch(() => console.log("⚠️ Ping failed"));
-}, 840000); // Har 14 min
+// Keep-alive ping (Only if running on Render)
+if (process.env.RENDER) {
+    setInterval(() => {
+        axios.get('https://career-xone-final.onrender.com/admin-login')
+            .catch(() => {});
+    }, 840000);
+}
