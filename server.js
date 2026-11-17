@@ -109,7 +109,8 @@ app.use(async (req, res, next) => {
     const isApi = req.path.startsWith('/api') || [
         '/contact', '/admission', '/testseries', '/scholarship',
         '/register', '/user-login', '/admin-login',
-        '/contacts', '/admissions', '/scholarships', '/users'
+        '/contacts', '/admissions', '/scholarships', '/users',
+        '/jobs', '/job'
     ].some(p => req.path === p || req.path.startsWith(p + '/'));
 
     if (isApi) {
@@ -152,6 +153,18 @@ const TestSeries = mongoose.model('TestSeries', new mongoose.Schema({
 const Scholarship = mongoose.model('Scholarship', new mongoose.Schema({
     name: String, phone: String, studentClass: String, preferredDate: String,
     date: { type: Date, default: Date.now }
+}));
+
+const JobApplication = mongoose.model('JobApplication', new mongoose.Schema({
+    name:          { type: String, required: true },
+    phone:         { type: String, required: true },
+    email:         { type: String, default: '' },
+    position:      { type: String, required: true },
+    experience:    { type: String, default: '' },
+    qualification: { type: String, default: '' },
+    resumeLink:    { type: String, default: '' },
+    message:       { type: String, default: '' },
+    date:          { type: Date, default: Date.now }
 }));
 
 const User = mongoose.model('User', new mongoose.Schema({
@@ -235,6 +248,20 @@ app.post(['/contact', '/api/contact'],       async (req, res) => { try { await n
 app.post(['/admission', '/api/admission'],   async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 app.post(['/testseries', '/api/testseries'], async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 app.post(['/scholarship', '/api/scholarship'], async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/jobs', '/job', '/api/jobs', '/api/job'], async (req, res) => {
+    try {
+        const { name, phone, email, position, experience, qualification, resumeLink, message } = req.body;
+        if (!name || !phone || !position) {
+            return res.status(400).json({ status: "error", message: "Name, phone, and position are required." });
+        }
+        await new JobApplication({
+            name, phone, email, position, experience, qualification, resumeLink, message
+        }).save();
+        res.json({ status: "success" });
+    } catch (e) {
+        res.status(500).json({ status: "error", message: e.message });
+    }
+});
 
 // ================================================================
 // ROUTES — ADMIN DATA (Protected)
@@ -243,6 +270,7 @@ app.get(['/contacts', '/api/contacts'],       checkAuth, async (req, res) => { t
 app.get(['/admissions', '/api/admissions'],   checkAuth, async (req, res) => { try { res.json(await Admission.find().sort({ date: -1 }));  } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 app.get(['/testseries', '/api/testseries'],   checkAuth, async (req, res) => { try { res.json(await TestSeries.find().sort({ date: -1 })); } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 app.get(['/scholarships', '/api/scholarships'],checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/jobs', '/api/jobs'],               checkAuth, async (req, res) => { try { res.json(await JobApplication.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 app.get(['/users', '/api/users'],             checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 
 // ================================================================
@@ -252,6 +280,7 @@ app.delete(['/contacts/:id', '/api/contacts/:id'],       checkAuth, async (req, 
 app.delete(['/admissions/:id', '/api/admissions/:id'],   checkAuth, async (req, res) => { await Admission.findByIdAndDelete(req.params.id);  res.json({ status: "Deleted" }); });
 app.delete(['/testseries/:id', '/api/testseries/:id'],   checkAuth, async (req, res) => { await TestSeries.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
 app.delete(['/scholarships/:id', '/api/scholarships/:id'],checkAuth, async (req, res) => { await Scholarship.findByIdAndDelete(req.params.id);res.json({ status: "Deleted" }); });
+app.delete(['/jobs/:id', '/api/jobs/:id'],               checkAuth, async (req, res) => { await JobApplication.findByIdAndDelete(req.params.id);res.json({ status: "Deleted" }); });
 
 // ================================================================
 // SERVER START

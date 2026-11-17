@@ -400,6 +400,95 @@ if (scholarshipBtn) {
 }
 
 // ------------------------------------------------------
+// 6b. CAREERS / JOB APPLICATION FORM HANDLING
+// ------------------------------------------------------
+const jobBtn = document.getElementById('jobBtn');
+
+if (jobBtn) {
+    jobBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const nameEl = document.getElementById('jobName');
+        const phoneEl = document.getElementById('jobPhone');
+        const emailEl = document.getElementById('jobEmail');
+        const positionEl = document.getElementById('jobPosition');
+        const expEl = document.getElementById('jobExperience');
+        const qualEl = document.getElementById('jobQualification');
+        const resumeEl = document.getElementById('jobResume');
+        const msgEl = document.getElementById('jobMessage');
+
+        const name = nameEl ? nameEl.value.trim() : '';
+        const phone = phoneEl ? phoneEl.value.trim() : '';
+        const email = emailEl ? emailEl.value.trim() : '';
+        const position = positionEl ? positionEl.value : '';
+        const experience = expEl ? expEl.value : '';
+        const qualification = qualEl ? qualEl.value.trim() : '';
+        const resumeLink = resumeEl ? resumeEl.value.trim() : '';
+        const message = msgEl ? msgEl.value.trim() : '';
+
+        if (!name || !phone || !position) {
+            alert("⚠️ Please fill in all required fields (Name, Phone Number, and Position Applied For)!");
+            return;
+        }
+
+        const originalText = jobBtn.innerText;
+        jobBtn.disabled = true;
+        jobBtn.innerText = "Submitting Application...";
+
+        try {
+            const response = await fetch(`${API_BASE}/jobs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name, phone, email, position, experience, qualification, resumeLink, message
+                })
+            });
+
+            const result = await response.json();
+            if (result.status === "success") {
+                alert("🎉 Application Submitted Successfully! Our Academic Operations / HR team will review your profile and contact you soon.");
+                if (nameEl) nameEl.value = '';
+                if (phoneEl) phoneEl.value = '';
+                if (emailEl) emailEl.value = '';
+                if (qualEl) qualEl.value = '';
+                if (resumeEl) resumeEl.value = '';
+                if (msgEl) msgEl.value = '';
+            } else {
+                alert("❌ Submission Failed: " + (result.message || "Please try again."));
+            }
+        } catch (error) {
+            console.error("Job Application Error:", error);
+            alert("⚠️ Server Error. Please check your connection and try again.");
+        } finally {
+            jobBtn.disabled = false;
+            jobBtn.innerText = originalText;
+        }
+    });
+}
+
+// Function to select job role and smooth scroll to form
+window.applyForRole = function(roleTitle) {
+    const positionSelect = document.getElementById('jobPosition');
+    if (positionSelect) {
+        for (let i = 0; i < positionSelect.options.length; i++) {
+            if (positionSelect.options[i].text.toLowerCase().includes(roleTitle.toLowerCase()) || 
+                positionSelect.options[i].value.toLowerCase().includes(roleTitle.toLowerCase())) {
+                positionSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+    const applySec = document.getElementById('applySection') || document.getElementById('applyForm');
+    if (applySec) {
+        applySec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(() => {
+            const nameEl = document.getElementById('jobName');
+            if (nameEl) nameEl.focus();
+        }, 600);
+    }
+};
+
+// ------------------------------------------------------
 // 7. AUTHENTICATION UI HANDLE (Login/Logout & Navbar)
 // Removed as login button is removed.
 // ------------------------------------------------------

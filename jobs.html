@@ -22,6 +22,517 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png">
     <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon-192.png">
 
+    <style>
+        :root {
+            --job-primary: #2563eb;
+            --job-primary-hover: #1d4ed8;
+            --job-dark: #07162c;
+            --job-accent: #f59e0b;
+            --job-green: #10b981;
+            --job-bg: #f8fafc;
+            --job-card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.06);
+            --job-border: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--job-bg);
+            color: #1e293b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* HERO SECTION */
+        .job-hero {
+            background: linear-gradient(135deg, #07162c 0%, #0d284f 55%, #183e75 100%);
+            color: #ffffff;
+            padding: 90px 20px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .job-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 30px;
+            background: linear-gradient(to top, var(--job-bg), transparent);
+        }
+        .job-hero-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+        .job-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #93c5fd;
+            padding: 7px 18px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        .job-hero h1 {
+            font-size: 46px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+        .job-hero h1 span {
+            background: linear-gradient(90deg, #60a5fa, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .job-hero p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 35px;
+            max-width: 780px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .job-hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 45px;
+        }
+        .job-btn-primary {
+            background: #2563eb;
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.25s;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+        }
+        .job-btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+        .job-btn-outline {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.25s;
+            backdrop-filter: blur(8px);
+        }
+        .job-btn-outline:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* METRICS STRIP */
+        .job-metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 20px 25px;
+            backdrop-filter: blur(10px);
+        }
+        .metric-box {
+            text-align: center;
+        }
+        .metric-num {
+            font-size: 26px;
+            font-weight: 800;
+            color: #f8fafc;
+            margin-bottom: 2px;
+        }
+        .metric-lbl {
+            font-size: 12.5px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* CONTAINER */
+        .job-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* SECTION HEADER */
+        .job-sec-header {
+            text-align: center;
+            margin-bottom: 45px;
+        }
+        .job-sec-tag {
+            color: var(--job-primary);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .job-sec-title {
+            font-size: 34px;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+        .job-sec-desc {
+            font-size: 16px;
+            color: #64748b;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* WHY JOIN CARDS */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+        .why-card {
+            background: #ffffff;
+            border: 1px solid var(--job-border);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            box-shadow: var(--job-card-shadow);
+        }
+        .why-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px -10px rgba(15, 23, 42, 0.1);
+            border-color: #cbd5e1;
+        }
+        .why-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: #eff6ff;
+            color: var(--job-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .why-card h3 {
+            font-size: 19px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+        .why-card p {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* OPENINGS GRID */
+        .openings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+        .job-card {
+            background: #ffffff;
+            border: 1px solid var(--job-border);
+            border-radius: 18px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            box-shadow: var(--job-card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .job-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--job-primary);
+        }
+        .job-card:hover {
+            border-color: #93c5fd;
+            transform: translateY(-3px);
+            box-shadow: 0 16px 36px -8px rgba(37, 99, 235, 0.12);
+        }
+        .job-card-top {
+            margin-bottom: 20px;
+        }
+        .job-badge-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .j-chip {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .j-chip-blue { background: #eff6ff; color: #1d4ed8; }
+        .j-chip-green { background: #ecfdf5; color: #047857; }
+        .j-chip-amber { background: #fffbeb; color: #b45309; }
+        .job-card h3 {
+            font-size: 21px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+        .job-desc {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+        .job-details-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 24px;
+        }
+        .job-details-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .job-details-list li i {
+            color: var(--job-primary);
+            width: 16px;
+        }
+        .apply-role-btn {
+            width: 100%;
+            background: #0f172a;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 13px 20px;
+            font-weight: 700;
+            font-size: 14.5px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .apply-role-btn:hover {
+            background: var(--job-primary);
+            color: #ffffff;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+        }
+
+        /* FORM WRAPPER */
+        .job-form-wrapper {
+            background: #ffffff;
+            border: 1px solid var(--job-border);
+            border-radius: 20px;
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
+            margin-bottom: 70px;
+        }
+        .form-header-banner {
+            background: linear-gradient(135deg, #07162c 0%, #1e3a8a 100%);
+            color: #ffffff;
+            padding: 40px;
+            text-align: center;
+        }
+        .form-header-banner h2 {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .form-header-banner p {
+            color: #cbd5e1;
+            font-size: 15.5px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .job-form-body {
+            padding: 45px 50px;
+        }
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-group-full {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+        .form-label span {
+            color: #ef4444;
+        }
+        .form-control {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            font-size: 14.5px;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: 0.2s;
+            font-family: inherit;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .form-control:focus {
+            border-color: var(--job-primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+        select.form-control {
+            cursor: pointer;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .submit-job-btn {
+            width: 100%;
+            background: var(--job-primary);
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+        }
+        .submit-job-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(37, 99, 235, 0.35);
+        }
+        .submit-job-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .direct-hr-box {
+            margin-top: 30px;
+            background: #f1f5f9;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 13.5px;
+            color: #475569;
+        }
+        .direct-hr-box a {
+            color: var(--job-primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .direct-hr-box a:hover {
+            text-decoration: underline;
+        }
+
+        /* PROCESS SECTION */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 40px;
+        }
+        .process-step {
+            background: #ffffff;
+            border: 1px solid var(--job-border);
+            border-radius: 16px;
+            padding: 30px 24px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--job-card-shadow);
+        }
+        .step-num {
+            width: 44px;
+            height: 44px;
+            background: #eff6ff;
+            color: var(--job-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            margin: 0 auto 16px;
+            border: 2px solid #bfdbfe;
+        }
+        .process-step h4 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        .process-step p {
+            font-size: 13.5px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .job-hero h1 { font-size: 36px; }
+            .why-grid { grid-template-columns: repeat(2, 1fr); }
+            .openings-grid { grid-template-columns: 1fr; }
+            .job-metrics-bar { grid-template-columns: repeat(2, 1fr); }
+            .process-grid { grid-template-columns: 1fr; }
+            .job-form-body { padding: 30px 24px; }
+        }
+        @media (max-width: 640px) {
+            .job-hero { padding: 70px 16px 50px; }
+            .job-hero h1 { font-size: 28px; }
+            .job-hero p { font-size: 15px; }
+            .why-grid { grid-template-columns: 1fr; }
+            .form-grid-2 { grid-template-columns: 1fr; }
+            .job-metrics-bar { grid-template-columns: 1fr 1fr; padding: 16px; gap: 14px; }
+            .metric-num { font-size: 22px; }
+        }
+    </style>
+
     
 
     <meta property="og:title" content="Jobs and Careers - Career Xone Gondia" />
@@ -160,26 +671,411 @@
 
 <!-- ======================================================================================================================================================== -->
                                                                                 <!-- 1. PREMIUM HERO SECTION -->
-    <!-- 🌟 COMING SOON HERO SECTION 🌟 -->
-    <section class="cs-hero">
-        <div class="cs-content">
-            <!-- Animated Icon -->
-            <div class="cs-icon">
-                <i class="fas fa-rocket"></i>
+    <!-- 🌟 HERO SECTION 🌟 -->
+    <section class="job-hero">
+        <div class="job-hero-inner">
+            <div class="job-pill">
+                <i class="fas fa-sparkles"></i> We Are Hiring — Join Our Team
             </div>
-            
-            <h1 class="cs-title">Coming Soon</h1>
-            
-            <p class="cs-desc">
-                We are working hard to bring you something amazing. <br>
-                Stay tuned for updates regarding this section.
+            <h1>Empower India's Future Doctors & Engineers with <span>Career Xone</span></h1>
+            <p>
+                Are you an inspiring educator, mentor, or education enthusiast? Build a transformative career at Gondia's premier coaching institute for IIT-JEE, NEET & Foundation. Experience unparalleled academic freedom, growth, and industry-leading compensation.
             </p>
-            
-            <a href="/" class="cs-btn">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
+            <div class="job-hero-btns">
+                <a href="#openings" class="job-btn-primary">
+                    <i class="fas fa-briefcase"></i> Explore Openings
+                </a>
+                <a href="#applySection" class="job-btn-outline">
+                    <i class="fas fa-paper-plane"></i> Quick Apply
+                </a>
+            </div>
+
+            <!-- METRICS BAR -->
+            <div class="job-metrics-bar">
+                <div class="metric-box">
+                    <div class="metric-num">Top-Tier</div>
+                    <div class="metric-lbl">Salary & Performance Bonus</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-num">1000+</div>
+                    <div class="metric-lbl">Students Mentored</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-num">100%</div>
+                    <div class="metric-lbl">Academic Freedom</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-num">Smart</div>
+                    <div class="metric-lbl">Digital Classrooms</div>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- 🌟 MAIN CONTENT CONTAINER 🌟 -->
+    <div class="job-container">
+
+        <!-- ── 1. WHY JOIN US ── -->
+        <div class="job-sec-header">
+            <span class="job-sec-tag">Why Choose Us</span>
+            <h2 class="job-sec-title">Why Build Your Career At Career Xone?</h2>
+            <p class="job-sec-desc">
+                We believe exceptional teachers and passionate professionals deserve an ecosystem where they can thrive, innovate, and make an enduring impact on young lives.
+            </p>
+        </div>
+
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-coins"></i></div>
+                <h3>Industry-Best Compensation</h3>
+                <p>We offer competitive packages with transparent annual appraisals, plus significant performance incentives for producing top ranks in JEE & NEET.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-chalkboard-user"></i></div>
+                <h3>Academic Autonomy</h3>
+                <p>Design your lecture delivery, DPPs, and problem-solving sessions without rigid micromanagement. Your individual teaching style is valued and celebrated.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3>Modern Smart Classrooms</h3>
+                <p>Teach in air-conditioned smart rooms equipped with Interactive Flat Panels (IFPs), hybrid lecture capture, and high-speed campus infrastructure.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-arrow-trend-up"></i></div>
+                <h3>Fast-Track Leadership</h3>
+                <p>Clear, merit-driven career pathways to Senior HOD, Academic Director, and Center Management positions based on merit and passion.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-calendar-check"></i></div>
+                <h3>Structured Work-Life Balance</h3>
+                <p>Well-planned annual academic calendars, predictable batch schedules, and transparent leave policies so you never face academic burnout.</p>
+            </div>
+            <div class="why-card">
+                <div class="why-icon"><i class="fas fa-users-gear"></i></div>
+                <h3>Supportive Peer Ecosystem</h3>
+                <p>Collaborate with experienced educators and subject experts who share a common mission of making Gondia the education hub of Vidarbha.</p>
+            </div>
+        </div>
+
+        <!-- ── 2. OPEN POSITIONS ── -->
+        <div class="job-sec-header" id="openings">
+            <span class="job-sec-tag">Current Openings</span>
+            <h2 class="job-sec-title">Explore Active Positions in Gondia</h2>
+            <p class="job-sec-desc">
+                Click "Apply for this Role" on any vacancy to jump directly to the application form with your selected role.
+            </p>
+        </div>
+
+        <div class="openings-grid">
+
+            <!-- ROLE 1: PHYSICS -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Faculty — JEE & NEET</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Gondia Campus</span>
+                    </div>
+                    <h3>Senior Faculty — Physics</h3>
+                    <p class="job-desc">
+                        Deliver conceptual and problem-solving mastery in Mechanics, Electrodynamics, Optics, and Modern Physics for JEE Advanced & NEET aspirants.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 2+ Years teaching JEE / NEET batches</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> B.Tech / M.Sc / M.Tech in Physics or relevant field</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Competitive & Negotiable based on credentials</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Senior Faculty - Physics')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 2: CHEMISTRY -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Faculty — JEE & NEET</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Gondia Campus</span>
+                    </div>
+                    <h3>Senior Faculty — Chemistry</h3>
+                    <p class="job-desc">
+                        Expertise in Organic Reaction Mechanisms, Physical Chemistry numericals, or Inorganic NCERT-focused pedagogy for top rank aspirants.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 2+ Years in premier coaching environments</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> M.Sc Chemistry / B.Tech / M.Tech</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Best-in-region salary package + incentives</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Senior Faculty - Chemistry')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 3: MATHEMATICS -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Faculty — JEE Main & Adv</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Gondia Campus</span>
+                    </div>
+                    <h3>Senior Faculty — Mathematics</h3>
+                    <p class="job-desc">
+                        Train students in rigorous analytical thinking across Calculus, Coordinate Geometry, Algebra, Vectors & 3D geometry with high-speed problem techniques.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 2+ Years teaching JEE Main & Advanced</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> B.Tech / M.Tech / M.Sc Mathematics</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> High package + Ranker incentives</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Senior Faculty - Mathematics')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 4: BIOLOGY -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Faculty — NEET Medical</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Gondia Campus</span>
+                    </div>
+                    <h3>Senior Faculty — Biology (Botany & Zoology)</h3>
+                    <p class="job-desc">
+                        Deep command over NCERT Biology line-by-line interpretation, assertion-reason analysis, diagrams, and high-yield memory retention techniques for 360/360 NEET scores.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 2+ Years in NEET coaching</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> M.Sc (Botany/Zoology/Biotech) / MBBS / BDS / M.Pharm</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Top competitive remuneration</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Senior Faculty - Biology')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 5: FOUNDATION -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Foundation Division</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Gondia Campus</span>
+                    </div>
+                    <h3>Junior / Foundation Faculty (Science & Maths)</h3>
+                    <p class="job-desc">
+                        Build rock-solid fundamentals for Class 6th to 10th students targeting Olympiads, NTSE, and early JEE/NEET competitive preparedness.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 1+ Year / Passionate freshers with high subject aptitude</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> B.Sc / M.Sc / B.Tech / B.Ed</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Standard package with rapid promotion track</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Junior / Foundation Faculty')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 6: ACADEMIC COUNSELOR -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Admissions & Relations</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Front Office</span>
+                    </div>
+                    <h3>Academic Counselor & Front Desk Officer</h3>
+                    <p class="job-desc">
+                        Provide personalized counseling to visiting parents and students, explain course structures, batches, scholarship tests, and facilitate smooth admissions.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 1-3 Years in counseling, customer relations or sales</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> Graduate in any discipline with good communication</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Fixed Salary + Admission Incentives</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Academic Counselor & Front Desk')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 7: TELECALLING -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Student Outreach</span>
+                        <span class="j-chip j-chip-green">Full-Time</span>
+                        <span class="j-chip j-chip-amber">Campus Desk</span>
+                    </div>
+                    <h3>Telecalling & Admission Support Executive</h3>
+                    <p class="job-desc">
+                        Connect with prospective students regarding CXSAT scholarship tests, seminars, open demo sessions, and handle inbound parent enquiries with empathy.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 0-2 Years (Freshers with pleasant telephone etiquette welcome)</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> Higher Secondary (12th Pass) or Any Graduate</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Salary + Monthly Performance Bonus</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('Telecalling & Admission Support')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <!-- ROLE 8: DTP / CONTENT -->
+            <div class="job-card">
+                <div class="job-card-top">
+                    <div class="job-badge-row">
+                        <span class="j-chip j-chip-blue">Academic Operations</span>
+                        <span class="j-chip j-chip-green">Full-Time / Part-Time</span>
+                        <span class="j-chip j-chip-amber">Desktop Publishing</span>
+                    </div>
+                    <h3>DTP Operator / Content & Test Paper Typesetter</h3>
+                    <p class="job-desc">
+                        High-speed formatting of Physics, Chemistry & Maths equation papers, Daily Practice Papers (DPPs), test answer keys, and graphic banner typesetting.
+                    </p>
+                    <ul class="job-details-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Experience:</strong> 1+ Year handling MathType, MS Word, CorelDraw or LaTeX</li>
+                        <li><i class="fas fa-graduation-cap"></i> <strong>Qualification:</strong> Any Diploma or Degree with DTP typing speed</li>
+                        <li><i class="fas fa-wallet"></i> <strong>Compensation:</strong> Competitive monthly remuneration</li>
+                    </ul>
+                </div>
+                <button type="button" class="apply-role-btn" onclick="applyForRole('DTP Operator / Content Designer')">
+                    Apply for this Role <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ── 3. APPLICATION FORM ── -->
+        <div class="job-form-wrapper" id="applySection">
+            <div class="form-header-banner">
+                <h2>Submit Your Job Application</h2>
+                <p>
+                    Take the first step toward an exciting career. Fill out the application form below and our Academic Operations / HR team will get back to you promptly.
+                </p>
+            </div>
+
+            <div class="job-form-body">
+                <form id="jobForm" onsubmit="return false;">
+                    
+                    <!-- ROW 1: NAME & PHONE -->
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="form-label" for="jobName">Full Name <span>*</span></label>
+                            <input type="text" id="jobName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="jobPhone">Mobile / WhatsApp Number <span>*</span></label>
+                            <input type="tel" id="jobPhone" class="form-control" placeholder="e.g. 9876543210" required>
+                        </div>
+                    </div>
+
+                    <!-- ROW 2: EMAIL & POSITION -->
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="form-label" for="jobEmail">Email Address</label>
+                            <input type="email" id="jobEmail" class="form-control" placeholder="e.g. rahul@example.com">
+                        </div>
+                        <div>
+                            <label class="form-label" for="jobPosition">Position Applied For <span>*</span></label>
+                            <select id="jobPosition" class="form-control" required>
+                                <option value="" disabled selected>-- Select Position --</option>
+                                <option value="Senior Faculty - Physics">Senior Faculty — Physics (JEE/NEET)</option>
+                                <option value="Senior Faculty - Chemistry">Senior Faculty — Chemistry (JEE/NEET)</option>
+                                <option value="Senior Faculty - Mathematics">Senior Faculty — Mathematics (JEE Main & Adv)</option>
+                                <option value="Senior Faculty - Biology">Senior Faculty — Biology (NEET Specialist)</option>
+                                <option value="Junior / Foundation Faculty">Junior / Foundation Faculty (Class 6-10)</option>
+                                <option value="Academic Counselor & Front Desk">Academic Counselor & Front Desk Officer</option>
+                                <option value="Telecalling & Admission Support">Telecalling & Admission Support Executive</option>
+                                <option value="DTP Operator / Content Designer">DTP Operator / Content & Test Paper Designer</option>
+                                <option value="Other Department / General">Other Department / General Application</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- ROW 3: EXPERIENCE & QUALIFICATION -->
+                    <div class="form-grid-2">
+                        <div>
+                            <label class="form-label" for="jobExperience">Total Relevant Experience</label>
+                            <select id="jobExperience" class="form-control">
+                                <option value="Fresher">Fresher (Passionate & Eager to Learn)</option>
+                                <option value="1-2 Years">1 - 2 Years</option>
+                                <option value="3-5 Years" selected>3 - 5 Years</option>
+                                <option value="5-8 Years">5 - 8 Years</option>
+                                <option value="8+ Years">8+ Years (Veteran / Senior Educator)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" for="jobQualification">Highest Educational Qualification</label>
+                            <input type="text" id="jobQualification" class="form-control" placeholder="e.g. M.Sc Chemistry / B.Tech / MBBS / B.Ed">
+                        </div>
+                    </div>
+
+                    <!-- ROW 4: RESUME LINK -->
+                    <div class="form-group-full">
+                        <label class="form-label" for="jobResume">Resume / Portfolio Link (Optional)</label>
+                        <input type="url" id="jobResume" class="form-control" placeholder="Paste Google Drive, Dropbox, LinkedIn, or personal portfolio link">
+                        <small style="display:block;margin-top:5px;font-size:12px;color:#64748b;">
+                            * If sharing a Google Drive link, please ensure access is set to <em>"Anyone with the link can view"</em>.
+                        </small>
+                    </div>
+
+                    <!-- ROW 5: BRIEF COVER NOTE -->
+                    <div class="form-group-full">
+                        <label class="form-label" for="jobMessage">Brief Note / Key Highlights (Optional)</label>
+                        <textarea id="jobMessage" class="form-control" rows="3" placeholder="Tell us briefly about your teaching philosophy, past student selections, or special achievements..."></textarea>
+                    </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <button type="button" id="jobBtn" class="submit-job-btn">
+                        <i class="fas fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+
+                <!-- DIRECT HR ALTERNATIVE -->
+                <div class="direct-hr-box">
+                    <i class="fas fa-envelope-open-text" style="color:var(--job-primary);margin-right:6px;"></i>
+                    Prefer emailing your CV directly? Send your resume to <a href="mailto:cxjeeneet@gmail.com?subject=Job%20Application%20at%20Career%20Xone">cxjeeneet@gmail.com</a> with the role in subject line, or WhatsApp us at <strong>+91 96733 83561</strong>.
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 4. HIRING PROCESS ── -->
+        <div class="job-sec-header">
+            <span class="job-sec-tag">How It Works</span>
+            <h2 class="job-sec-title">Our Simple 3-Step Selection Process</h2>
+            <p class="job-sec-desc">
+                We value your time. Our hiring process is transparent, structured, and fast.
+            </p>
+        </div>
+
+        <div class="process-grid">
+            <div class="process-step">
+                <div class="step-num">1</div>
+                <h4>Apply & Shortlist</h4>
+                <p>Submit your application online or via email. Our Academic Operations team evaluates your credentials within 24–48 hours.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-num">2</div>
+                <h4>Demo & Interaction</h4>
+                <p>For faculty roles, a 20-minute topic demo lecture (online or on-site). For administrative roles, a personal interaction round.</p>
+            </div>
+            <div class="process-step">
+                <div class="step-num">3</div>
+                <h4>Offer & Onboarding</h4>
+                <p>Final discussion on role, expectations, compensation package, and smooth induction into the Career Xone family.</p>
+            </div>
+        </div>
+
+    </div>
 
     <!-- =====================================================================================================================================-->
                                                     <!-- footer section -->

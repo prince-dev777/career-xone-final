@@ -213,7 +213,7 @@
         /* STATS */
         .stats-row {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 14px; margin-bottom: 32px;
         }
 
@@ -408,6 +408,12 @@
             <span class="sb-badge" id="b-scholarships">—</span>
         </div>
 
+        <div class="sb-item" onclick="showSec('jobs',this)">
+            <div class="sb-item-icon"><i class="fas fa-briefcase"></i></div>
+            Job Applications
+            <span class="sb-badge" id="b-jobs">—</span>
+        </div>
+
         <div class="sb-section-label">Portals</div>
 
         <a class="sb-item" href="https://studentreport.cxjeeneet.com" target="_blank" style="text-decoration: none;">
@@ -467,6 +473,11 @@
                 <div class="stat-icon"><i class="fas fa-trophy"></i></div>
                 <div class="stat-num" id="s-scholarships">—</div>
                 <div class="stat-label">Scholarships</div>
+            </div>
+            <div class="stat-card sc5" onclick="showSecByName('jobs')">
+                <div class="stat-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="stat-num" id="s-jobs">—</div>
+                <div class="stat-label">Job Applications</div>
             </div>
 
         </div>
@@ -539,6 +550,23 @@
             </table></div>
         </div>
 
+        <!-- ── JOB APPLICATIONS ── -->
+        <div class="section" id="sec-jobs">
+            <div class="sec-header">
+                <div class="sec-title">
+                    <div class="ti" style="background:var(--cyan-dim);color:var(--cyan)"><i class="fas fa-briefcase"></i></div>
+                    Job Applications
+                </div>
+                <span class="sec-count" id="c-jobs">Loading...</span>
+            </div>
+            <div class="table-box"><table>
+                <thead><tr><th>Date</th><th>Applicant</th><th>Position</th><th>Experience & Qualification</th><th>Contact</th><th>Resume / Portfolio</th><th>Message</th><th></th></tr></thead>
+                <tbody id="tb-jobs">
+                    <tr><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td></td></tr>
+                </tbody>
+            </table></div>
+        </div>
+
 
     </div><!-- /content -->
 </div><!-- /main -->
@@ -575,7 +603,8 @@ async function api(endpoint) {
     const token = sessionStorage.getItem("adminToken");
     if (!token) { window.location.href = "admin-login.html"; return []; }
     try {
-        const res = await fetch(`${RENDER_URL}${endpoint}`, {
+        const cleanEndpoint = endpoint.startsWith('/api') ? endpoint : `/api${endpoint}`;
+        const res = await fetch(`${RENDER_URL}${cleanEndpoint}`, {
             headers: { 'auth-token': token, 'Content-Type': 'application/json' }
         });
         if (res.status === 401) {
@@ -596,7 +625,8 @@ async function del(type, id) {
     if (!confirm("⚠️ Permanently delete kar doon?")) return;
     const token = sessionStorage.getItem("adminToken");
     try {
-        const res = await fetch(`${RENDER_URL}/${type}/${id}`, {
+        const cleanType = type.startsWith('api/') ? type : `api/${type}`;
+        const res = await fetch(`${RENDER_URL}/${cleanType}/${id}`, {
             method: 'DELETE',
             headers: { 'auth-token': token }
         });
@@ -688,6 +718,30 @@ async function loadAll() {
             <td><button class="del-btn" onclick="del('scholarships','${i._id}')"><i class="fas fa-trash"></i></button></td>
           </tr>`).join('')
         : empty(6, 'trophy', 'Koi scholarship registration nahi');
+
+    // JOB APPLICATIONS
+    const jobs = await api('/jobs');
+    setStats('jobs', jobs.length);
+    document.getElementById('tb-jobs').innerHTML = jobs.length
+        ? jobs.map(i => `<tr>
+            <td class="t-date">${fmt(i.date)}</td>
+            <td class="t-name">${i.name}</td>
+            <td><span class="chip chip-blue">${i.position}</span></td>
+            <td>
+                <div><strong>${i.experience || 'Not specified'}</strong></div>
+                <div style="font-size:11px;color:var(--muted);">${i.qualification || '—'}</div>
+            </td>
+            <td>
+                <div><i class="fas fa-phone" style="font-size:11px;color:var(--muted);margin-right:4px;"></i><a href="tel:${i.phone}" style="color:inherit;text-decoration:none;">${i.phone}</a></div>
+                ${i.email ? `<div style="font-size:11px;color:var(--muted);"><i class="fas fa-envelope" style="font-size:10px;margin-right:4px;"></i><a href="mailto:${i.email}" style="color:inherit;text-decoration:none;">${i.email}</a></div>` : ''}
+            </td>
+            <td>
+                ${i.resumeLink ? `<a href="${i.resumeLink.startsWith('http') ? i.resumeLink : 'https://' + i.resumeLink}" target="_blank" rel="noopener noreferrer" class="chip chip-green" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;"><i class="fas fa-arrow-up-right-from-square" style="font-size:10px;"></i> View Link</a>` : '<span style="color:var(--muted);font-size:12px;">—</span>'}
+            </td>
+            <td style="max-width:200px;font-size:12px;color:var(--muted);line-height:1.4;">${i.message || '—'}</td>
+            <td><button class="del-btn" onclick="del('jobs','${i._id}')"><i class="fas fa-trash"></i></button></td>
+          </tr>`).join('')
+        : empty(8, 'briefcase', 'Koi job application nahi aayi abhi');
 
 
 }
