@@ -78,7 +78,7 @@ app.use(express.static(__dirname));
 let cachedDbPromise = null;
 
 async function connectToDatabase() {
-    if (mongoose.connection.readyState >= 1) {
+    if (mongoose.connection.readyState === 1) {
         return mongoose.connection;
     }
 
@@ -107,12 +107,12 @@ async function connectToDatabase() {
 
 // Database Connection Middleware for all API routes
 app.use(async (req, res, next) => {
-    const apiRoutes = [
+    const isApi = req.path.startsWith('/api') || [
         '/contact', '/admission', '/testseries', '/scholarship',
         '/register', '/user-login', '/admin-login',
         '/contacts', '/admissions', '/scholarships', '/users'
-    ];
-    const isApi = apiRoutes.some(p => req.path === p || req.path.startsWith(p + '/'));
+    ].some(p => req.path === p || req.path.startsWith(p + '/'));
+
     if (isApi) {
         try {
             await connectToDatabase();
@@ -176,7 +176,7 @@ const checkAuth = (req, res, next) => {
 // ================================================================
 // ROUTES — ADMIN LOGIN
 // ================================================================
-app.post('/admin-login', (req, res) => {
+app.post(['/admin-login', '/api/admin-login'], (req, res) => {
     const { password } = req.body;
     const correctPassword = process.env.ADMIN_PASSWORD;
 
@@ -198,7 +198,7 @@ app.post('/admin-login', (req, res) => {
 // ================================================================
 // ROUTES — STUDENT AUTH
 // ================================================================
-app.post('/register', async (req, res) => {
+app.post(['/register', '/api/register'], async (req, res) => {
     const { email, password } = req.body;
     try {
         if (await User.findOne({ email }))
@@ -210,7 +210,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/user-login', async (req, res) => {
+app.post(['/user-login', '/api/user-login'], async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ email });
@@ -230,29 +230,29 @@ app.get('/admin-login', (req, res) => res.sendFile(path.join(__dirname, 'admin-l
 app.get('/admin',       (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 // ================================================================
-// ROUTES — PUBLIC FORM SUBMISSIONS
+// ROUTES — PUBLIC FORM SUBMISSIONS (Accepts /route & /api/route)
 // ================================================================
-app.post('/contact',    async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post('/admission',  async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post('/testseries', async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post('/scholarship',async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/contact', '/api/contact'],       async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/admission', '/api/admission'],   async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/testseries', '/api/testseries'], async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/scholarship', '/api/scholarship'], async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 
 // ================================================================
 // ROUTES — ADMIN DATA (Protected)
 // ================================================================
-app.get('/contacts',    checkAuth, async (req, res) => { try { res.json(await Contact.find().sort({ date: -1 }));    } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
-app.get('/admissions',  checkAuth, async (req, res) => { try { res.json(await Admission.find().sort({ date: -1 }));  } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
-app.get('/testseries',  checkAuth, async (req, res) => { try { res.json(await TestSeries.find().sort({ date: -1 })); } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
-app.get('/scholarships',checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
-app.get('/users',       checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/contacts', '/api/contacts'],       checkAuth, async (req, res) => { try { res.json(await Contact.find().sort({ date: -1 }));    } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/admissions', '/api/admissions'],   checkAuth, async (req, res) => { try { res.json(await Admission.find().sort({ date: -1 }));  } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/testseries', '/api/testseries'],   checkAuth, async (req, res) => { try { res.json(await TestSeries.find().sort({ date: -1 })); } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/scholarships', '/api/scholarships'],checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+app.get(['/users', '/api/users'],             checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 
 // ================================================================
 // ROUTES — DELETE (Protected)
 // ================================================================
-app.delete('/contacts/:id',    checkAuth, async (req, res) => { await Contact.findByIdAndDelete(req.params.id);    res.json({ status: "Deleted" }); });
-app.delete('/admissions/:id',  checkAuth, async (req, res) => { await Admission.findByIdAndDelete(req.params.id);  res.json({ status: "Deleted" }); });
-app.delete('/testseries/:id',  checkAuth, async (req, res) => { await TestSeries.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
-app.delete('/scholarships/:id',checkAuth, async (req, res) => { await Scholarship.findByIdAndDelete(req.params.id);res.json({ status: "Deleted" }); });
+app.delete(['/contacts/:id', '/api/contacts/:id'],       checkAuth, async (req, res) => { await Contact.findByIdAndDelete(req.params.id);    res.json({ status: "Deleted" }); });
+app.delete(['/admissions/:id', '/api/admissions/:id'],   checkAuth, async (req, res) => { await Admission.findByIdAndDelete(req.params.id);  res.json({ status: "Deleted" }); });
+app.delete(['/testseries/:id', '/api/testseries/:id'],   checkAuth, async (req, res) => { await TestSeries.findByIdAndDelete(req.params.id); res.json({ status: "Deleted" }); });
+app.delete(['/scholarships/:id', '/api/scholarships/:id'],checkAuth, async (req, res) => { await Scholarship.findByIdAndDelete(req.params.id);res.json({ status: "Deleted" }); });
 
 // ================================================================
 // SERVER START

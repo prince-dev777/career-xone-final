@@ -93,8 +93,8 @@ function validateInputs(email, password) {
 // API CONFIGURATION (Vercel Serverless / Same-Origin)
 // ------------------------------------------------------
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:5000'
-    : '';
+    ? 'http://localhost:5000/api'
+    : '/api';
 
 async function loginRequest(email, password) {
     const res = await fetch(`${API_BASE}/user-login`, {
