@@ -3,7 +3,6 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express    = require('express');
 const mongoose   = require('mongoose');
 const cors       = require('cors');
-const axios      = require('axios');
 
 const app  = express();
 const PORT = process.env.PORT || 5000;
@@ -262,11 +261,3 @@ if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
 }
 
 module.exports = app;
-
-// Keep-alive ping (Only if running on Render)
-if (process.env.RENDER) {
-    setInterval(() => {
-        axios.get('https://career-xone-final.onrender.com/admin-login')
-            .catch(() => {});
-    }, 840000);
-}
