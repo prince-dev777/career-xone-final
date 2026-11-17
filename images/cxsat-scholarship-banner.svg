@@ -98,11 +98,11 @@
   </g>
 
   <!-- Top Right Helpline -->
-  <g transform="translate(820, 50)">
-    <rect width="320" height="38" rx="19" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
+  <g transform="translate(680, 50)">
+    <rect width="460" height="38" rx="19" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.15)" stroke-width="1" />
     <circle cx="24" cy="19" r="6" fill="#10b981" />
     <text x="42" y="24" fill="#f8fafc" class="font-sans" font-size="13" font-weight="700" letter-spacing="0.5">
-      HELPLINE: +91 96733 83561
+      HELPLINE: +91 96733 83561 / 91454 81323
     </text>
   </g>
 
@@ -227,7 +227,7 @@
         📍 Test Venue: Career Xone Gondia Campus
       </text>
       <text x="0" y="38" fill="#94a3b8" class="font-sans" font-size="13">
-        Hadditoli Road, Near Ananya Hospital, Gondia (MH) 441601 | Website: www.cxjeeneet.com
+        Hadditoli Road, Gondia | 📞 +91 96733 83561 / 91454 81323 | www.cxjeeneet.com
       </text>
     </g>
   </g>
