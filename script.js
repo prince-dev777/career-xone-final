@@ -382,16 +382,26 @@ if (scholarshipBtn) {
         scholarshipBtn.innerText = "Booking Slot...";
 
         try {
+            const clientRegId = `CX-HS-${Math.floor(1000 + Math.random() * 9000)}`;
             const response = await fetch(`${API_BASE}/scholarship`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, school, studentClass, preferredDate })
+                body: JSON.stringify({ regId: clientRegId, name, phone, school, studentClass, preferredDate })
             });
 
             const result = await response.json();
             if (result.status === "success") {
-                alert("✅ Hunar Sangram Scholarship Test Slot Booked Successfully!");
-                window.location.reload(); 
+                const finalRegId = result.regId || clientRegId;
+                if (typeof showAdmitCardModal === 'function') {
+                    showAdmitCardModal({ regId: finalRegId, name, phone, school, studentClass, preferredDate });
+                } else {
+                    alert(`✅ Hunar Sangram Slot Booked Successfully!\n\nYour Roll / Registration No: ${finalRegId}`);
+                }
+                // Clear input fields
+                if (nameEl) nameEl.value = '';
+                if (phoneEl) phoneEl.value = '';
+                if (schoolEl) schoolEl.value = '';
+                if (classEl) classEl.selectedIndex = 0;
             } else {
                 alert("❌ Failed: " + (result.message || "Please try again."));
             }

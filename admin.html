@@ -543,9 +543,9 @@
                 <span class="sec-count" id="c-scholarships">Loading...</span>
             </div>
             <div class="table-box"><table>
-                <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Class</th><th>School</th><th>Preferred Slot</th><th></th></tr></thead>
+                <thead><tr><th>Date</th><th>Roll No</th><th>Name</th><th>Phone</th><th>Class</th><th>School</th><th>Preferred Slot</th><th></th></tr></thead>
                 <tbody id="tb-scholarships">
-                    <tr><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td></td></tr>
+                    <tr><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td><div class="sh"></div></td><td></td></tr>
                 </tbody>
             </table></div>
         </div>
@@ -711,6 +711,7 @@ async function loadAll() {
     document.getElementById('tb-scholarships').innerHTML = scholarships.length
         ? scholarships.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
+            <td><strong style="color:var(--primary);font-family:monospace;font-size:12.5px;">${i.regId || '—'}</strong></td>
             <td class="t-name">${i.name}</td>
             <td>${i.phone}</td>
             <td>${i.studentClass}</td>
@@ -718,7 +719,7 @@ async function loadAll() {
             <td><span class="chip chip-green">${i.preferredDate || '—'}</span></td>
             <td><button class="del-btn" onclick="del('scholarships','${i._id}')"><i class="fas fa-trash"></i></button></td>
           </tr>`).join('')
-        : empty(7, 'trophy', 'Koi scholarship registration nahi');
+        : empty(8, 'trophy', 'Koi scholarship registration nahi');
 
     // JOB APPLICATIONS
     const jobs = await api('/jobs');

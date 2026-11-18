@@ -151,7 +151,7 @@ const TestSeries = mongoose.model('TestSeries', new mongoose.Schema({
 }));
 
 const Scholarship = mongoose.model('Scholarship', new mongoose.Schema({
-    name: String, phone: String, school: String, studentClass: String, preferredDate: String,
+    regId: String, name: String, phone: String, school: String, studentClass: String, preferredDate: String,
     date: { type: Date, default: Date.now }
 }));
 
@@ -247,7 +247,18 @@ app.get('/admin',       (req, res) => res.sendFile(path.join(__dirname, 'admin.h
 app.post(['/contact', '/api/contact'],       async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 app.post(['/admission', '/api/admission'],   async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
 app.post(['/testseries', '/api/testseries'], async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post(['/scholarship', '/api/scholarship'], async (req, res) => { try { await new Scholarship(req.body).save();res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/scholarship', '/api/scholarship'], async (req, res) => {
+    try {
+        const payload = req.body || {};
+        if (!payload.regId) {
+            payload.regId = `CX-HS-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+        const saved = await new Scholarship(payload).save();
+        res.json({ status: "success", regId: saved.regId });
+    } catch (e) {
+        res.status(500).json({ status: "error", message: e.message });
+    }
+});
 app.post(['/jobs', '/job', '/api/jobs', '/api/job'], async (req, res) => {
     try {
         const { name, phone, email, position, experience, qualification, resumeLink, message } = req.body;
