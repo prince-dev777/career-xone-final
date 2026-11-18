@@ -934,7 +934,7 @@
         }, 300);
     }
 
-    // Clean PDF Generation with zero-scroll offset container
+    // Clean PDF Generation — renders inside a hidden iframe so scroll/position never clips
     function downloadAdmitCardPDF() {
         const cardEl = document.getElementById('admitCardPrintArea');
         if (!cardEl) return;
@@ -947,55 +947,69 @@
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing PDF...';
         }
-        
-        if (typeof html2pdf !== 'undefined') {
-            const container = document.createElement('div');
-            container.style.position = 'fixed';
-            container.style.top = '0';
-            container.style.left = '0';
-            container.style.width = '700px';
-            container.style.background = '#ffffff';
-            container.style.zIndex = '-999999';
-            container.style.opacity = '1';
-            container.style.pointerEvents = 'none';
 
-            const clone = cardEl.cloneNode(true);
-            clone.style.margin = '0';
-            clone.style.width = '700px';
-            clone.style.boxSizing = 'border-box';
-            container.appendChild(clone);
-            document.body.appendChild(container);
-
-            const opt = {
-                margin:       [8, 8, 8, 8],
-                filename:     `CXSAT_2027_AdmitCard_${regNo}_${studentName}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, allowTaint: true, scrollY: 0, scrollX: 0, windowWidth: 750 },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(clone).save().then(() => {
-                if (document.body.contains(container)) document.body.removeChild(container);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
-                }
-            }).catch(err => {
-                console.error('PDF generation error:', err);
-                if (document.body.contains(container)) document.body.removeChild(container);
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
-                }
-                printAdmitCard();
-            });
-        } else {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalContent;
-            }
-            printAdmitCard();
+        function restoreBtn() {
+            if (btn) { btn.disabled = false; btn.innerHTML = originalContent; }
         }
+        
+        if (typeof html2pdf === 'undefined') { restoreBtn(); printAdmitCard(); return; }
+
+        // Create a hidden iframe at top-left with fixed 800px width — no scroll offset issues
+        let pdfFrame = document.getElementById('admitPdfFrame');
+        if (pdfFrame) pdfFrame.remove();
+        pdfFrame = document.createElement('iframe');
+        pdfFrame.id = 'admitPdfFrame';
+        pdfFrame.style.cssText = 'position:fixed;top:0;left:0;width:800px;height:900px;border:0;opacity:0;pointer-events:none;z-index:-99999;';
+        document.body.appendChild(pdfFrame);
+
+        const fdoc = pdfFrame.contentWindow.document;
+        fdoc.open();
+        fdoc.write(`<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{margin:0;padding:20px;background:#fff;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;width:760px;}
+table{border-collapse:collapse;width:100%;}
+td,th{vertical-align:middle;}
+img{max-width:100%;height:auto;}
+</style>
+</head><body>
+<div id="pdfTarget" style="width:700px;margin:0 auto;background:#fff;">
+${cardEl.outerHTML}
+</div>
+</body></html>`);
+        fdoc.close();
+
+        // Wait for iframe content (especially images) to load, then capture
+        setTimeout(() => {
+            try {
+                const target = fdoc.getElementById('pdfTarget');
+                if (!target) { restoreBtn(); pdfFrame.remove(); printAdmitCard(); return; }
+
+                const opt = {
+                    margin:       [8, 6, 8, 6],
+                    filename:     `CXSAT_2027_AdmitCard_${regNo}_${studentName}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2.5, useCORS: true, allowTaint: true, scrollX: 0, scrollY: 0, windowWidth: 800, width: 740, x: 0, y: 0 },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+
+                html2pdf().set(opt).from(target).save().then(() => {
+                    restoreBtn();
+                    if (pdfFrame) pdfFrame.remove();
+                }).catch(err => {
+                    console.error('PDF error:', err);
+                    restoreBtn();
+                    if (pdfFrame) pdfFrame.remove();
+                    printAdmitCard();
+                });
+            } catch(e) {
+                console.error('PDF iframe error:', e);
+                restoreBtn();
+                if (pdfFrame) pdfFrame.remove();
+                printAdmitCard();
+            }
+        }, 500);
     }
 
     // Toggle custom date input field
