@@ -358,12 +358,14 @@ if (scholarshipBtn) {
 
         const nameEl = document.getElementById('SATName') || document.getElementById('catName');
         const phoneEl = document.getElementById('SATPhone') || document.getElementById('catPhone');
+        const schoolEl = document.getElementById('SATSchool');
         const classEl = document.getElementById('SATClass') || document.getElementById('catClass');
         const dateEl = document.getElementById('SATDate') || document.getElementById('catDate');
         const customDateEl = document.getElementById('SATCustomInput');
 
         const name = nameEl ? nameEl.value.trim() : '';
         const phone = phoneEl ? phoneEl.value.trim() : '';
+        const school = schoolEl ? schoolEl.value.trim() : '';
         const studentClass = classEl ? classEl.value : '';
         let preferredDate = dateEl ? dateEl.value : '';
         if (preferredDate === 'custom') {
@@ -383,7 +385,7 @@ if (scholarshipBtn) {
             const response = await fetch(`${API_BASE}/scholarship`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, studentClass, preferredDate })
+                body: JSON.stringify({ name, phone, school, studentClass, preferredDate })
             });
 
             const result = await response.json();

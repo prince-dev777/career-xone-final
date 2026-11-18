@@ -489,15 +489,7 @@
         <!-- Scheme 1: Admission Test WITH FORM -->
         <div class="scholarship-box" id="register" style="scroll-margin-top: 100px;">
             <h3 class="scholarship-title"><i class="fas fa-edit"></i> Career Xone Hunar Sangram — Scholarship Admission Test</h3>
-            <p class="scholarship-text">
-                Appear for our Hunar Sangram scholarship test. Based on your score, you can avail scholarships ranging from 10% to 100% on course enrollment.
-            </p>
-            <ul class="criteria-list" style="list-style: none; padding: 0;">
-                <li><i class="fas fa-check-circle"></i> <strong>90% - 100% Score:</strong> 70% Scholarship</li>
-                <li><i class="fas fa-check-circle"></i> <strong>80% - 90% Score:</strong> 60% Scholarship</li>
-                <li><i class="fas fa-check-circle"></i> <strong>70% - 80% Score:</strong> 40% Scholarship</li>
-                <li><i class="fas fa-check-circle"></i> <strong>60% - 70% Score:</strong> 25% Scholarship</li>
-            </ul>
+
             
             <!-- DIRECT REGISTRATION FORM -->
             <div class="reg-form-box" id="sat-form" style="scroll-margin-top: 110px;">
@@ -508,6 +500,7 @@
             <input type="tel" id="SATPhone" class="form-input" placeholder="Mobile Number" required>
         </div>
         <div class="form-grid">
+            <input type="text" id="SATSchool" class="form-input" placeholder="School Name">
             <select id="SATClass" class="form-input" required>
                 <option value="" disabled selected>Select Class</option>
                 <option value="Class 6th">Class 6th</option>
@@ -519,7 +512,9 @@
                 <option value="Class 12th">Class 12th</option>
                 <option value="Repeater / Dropper">Repeater / Dropper</option>
             </select>
-            <div>
+        </div>
+        <div class="form-grid">
+            <div style="grid-column: 1 / -1;">
                 <select id="SATDate" class="form-input" onchange="toggleCustomExamDate(this.value)">
                     <option value="29th November (Sunday)" selected>29th November (Sunday) — Hunar Sangram Mega Test</option>
                     <option value="custom">✏️ Other Date (Type your own date)</option>

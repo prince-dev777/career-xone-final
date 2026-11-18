@@ -151,7 +151,7 @@ const TestSeries = mongoose.model('TestSeries', new mongoose.Schema({
 }));
 
 const Scholarship = mongoose.model('Scholarship', new mongoose.Schema({
-    name: String, phone: String, studentClass: String, preferredDate: String,
+    name: String, phone: String, school: String, studentClass: String, preferredDate: String,
     date: { type: Date, default: Date.now }
 }));
 
