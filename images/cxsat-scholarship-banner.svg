@@ -109,7 +109,7 @@
   <!-- ============================================================== -->
   <!-- LEFT COLUMN: BRANDING & MAIN SCHOLARSHIP HEADLINE -->
   <!-- ============================================================== -->
-  <!-- CX Logo Emblem -->
+  <!-- CX Logo Emblem & Date Highlight Badge -->
   <g transform="translate(85, 145)">
     <rect width="68" height="68" rx="16" fill="url(#cyanGrad)" />
     <text x="34" y="47" fill="#050e1d" class="font-title" font-size="30" font-weight="900" text-anchor="middle">CX</text>
@@ -118,25 +118,43 @@
     <text x="88" y="66" fill="#94a3b8" class="font-sans" font-size="14" font-weight="700" letter-spacing="2.5">GONDIA CAMPUS</text>
   </g>
 
+  <!-- Glowing Mega Date Badge -->
+  <g transform="translate(485, 150)" filter="url(#btnShadow)">
+    <rect width="320" height="52" rx="26" fill="#dc2626" stroke="#fbbf24" stroke-width="2" />
+    <circle cx="28" cy="26" r="14" fill="#fbbf24" />
+    <text x="28" y="32" fill="#000000" font-size="16" text-anchor="middle">🔥</text>
+    <text x="175" y="33" fill="#ffffff" class="font-title" font-size="16.5" font-weight="900" text-anchor="middle" letter-spacing="0.5">
+      TEST DATE: 29 NOV (SUNDAY)
+    </text>
+  </g>
+
   <!-- Main Exam Name -->
-  <g transform="translate(85, 260)">
+  <g transform="translate(85, 252)">
+    <!-- Hindi & Edition Badge -->
+    <g transform="translate(0, 0)">
+      <rect width="210" height="32" rx="16" fill="rgba(245,158,11,0.22)" stroke="#f59e0b" stroke-width="1.2" />
+      <text x="105" y="21" fill="#fbbf24" class="font-sans" font-size="13.5" font-weight="800" text-anchor="middle" letter-spacing="0.5">
+        ★ हुनर संग्राम 2026-27 ★
+      </text>
+    </g>
+
     <!-- Big Gold Title -->
-    <text x="0" y="55" class="font-title gold-text" font-size="70" font-weight="950" letter-spacing="-1">
-      CXSAT 2026-27
+    <text x="0" y="78" class="font-title gold-text" font-size="64" font-weight="950" letter-spacing="-0.5">
+      HUNAR SANGRAM
     </text>
 
     <!-- Subheadline -->
-    <text x="0" y="105" fill="#ffffff" class="font-sans" font-size="24" font-weight="800" letter-spacing="2">
-      CAREER XONE SCHOLARSHIP ADMISSION TEST
+    <text x="0" y="118" fill="#ffffff" class="font-sans" font-size="22" font-weight="800" letter-spacing="1.5">
+      CAREER XONE SCHOLARSHIP ADMISSION TEST (SAT)
     </text>
 
     <!-- Description -->
-    <text x="0" y="142" fill="#cbd5e1" class="font-sans" font-size="17" font-weight="500">
+    <text x="0" y="152" fill="#cbd5e1" class="font-sans" font-size="16.5" font-weight="500">
       Benchmark your potential &amp; earn prestigious merit scholarships with expert guidance
     </text>
 
     <!-- Target Audience Pill -->
-    <g transform="translate(0, 160)">
+    <g transform="translate(0, 172)">
       <rect width="490" height="34" rx="8" fill="rgba(56,189,248,0.12)" stroke="rgba(56,189,248,0.3)" stroke-width="1" />
       <text x="16" y="23" fill="#38bdf8" class="font-sans" font-size="14" font-weight="700">
         🎓 For Students of Class 7th, 8th, 9th, 10th, 11th, 12th &amp; Droppers
@@ -166,13 +184,13 @@
 
   <!-- 3 Feature Highlight Badges -->
   <g transform="translate(85, 565)">
-    <!-- Feature 1 -->
+    <!-- Feature 1: NEXT TEST DATE -->
     <g transform="translate(0, 0)">
-      <rect width="215" height="66" rx="14" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
-      <circle cx="35" cy="33" r="18" fill="rgba(37,99,235,0.25)" />
-      <text x="35" y="39" fill="#60a5fa" font-size="16" text-anchor="middle">📅</text>
-      <text x="65" y="28" fill="#ffffff" class="font-sans" font-size="14.5" font-weight="800">Every Sunday</text>
-      <text x="65" y="48" fill="#94a3b8" class="font-sans" font-size="12">Offline &amp; Online Mode</text>
+      <rect width="225" height="66" rx="14" fill="rgba(245,158,11,0.18)" stroke="#f59e0b" stroke-width="1.8" />
+      <circle cx="35" cy="33" r="18" fill="#f59e0b" />
+      <text x="35" y="39" fill="#000000" font-size="16" text-anchor="middle">📅</text>
+      <text x="65" y="28" fill="#fbbf24" class="font-sans" font-size="15" font-weight="900">29 Nov (Sunday)</text>
+      <text x="65" y="48" fill="#ffffff" class="font-sans" font-size="12">Next Major Exam Date</text>
     </g>
 
     <!-- Feature 2 -->
@@ -284,7 +302,7 @@
   <!-- ============================================================== -->
   <g transform="translate(85, 770)">
     <text x="0" y="20" fill="rgba(255,255,255,0.4)" class="font-sans" font-size="13">
-      * Scholarships awarded strictly based on score in CXSAT aptitude &amp; subject test. T&amp;C Apply.
+      * Scholarships awarded strictly based on score in Hunar Sangram (SAT) aptitude &amp; subject test. T&amp;C Apply.
     </text>
   </g>
 </svg>

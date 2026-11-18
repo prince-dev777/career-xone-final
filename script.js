@@ -360,11 +360,15 @@ if (scholarshipBtn) {
         const phoneEl = document.getElementById('SATPhone') || document.getElementById('catPhone');
         const classEl = document.getElementById('SATClass') || document.getElementById('catClass');
         const dateEl = document.getElementById('SATDate') || document.getElementById('catDate');
+        const customDateEl = document.getElementById('SATCustomInput');
 
         const name = nameEl ? nameEl.value.trim() : '';
         const phone = phoneEl ? phoneEl.value.trim() : '';
         const studentClass = classEl ? classEl.value : '';
-        const preferredDate = dateEl ? dateEl.value : '';
+        let preferredDate = dateEl ? dateEl.value : '';
+        if (preferredDate === 'custom') {
+            preferredDate = customDateEl && customDateEl.value.trim() ? customDateEl.value.trim() : 'Custom Date';
+        }
 
         if (!name || !phone || !studentClass) {
             alert("⚠️ Please fill all required fields (Name, Mobile, Class)!");
@@ -384,7 +388,7 @@ if (scholarshipBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
-                alert("✅ CXSAT Scholarship Test Slot Booked Successfully!");
+                alert("✅ Hunar Sangram Scholarship Test Slot Booked Successfully!");
                 window.location.reload(); 
             } else {
                 alert("❌ Failed: " + (result.message || "Please try again."));
