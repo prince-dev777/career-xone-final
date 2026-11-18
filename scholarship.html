@@ -854,7 +854,6 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="script.js"></script>
 <script>
     // Admit Card Modal Controls
@@ -888,17 +887,11 @@
         if (!cardEl) return;
 
         let printFrame = document.getElementById('admitPrintFrame');
-        if (!printFrame) {
-            printFrame = document.createElement('iframe');
-            printFrame.id = 'admitPrintFrame';
-            printFrame.style.position = 'fixed';
-            printFrame.style.right = '0';
-            printFrame.style.bottom = '0';
-            printFrame.style.width = '0';
-            printFrame.style.height = '0';
-            printFrame.style.border = '0';
-            document.body.appendChild(printFrame);
-        }
+        if (printFrame) printFrame.remove();
+        printFrame = document.createElement('iframe');
+        printFrame.id = 'admitPrintFrame';
+        printFrame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
+        document.body.appendChild(printFrame);
 
         const frameDoc = printFrame.contentWindow.document;
         frameDoc.open();
@@ -906,17 +899,22 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>CXSAT_2027_Admit_Card</title>
+    <title>CXSAT 2027 Admit Card</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @page { size: A4 portrait; margin: 10mm; }
-        * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-        body { margin: 0; padding: 0; background: #ffffff; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+        @page { size: A4 portrait; margin: 12mm 14mm; }
+        * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+        html, body { margin: 0; padding: 0; background: #ffffff; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+        body { display: flex; justify-content: center; padding: 10px 0; }
         table { border-collapse: collapse; width: 100%; }
         td, th { vertical-align: middle; }
+        img { max-width: 100%; height: auto; }
+        .card-wrapper { width: 100%; max-width: 680px; margin: 0 auto; background: #ffffff; }
+        div, td, span, tr { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     </style>
 </head>
 <body>
-    <div style="max-width: 700px; margin: 0 auto; background: #ffffff; padding: 4px;">
+    <div class="card-wrapper">
         ${cardEl.outerHTML}
     </div>
 </body>
@@ -931,85 +929,109 @@
                 console.error('Print iframe error:', e);
                 window.print();
             }
-        }, 300);
+        }, 400);
     }
 
-    // Clean PDF Generation — renders inside a hidden iframe so scroll/position never clips
+    // Clean PDF Generation — uses browser's native print-to-PDF for crisp vector output
     function downloadAdmitCardPDF() {
         const cardEl = document.getElementById('admitCardPrintArea');
         if (!cardEl) return;
-        const regNo = (document.getElementById('cardRegId').innerText || 'CX-HS-SLIP').trim();
-        const studentName = (document.getElementById('cardName').innerText || 'Student').trim().replace(/[^a-zA-Z0-9]/g, '_');
-        
+
         const btn = document.getElementById('downloadPdfBtn');
         const originalContent = btn ? btn.innerHTML : '';
         if (btn) {
             btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing PDF...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Preparing...';
         }
 
         function restoreBtn() {
             if (btn) { btn.disabled = false; btn.innerHTML = originalContent; }
         }
-        
-        if (typeof html2pdf === 'undefined') { restoreBtn(); printAdmitCard(); return; }
 
-        // Create a hidden iframe at top-left with fixed 800px width — no scroll offset issues
+        // Create a dedicated hidden iframe with clean styles for vector PDF
         let pdfFrame = document.getElementById('admitPdfFrame');
         if (pdfFrame) pdfFrame.remove();
         pdfFrame = document.createElement('iframe');
         pdfFrame.id = 'admitPdfFrame';
-        pdfFrame.style.cssText = 'position:fixed;top:0;left:0;width:800px;height:900px;border:0;opacity:0;pointer-events:none;z-index:-99999;';
+        pdfFrame.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;';
         document.body.appendChild(pdfFrame);
 
         const fdoc = pdfFrame.contentWindow.document;
         fdoc.open();
         fdoc.write(`<!DOCTYPE html>
-<html><head><meta charset="utf-8">
+<html>
+<head>
+<meta charset="utf-8">
+<title>CXSAT 2027 Admit Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-body{margin:0;padding:20px;background:#fff;font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;width:760px;}
-table{border-collapse:collapse;width:100%;}
-td,th{vertical-align:middle;}
-img{max-width:100%;height:auto;}
+    @page {
+        size: A4 portrait;
+        margin: 12mm 14mm;
+    }
+    * {
+        box-sizing: border-box;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+    }
+    html, body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+    body {
+        display: flex;
+        justify-content: center;
+        padding: 10px 0;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    td, th {
+        vertical-align: middle;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+    .card-wrapper {
+        width: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        background: #ffffff;
+    }
+    /* Ensure backgrounds print */
+    div, td, span, tr {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 </style>
-</head><body>
-<div id="pdfTarget" style="width:700px;margin:0 auto;background:#fff;">
-${cardEl.outerHTML}
+</head>
+<body>
+<div class="card-wrapper">
+    ${cardEl.outerHTML}
 </div>
-</body></html>`);
+</body>
+</html>`);
         fdoc.close();
 
-        // Wait for iframe content (especially images) to load, then capture
+        // Wait for fonts & images to load, then trigger print dialog
         setTimeout(() => {
             try {
-                const target = fdoc.getElementById('pdfTarget');
-                if (!target) { restoreBtn(); pdfFrame.remove(); printAdmitCard(); return; }
-
-                const opt = {
-                    margin:       [8, 6, 8, 6],
-                    filename:     `CXSAT_2027_AdmitCard_${regNo}_${studentName}.pdf`,
-                    image:        { type: 'jpeg', quality: 0.98 },
-                    html2canvas:  { scale: 2.5, useCORS: true, allowTaint: true, scrollX: 0, scrollY: 0, windowWidth: 800, width: 740, x: 0, y: 0 },
-                    jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                };
-
-                html2pdf().set(opt).from(target).save().then(() => {
-                    restoreBtn();
-                    if (pdfFrame) pdfFrame.remove();
-                }).catch(err => {
-                    console.error('PDF error:', err);
-                    restoreBtn();
-                    if (pdfFrame) pdfFrame.remove();
-                    printAdmitCard();
-                });
-            } catch(e) {
-                console.error('PDF iframe error:', e);
+                pdfFrame.contentWindow.focus();
+                pdfFrame.contentWindow.print();
                 restoreBtn();
-                if (pdfFrame) pdfFrame.remove();
-                printAdmitCard();
+            } catch (e) {
+                console.error('PDF print error:', e);
+                restoreBtn();
+                // Fallback: use main window print
+                window.print();
             }
-        }, 500);
+        }, 400);
     }
 
     // Toggle custom date input field
