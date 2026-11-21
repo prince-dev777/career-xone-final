@@ -177,7 +177,7 @@ const User = mongoose.model('User', new mongoose.Schema({
 // AUTH MIDDLEWARE
 // ================================================================
 const checkAuth = (req, res, next) => {
-    const token = req.headers['auth-token'];
+    const token = req.headers['auth-token'] || req.query.token;
     if (token === ADMIN_TOKEN) {
         next();
     } else {
@@ -283,6 +283,147 @@ app.get(['/testseries', '/api/testseries'],   checkAuth, async (req, res) => { t
 app.get(['/scholarships', '/api/scholarships'],checkAuth, async (req, res) => { try { res.json(await Scholarship.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 app.get(['/jobs', '/api/jobs'],               checkAuth, async (req, res) => { try { res.json(await JobApplication.find().sort({ date: -1 }));} catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
 app.get(['/users', '/api/users'],             checkAuth, async (req, res) => { try { res.json(await User.find().sort({ date: -1 }));       } catch (e) { res.status(500).json({ error: "DB Error: " + e.message }); } });
+
+// ================================================================
+// ROUTES — EXCEL EXPORT (Protected)
+// ================================================================
+const XLSX = require('xlsx');
+
+function sendExcelWorkbook(res, sheetName, fileName, data, cols) {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(data);
+    if (cols) ws['!cols'] = cols;
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buf);
+}
+
+app.get(['/contacts/export-excel', '/api/contacts/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const items = await Contact.find().sort({ date: -1 });
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const data = items.map((c, idx) => {
+            const d = c.date ? new Date(c.date) : null;
+            return {
+                "S.No.": idx + 1,
+                "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                "Student / Parent Name": c.name || '—',
+                "Phone Number": c.phone || '—',
+                "Enquiry / Message": c.message || '—'
+            };
+        });
+        sendExcelWorkbook(res, 'Enquiries', `CareerXone_Enquiries_${dateStr}.xlsx`, data, [
+            { wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 18 }, { wch: 50 }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
+
+app.get(['/admissions/export-excel', '/api/admissions/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const items = await Admission.find().sort({ date: -1 });
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const data = items.map((c, idx) => {
+            const d = c.date ? new Date(c.date) : null;
+            return {
+                "S.No.": idx + 1,
+                "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                "Student Name": c.name || '—',
+                "Target Course": c.course || '—',
+                "School / College": c.school || '—',
+                "Phone Number": c.phone || '—',
+                "Email Address": c.email || '—',
+                "Message": c.message || '—'
+            };
+        });
+        sendExcelWorkbook(res, 'Admissions', `CareerXone_Admissions_${dateStr}.xlsx`, data, [
+            { wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 20 }, { wch: 26 }, { wch: 18 }, { wch: 26 }, { wch: 40 }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
+
+app.get(['/testseries/export-excel', '/api/testseries/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const items = await TestSeries.find().sort({ date: -1 });
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const data = items.map((c, idx) => {
+            const d = c.date ? new Date(c.date) : null;
+            return {
+                "S.No.": idx + 1,
+                "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                "Student Name": c.name || '—',
+                "Phone Number": c.phone || '—',
+                "Series Enrolled": c.series || '—'
+            };
+        });
+        sendExcelWorkbook(res, 'TestSeries', `CareerXone_TestSeries_${dateStr}.xlsx`, data, [
+            { wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 18 }, { wch: 25 }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
+
+app.get(['/scholarships/export-excel', '/api/scholarships/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const items = await Scholarship.find().sort({ date: -1 });
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const data = items.map((c, idx) => {
+            const d = c.date ? new Date(c.date) : null;
+            return {
+                "S.No.": idx + 1,
+                "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                "Registration / Roll No": c.regId || '—',
+                "Student Name": c.name || '—',
+                "Phone Number": c.phone || '—',
+                "Class": c.studentClass || '—',
+                "School": c.school || '—',
+                "Preferred Exam Slot": c.preferredDate || '—'
+            };
+        });
+        sendExcelWorkbook(res, 'Scholarships', `CareerXone_Scholarships_${dateStr}.xlsx`, data, [
+            { wch: 8 }, { wch: 14 }, { wch: 22 }, { wch: 26 }, { wch: 18 }, { wch: 14 }, { wch: 26 }, { wch: 20 }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
+
+app.get(['/jobs/export-excel', '/api/jobs/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const items = await JobApplication.find().sort({ date: -1 });
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const data = items.map((c, idx) => {
+            const d = c.date ? new Date(c.date) : null;
+            return {
+                "S.No.": idx + 1,
+                "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                "Applicant Name": c.name || '—',
+                "Applied Position": c.position || '—',
+                "Experience": c.experience || '—',
+                "Qualification": c.qualification || '—',
+                "Phone Number": c.phone || '—',
+                "Email Address": c.email || '—',
+                "Resume / Portfolio Link": c.resumeLink || '—',
+                "Cover Message": c.message || '—'
+            };
+        });
+        sendExcelWorkbook(res, 'JobApplications', `CareerXone_JobApplications_${dateStr}.xlsx`, data, [
+            { wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 24 }, { wch: 18 }, { wch: 22 }, { wch: 18 }, { wch: 26 }, { wch: 35 }, { wch: 45 }
+        ]);
+    } catch (e) {
+        res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
 
 // ================================================================
 // ROUTES — DELETE (Protected)

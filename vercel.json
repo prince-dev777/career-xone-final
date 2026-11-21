@@ -19,6 +19,6 @@
   ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/server.js" },
-    { "source": "/(admin-login|admin|register|user-login|contact|contacts|admission|admissions|testseries|scholarship|scholarships|users)(.*)", "destination": "/server.js" }
+    { "source": "/(admin-login|admin|register|user-login|contact|contacts|admission|admissions|testseries|scholarship|scholarships|users|jobs|job)(.*)", "destination": "/server.js" }
   ]
 }

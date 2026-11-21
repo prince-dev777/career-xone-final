@@ -7,6 +7,12 @@
     <title>Admin Dashboard — Career Xone</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="xlsx.full.min.js"></script>
+    <script>
+        if (typeof XLSX === 'undefined') {
+            document.write('<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"><\/script>');
+        }
+    </script>
     <script>
         // Auth guard — login nahi hai toh bhaga do
         if (sessionStorage.getItem("isAdminLoggedIn") !== "true") {
@@ -277,6 +283,8 @@
         .sec-header {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 18px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .sec-title {
             font-family: var(--ff-head);
@@ -287,11 +295,55 @@
             width: 34px; height: 34px; border-radius: 9px;
             display: flex; align-items: center; justify-content: center; font-size: 13px;
         }
+        .sec-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
         .sec-count {
             padding: 4px 12px; border-radius: 20px;
             font-size: 12px; font-weight: 600;
             background: var(--surface2); color: var(--muted);
             border: 1px solid var(--border);
+        }
+        .btn-excel {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6.5px 14px;
+            background: #10b981;
+            color: #ffffff;
+            border: 1px solid #059669;
+            border-radius: 8px;
+            font-family: var(--ff-body);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(16, 185, 129, 0.25);
+            text-decoration: none;
+            user-select: none;
+            white-space: nowrap;
+        }
+        .btn-excel:hover {
+            background: #059669;
+            border-color: #047857;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35);
+        }
+        .btn-excel:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(16, 185, 129, 0.2);
+        }
+        .btn-excel i {
+            font-size: 13px;
+        }
+        .btn-excel:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none;
         }
 
         /* TABLE */
@@ -364,6 +416,8 @@
             .stats-row { grid-template-columns: repeat(2,1fr); }
             .content { padding: 20px 16px; }
             .topbar { padding: 14px 16px; }
+            .sec-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .sec-actions { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
@@ -489,7 +543,12 @@
                     <div class="ti" style="background:var(--blue-dim);color:var(--blue)"><i class="fas fa-envelope"></i></div>
                     New Enquiries
                 </div>
-                <span class="sec-count" id="c-contacts">Loading...</span>
+                <div class="sec-actions">
+                    <span class="sec-count" id="c-contacts">Loading...</span>
+                    <button class="btn-excel" onclick="exportExcel('contacts')" id="btn-export-contacts" title="Download all enquiries in Excel (.xlsx)">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                </div>
             </div>
             <div class="table-box"><table>
                 <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Message</th><th></th></tr></thead>
@@ -506,7 +565,12 @@
                     <div class="ti" style="background:var(--green-dim);color:var(--green)"><i class="fas fa-user-graduate"></i></div>
                     Admission Applications
                 </div>
-                <span class="sec-count" id="c-admissions">Loading...</span>
+                <div class="sec-actions">
+                    <span class="sec-count" id="c-admissions">Loading...</span>
+                    <button class="btn-excel" onclick="exportExcel('admissions')" id="btn-export-admissions" title="Download admissions in Excel (.xlsx)">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                </div>
             </div>
             <div class="table-box"><table>
                 <thead><tr><th>Date</th><th>Name</th><th>Course</th><th>School</th><th>Phone</th><th>Email</th><th></th></tr></thead>
@@ -523,7 +587,12 @@
                     <div class="ti" style="background:var(--gold-dim);color:var(--gold)"><i class="fas fa-book-open"></i></div>
                     Test Series Requests
                 </div>
-                <span class="sec-count" id="c-testseries">Loading...</span>
+                <div class="sec-actions">
+                    <span class="sec-count" id="c-testseries">Loading...</span>
+                    <button class="btn-excel" onclick="exportExcel('testseries')" id="btn-export-testseries" title="Download test series requests in Excel (.xlsx)">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                </div>
             </div>
             <div class="table-box"><table>
                 <thead><tr><th>Date</th><th>Name</th><th>Phone</th><th>Series</th><th></th></tr></thead>
@@ -540,7 +609,12 @@
                     <div class="ti" style="background:var(--purple-dim);color:var(--purple)"><i class="fas fa-trophy"></i></div>
                     Scholarship Registrations
                 </div>
-                <span class="sec-count" id="c-scholarships">Loading...</span>
+                <div class="sec-actions">
+                    <span class="sec-count" id="c-scholarships">Loading...</span>
+                    <button class="btn-excel" onclick="exportExcel('scholarships')" id="btn-export-scholarships" title="Download scholarships in Excel (.xlsx)">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                </div>
             </div>
             <div class="table-box"><table>
                 <thead><tr><th>Date</th><th>Roll No</th><th>Name</th><th>Phone</th><th>Class</th><th>School</th><th>Preferred Slot</th><th></th></tr></thead>
@@ -557,7 +631,12 @@
                     <div class="ti" style="background:var(--cyan-dim);color:var(--cyan)"><i class="fas fa-briefcase"></i></div>
                     Job Applications
                 </div>
-                <span class="sec-count" id="c-jobs">Loading...</span>
+                <div class="sec-actions">
+                    <span class="sec-count" id="c-jobs">Loading...</span>
+                    <button class="btn-excel" onclick="exportExcel('jobs')" id="btn-export-jobs" title="Download job applications in Excel (.xlsx)">
+                        <i class="fas fa-file-excel"></i> Download Excel
+                    </button>
+                </div>
             </div>
             <div class="table-box"><table>
                 <thead><tr><th>Date</th><th>Applicant</th><th>Position</th><th>Experience & Qualification</th><th>Contact</th><th>Resume / Portfolio</th><th>Message</th><th></th></tr></thead>
@@ -661,14 +740,24 @@ function empty(cols, icon, msg) {
 
 function fmt(d) { return new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }); }
 
+// Store loaded data in memory for instant export
+const store = {
+    contacts: [],
+    admissions: [],
+    testseries: [],
+    scholarships: [],
+    jobs: []
+};
+
 // ── Load all
 async function loadAll() {
 
     // CONTACTS
     const contacts = await api('/contacts');
-    setStats('contacts', contacts.length);
-    document.getElementById('tb-contacts').innerHTML = contacts.length
-        ? contacts.map(i => `<tr>
+    store.contacts = Array.isArray(contacts) ? contacts : [];
+    setStats('contacts', store.contacts.length);
+    document.getElementById('tb-contacts').innerHTML = store.contacts.length
+        ? store.contacts.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
             <td class="t-name">${i.name}</td>
             <td>${i.phone}</td>
@@ -679,9 +768,10 @@ async function loadAll() {
 
     // ADMISSIONS
     const admissions = await api('/admissions');
-    setStats('admissions', admissions.length);
-    document.getElementById('tb-admissions').innerHTML = admissions.length
-        ? admissions.map(i => `<tr>
+    store.admissions = Array.isArray(admissions) ? admissions : [];
+    setStats('admissions', store.admissions.length);
+    document.getElementById('tb-admissions').innerHTML = store.admissions.length
+        ? store.admissions.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
             <td class="t-name">${i.name}</td>
             <td><span class="chip chip-blue">${i.course}</span></td>
@@ -694,9 +784,10 @@ async function loadAll() {
 
     // TEST SERIES
     const tests = await api('/testseries');
-    setStats('testseries', tests.length);
-    document.getElementById('tb-testseries').innerHTML = tests.length
-        ? tests.map(i => `<tr>
+    store.testseries = Array.isArray(tests) ? tests : [];
+    setStats('testseries', store.testseries.length);
+    document.getElementById('tb-testseries').innerHTML = store.testseries.length
+        ? store.testseries.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
             <td class="t-name">${i.name}</td>
             <td>${i.phone}</td>
@@ -707,9 +798,10 @@ async function loadAll() {
 
     // SCHOLARSHIPS
     const scholarships = await api('/scholarships');
-    setStats('scholarships', scholarships.length);
-    document.getElementById('tb-scholarships').innerHTML = scholarships.length
-        ? scholarships.map(i => `<tr>
+    store.scholarships = Array.isArray(scholarships) ? scholarships : [];
+    setStats('scholarships', store.scholarships.length);
+    document.getElementById('tb-scholarships').innerHTML = store.scholarships.length
+        ? store.scholarships.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
             <td><strong style="color:var(--primary);font-family:monospace;font-size:12.5px;">${i.regId || '—'}</strong></td>
             <td class="t-name">${i.name}</td>
@@ -723,9 +815,10 @@ async function loadAll() {
 
     // JOB APPLICATIONS
     const jobs = await api('/jobs');
-    setStats('jobs', jobs.length);
-    document.getElementById('tb-jobs').innerHTML = jobs.length
-        ? jobs.map(i => `<tr>
+    store.jobs = Array.isArray(jobs) ? jobs : [];
+    setStats('jobs', store.jobs.length);
+    document.getElementById('tb-jobs').innerHTML = store.jobs.length
+        ? store.jobs.map(i => `<tr>
             <td class="t-date">${fmt(i.date)}</td>
             <td class="t-name">${i.name}</td>
             <td><span class="chip chip-blue">${i.position}</span></td>
@@ -744,8 +837,170 @@ async function loadAll() {
             <td><button class="del-btn" onclick="del('jobs','${i._id}')"><i class="fas fa-trash"></i></button></td>
           </tr>`).join('')
         : empty(8, 'briefcase', 'Koi job application nahi aayi abhi');
+}
 
+// ── Export to Excel (.xlsx)
+async function exportExcel(type) {
+    const btn = document.getElementById(`btn-export-${type}`);
+    const originalHtml = btn ? btn.innerHTML : '';
 
+    try {
+        if (btn) {
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Exporting...`;
+            btn.disabled = true;
+        }
+
+        // 1. Fetch data if not already cached
+        let dataList = store[type];
+        if (!dataList || dataList.length === 0) {
+            const fetched = await api('/' + type);
+            if (Array.isArray(fetched) && fetched.length > 0) {
+                store[type] = fetched;
+                dataList = fetched;
+            }
+        }
+
+        if (!dataList || dataList.length === 0) {
+            alert(`Koi ${type === 'contacts' ? 'enquiry' : 'record'} data nahi mila export karne ke liye.`);
+            if (btn) {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }
+            return;
+        }
+
+        const dateStr = new Date().toISOString().slice(0, 10);
+
+        // 2. Client-side SheetJS Export (Fast, Clean, Native .xlsx)
+        if (typeof XLSX !== 'undefined') {
+            let sheetName = 'Data';
+            let fileName = `CareerXone_${type}_${dateStr}.xlsx`;
+            let formattedRows = [];
+            let cols = [];
+
+            if (type === 'contacts') {
+                sheetName = 'Enquiries';
+                fileName = `CareerXone_Enquiries_${dateStr}.xlsx`;
+                formattedRows = dataList.map((c, idx) => {
+                    const d = c.date ? new Date(c.date) : null;
+                    return {
+                        "S.No.": idx + 1,
+                        "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                        "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                        "Student / Parent Name": c.name || '—',
+                        "Phone Number": c.phone || '—',
+                        "Enquiry / Message": c.message || '—'
+                    };
+                });
+                cols = [{ wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 18 }, { wch: 50 }];
+            } else if (type === 'admissions') {
+                sheetName = 'Admissions';
+                fileName = `CareerXone_Admissions_${dateStr}.xlsx`;
+                formattedRows = dataList.map((c, idx) => {
+                    const d = c.date ? new Date(c.date) : null;
+                    return {
+                        "S.No.": idx + 1,
+                        "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                        "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                        "Student Name": c.name || '—',
+                        "Target Course": c.course || '—',
+                        "School / College": c.school || '—',
+                        "Phone Number": c.phone || '—',
+                        "Email Address": c.email || '—',
+                        "Message": c.message || '—'
+                    };
+                });
+                cols = [{ wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 20 }, { wch: 26 }, { wch: 18 }, { wch: 26 }, { wch: 40 }];
+            } else if (type === 'testseries') {
+                sheetName = 'TestSeries';
+                fileName = `CareerXone_TestSeries_${dateStr}.xlsx`;
+                formattedRows = dataList.map((c, idx) => {
+                    const d = c.date ? new Date(c.date) : null;
+                    return {
+                        "S.No.": idx + 1,
+                        "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                        "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                        "Student Name": c.name || '—',
+                        "Phone Number": c.phone || '—',
+                        "Series Enrolled": c.series || '—'
+                    };
+                });
+                cols = [{ wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 18 }, { wch: 25 }];
+            } else if (type === 'scholarships') {
+                sheetName = 'Scholarships';
+                fileName = `CareerXone_Scholarships_${dateStr}.xlsx`;
+                formattedRows = dataList.map((c, idx) => {
+                    const d = c.date ? new Date(c.date) : null;
+                    return {
+                        "S.No.": idx + 1,
+                        "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                        "Registration / Roll No": c.regId || '—',
+                        "Student Name": c.name || '—',
+                        "Phone Number": c.phone || '—',
+                        "Class": c.studentClass || '—',
+                        "School": c.school || '—',
+                        "Preferred Exam Slot": c.preferredDate || '—'
+                    };
+                });
+                cols = [{ wch: 8 }, { wch: 14 }, { wch: 22 }, { wch: 26 }, { wch: 18 }, { wch: 14 }, { wch: 26 }, { wch: 20 }];
+            } else if (type === 'jobs') {
+                sheetName = 'JobApplications';
+                fileName = `CareerXone_JobApplications_${dateStr}.xlsx`;
+                formattedRows = dataList.map((c, idx) => {
+                    const d = c.date ? new Date(c.date) : null;
+                    return {
+                        "S.No.": idx + 1,
+                        "Date": d ? d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—',
+                        "Time": d ? d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '—',
+                        "Applicant Name": c.name || '—',
+                        "Applied Position": c.position || '—',
+                        "Experience": c.experience || '—',
+                        "Qualification": c.qualification || '—',
+                        "Phone Number": c.phone || '—',
+                        "Email Address": c.email || '—',
+                        "Resume / Portfolio Link": c.resumeLink || '—',
+                        "Cover Message": c.message || '—'
+                    };
+                });
+                cols = [{ wch: 8 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 24 }, { wch: 18 }, { wch: 22 }, { wch: 18 }, { wch: 26 }, { wch: 35 }, { wch: 45 }];
+            }
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(formattedRows);
+            ws['!cols'] = cols;
+            XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            XLSX.writeFile(wb, fileName);
+
+            if (btn) {
+                btn.innerHTML = `<i class="fas fa-check"></i> Downloaded!`;
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.disabled = false;
+                }, 1600);
+            }
+            return;
+        }
+
+        // 3. Fallback to Server API if SheetJS isn't available
+        const token = sessionStorage.getItem("adminToken");
+        const exportUrl = `${RENDER_URL}/api/${type}/export-excel?token=${encodeURIComponent(token)}`;
+        window.location.href = exportUrl;
+
+        if (btn) {
+            btn.innerHTML = `<i class="fas fa-check"></i> Downloaded!`;
+            setTimeout(() => {
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            }, 1600);
+        }
+    } catch (err) {
+        console.error("Export failed:", err);
+        alert("Excel export me dikkat aayi: " + err.message);
+        if (btn) {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+        }
+    }
 }
 
 async function doRefresh() {
