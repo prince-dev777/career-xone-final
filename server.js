@@ -1,4 +1,6 @@
 const path       = require('path');
+const dns        = require('dns');
+try { dns.setServers(['8.8.8.8', '1.1.1.1']); } catch (e) {}
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express    = require('express');
 const mongoose   = require('mongoose');
@@ -244,9 +246,104 @@ app.get('/admin',       (req, res) => res.sendFile(path.join(__dirname, 'admin.h
 // ================================================================
 // ROUTES — PUBLIC FORM SUBMISSIONS (Accepts /route & /api/route)
 // ================================================================
-app.post(['/contact', '/api/contact'],       async (req, res) => { try { await new Contact(req.body).save();    res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post(['/admission', '/api/admission'],   async (req, res) => { try { await new Admission(req.body).save();  res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
-app.post(['/testseries', '/api/testseries'], async (req, res) => { try { await new TestSeries(req.body).save(); res.json({ status: "success" }); } catch (e) { res.status(500).json({ status: "error", message: e.message }); } });
+app.post(['/contact', '/api/contact'], async (req, res) => {
+    try {
+        let { name, phone, message } = req.body || {};
+        name = (name || '').trim();
+        phone = (phone || '').trim();
+        message = (message || '').trim();
+
+        if (!name || !phone) {
+            return res.status(400).json({ status: "error", message: "Name and phone are required." });
+        }
+
+        // Spam & Duplicate Cooldown Check (5 minutes)
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const recent = await Contact.findOne({
+            phone: phone,
+            date: { $gte: fiveMinutesAgo }
+        });
+        if (recent) {
+            return res.status(429).json({
+                status: "error",
+                message: "Aapki enquiry pehle hi submit ho chuki hai. Hum jald hi aapse sampark karenge."
+            });
+        }
+
+        await new Contact({ name, phone, message }).save();
+        res.json({ status: "success" });
+    } catch (e) {
+        res.status(500).json({ status: "error", message: e.message });
+    }
+});
+
+app.post(['/admission', '/api/admission'], async (req, res) => {
+    try {
+        let { name, school, course, phone, email, message } = req.body || {};
+        name = (name || '').trim();
+        phone = (phone || '').trim();
+        course = (course || '').trim();
+        email = (email || '').trim();
+        school = (school || '').trim();
+        message = (message || '').trim();
+
+        if (!name || !phone || !course) {
+            return res.status(400).json({ status: "error", message: "Name, phone, and course are required." });
+        }
+
+        // Spam & Duplicate Cooldown Check (5 minutes)
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const query = {
+            date: { $gte: fiveMinutesAgo },
+            $or: [{ phone: phone }]
+        };
+        if (email) query.$or.push({ email: email });
+
+        const recent = await Admission.findOne(query);
+        if (recent) {
+            return res.status(429).json({
+                status: "error",
+                message: "Aapka application form pehle hi submit ho chuka hai. Kripya thoda intezar karein."
+            });
+        }
+
+        await new Admission({ name, school, course, phone, email, message }).save();
+        res.json({ status: "success" });
+    } catch (e) {
+        res.status(500).json({ status: "error", message: e.message });
+    }
+});
+
+app.post(['/testseries', '/api/testseries'], async (req, res) => {
+    try {
+        let { name, phone, series } = req.body || {};
+        name = (name || '').trim();
+        phone = (phone || '').trim();
+        series = (series || '').trim();
+
+        if (!name || !phone) {
+            return res.status(400).json({ status: "error", message: "Name and phone are required." });
+        }
+
+        // Spam & Duplicate Cooldown Check (5 minutes)
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const recent = await TestSeries.findOne({
+            phone: phone,
+            date: { $gte: fiveMinutesAgo }
+        });
+        if (recent) {
+            return res.status(429).json({
+                status: "error",
+                message: "Aapka test series request pehle hi submit ho chuka hai."
+            });
+        }
+
+        await new TestSeries({ name, phone, series }).save();
+        res.json({ status: "success" });
+    } catch (e) {
+        res.status(500).json({ status: "error", message: e.message });
+    }
+});
 app.post(['/scholarship', '/api/scholarship'], async (req, res) => {
     try {
         const payload = req.body || {};
@@ -422,6 +519,63 @@ app.get(['/jobs/export-excel', '/api/jobs/export-excel'], checkAuth, async (req,
         ]);
     } catch (e) {
         res.status(500).json({ error: "Export Error: " + e.message });
+    }
+});
+
+// ================================================================
+// ROUTES — CLEAN DUPLICATES (Protected)
+// ================================================================
+app.post(['/admissions/clean-duplicates', '/api/admissions/clean-duplicates'], checkAuth, async (req, res) => {
+    try {
+        const all = await Admission.find().sort({ date: 1 }); // oldest first
+        const seen = new Set();
+        const toDeleteIds = [];
+
+        for (const item of all) {
+            const key = `${(item.name || '').trim().toLowerCase()}_${(item.phone || '').trim()}`;
+            if (seen.has(key)) {
+                toDeleteIds.push(item._id);
+            } else {
+                seen.add(key);
+            }
+        }
+
+        let deletedCount = 0;
+        if (toDeleteIds.length > 0) {
+            const delRes = await Admission.deleteMany({ _id: { $in: toDeleteIds } });
+            deletedCount = delRes.deletedCount;
+        }
+
+        res.json({ status: "success", deletedCount });
+    } catch (e) {
+        res.status(500).json({ error: "Clean duplicates error: " + e.message });
+    }
+});
+
+app.post(['/contacts/clean-duplicates', '/api/contacts/clean-duplicates'], checkAuth, async (req, res) => {
+    try {
+        const all = await Contact.find().sort({ date: 1 });
+        const seen = new Set();
+        const toDeleteIds = [];
+
+        for (const item of all) {
+            const key = `${(item.name || '').trim().toLowerCase()}_${(item.phone || '').trim()}`;
+            if (seen.has(key)) {
+                toDeleteIds.push(item._id);
+            } else {
+                seen.add(key);
+            }
+        }
+
+        let deletedCount = 0;
+        if (toDeleteIds.length > 0) {
+            const delRes = await Contact.deleteMany({ _id: { $in: toDeleteIds } });
+            deletedCount = delRes.deletedCount;
+        }
+
+        res.json({ status: "success", deletedCount });
+    } catch (e) {
+        res.status(500).json({ error: "Clean duplicates error: " + e.message });
     }
 });
 
