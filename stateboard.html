@@ -468,7 +468,7 @@
                     <div class="form-group">
                         <div class="input-wrapper">
                             <i class="fas fa-user input-icon"></i>
-                            <input type="text" class="input-box" placeholder="Student Name">
+                            <input type="text" id="contactName" class="input-box" placeholder="Student Name">
                         </div>
                     </div>
 
@@ -476,7 +476,7 @@
                     <div class="form-group">
                         <div class="input-wrapper">
                             <i class="fas fa-phone-alt input-icon"></i>
-                            <input type="tel" class="input-box" placeholder="Mobile Number">
+                            <input type="tel" id="contactPhone" class="input-box" placeholder="Mobile Number">
                         </div>
                     </div>
 
@@ -484,18 +484,18 @@
                     <div class="form-group">
                         <div class="input-wrapper">
                             <i class="fas fa-graduation-cap input-icon"></i>
-                            <select class="input-box" style="cursor: pointer;">
-                                <option>Select Class...</option>
-                                <option>Class 6th - 10th</option>
-                                <option>Class 11th</option>
-                                <option>Class 12th</option>
-                                <option>Repeater / Dropper</option>
+                            <select id="contactMessage" class="input-box" style="cursor: pointer;">
+                                <option value="">Select Class...</option>
+                                <option value="Class 6th - 10th">Class 6th - 10th</option>
+                                <option value="Class 11th">Class 11th</option>
+                                <option value="Class 12th">Class 12th</option>
+                                <option value="Repeater / Dropper">Repeater / Dropper</option>
                             </select>
                         </div>
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="button" class="submit-btn">Get Free Counselling</button>
+                    <button type="button" id="contactBtn" class="submit-btn">Get Free Counselling</button>
                 </form>
             </div>
 

@@ -96,6 +96,226 @@ const API_BASE = (window.location.hostname === 'localhost' || window.location.ho
     ? 'http://localhost:5000/api'
     : '/api';
 
+// ======================================================
+// REAL-TIME HUMAN-ONLY ANALYTICS (BOT-FILTERED)
+// ======================================================
+const cxAnalytics = (() => {
+    if (typeof window === 'undefined' || window.__cxAnalyticsInstance) {
+        return window.__cxAnalyticsInstance || { track: () => {} };
+    }
+
+    const BOT_UA_RE = /google|googlebot|google-inspectiontool|google-site-verification|chrome-lighthouse|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|twitterbot|facebookexternalhit|linkedinbot|telegrambot|slackbot|discordbot|headless|phantom|selenium|puppeteer|playwright|webdriver|curl|wget|python|scrapy|crawler|spider|pagespeed|gtmetrix|bot\b/i;
+
+    const ua = navigator.userAgent || '';
+    const isAdminPage = /admin/i.test(window.location.pathname || '');
+    const hasAutomatedRuntime = Boolean(
+        navigator.webdriver ||
+        document.documentElement.getAttribute('webdriver') ||
+        window.callPhantom ||
+        window._phantom ||
+        window.__nightmare ||
+        BOT_UA_RE.test(ua) ||
+        !navigator.languages ||
+        navigator.languages.length === 0 ||
+        (window.innerWidth === 0 && window.innerHeight === 0)
+    );
+
+    const disabled = isAdminPage || hasAutomatedRuntime;
+
+    function getId(storage, key, prefix) {
+        try {
+            let val = storage.getItem(key);
+            if (!val) {
+                val = `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
+                storage.setItem(key, val);
+            }
+            return val;
+        } catch (_) {
+            return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
+        }
+    }
+
+    function detectSource() {
+        try {
+            if (!document.referrer) return 'Direct';
+            const host = new URL(document.referrer).hostname.replace(/^www\./, '').toLowerCase();
+            if (!host || host === window.location.hostname.replace(/^www\./, '').toLowerCase()) return 'Internal';
+            if (host.includes('google')) return 'Google';
+            if (host.includes('instagram')) return 'Instagram';
+            if (host.includes('facebook') || host.includes('fb.')) return 'Facebook';
+            if (host.includes('youtube') || host.includes('youtu.be')) return 'YouTube';
+            return host.slice(0, 40);
+        } catch (_) {
+            return 'Direct';
+        }
+    }
+
+    const visitorId = getId(window.localStorage, 'cx_vid', 'vis');
+    const sessionId = getId(window.sessionStorage, 'cx_sid', 'ses');
+    const currentPage = window.location.pathname || '/';
+    const sentSessionKeys = new Set();
+
+    let humanVerified = false;
+    let pageViewSent = false;
+    const visiblePendingForms = new Set();
+
+    function sendPayload(eventType, targetId = '', targetLabel = '', useBeacon = false) {
+        if (disabled) return;
+        const payload = JSON.stringify({
+            eventType,
+            visitorId,
+            sessionId,
+            page: currentPage,
+            pageTitle: (document.title || '').slice(0, 120),
+            targetId: String(targetId || '').slice(0, 120),
+            targetLabel: String(targetLabel || '').slice(0, 120),
+            referrer: detectSource(),
+            humanSignal: true,
+            webdriver: Boolean(navigator.webdriver)
+        });
+
+        const url = `${API_BASE}/analytics/event`;
+        try {
+            if (useBeacon && navigator.sendBeacon) {
+                const blob = new Blob([payload], { type: 'text/plain;charset=UTF-8' });
+                if (navigator.sendBeacon(url, blob)) return;
+            }
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload,
+                keepalive: true
+            }).catch(() => {});
+        } catch (_) {}
+    }
+
+    function trackOncePerSession(eventType, targetId = '', targetLabel = '') {
+        const key = `${eventType}|${currentPage}|${targetId}`;
+        if (sentSessionKeys.has(key)) return;
+        try {
+            const storeKey = `cx_trk_${key}`;
+            if (sessionStorage.getItem(storeKey)) {
+                sentSessionKeys.add(key);
+                return;
+            }
+            sessionStorage.setItem(storeKey, '1');
+        } catch (_) {}
+        sentSessionKeys.add(key);
+        sendPayload(eventType, targetId, targetLabel, false);
+    }
+
+    function ensureHumanConfirmed() {
+        if (disabled || humanVerified) return;
+        humanVerified = true;
+        if (!pageViewSent) {
+            pageViewSent = true;
+            trackOncePerSession('page_view', currentPage, document.title || currentPage);
+        }
+        if (visiblePendingForms.size > 0) {
+            visiblePendingForms.forEach((entry) => {
+                const [fId, fLabel] = entry.split('||');
+                trackOncePerSession('form_section_view', fId, fLabel);
+            });
+            visiblePendingForms.clear();
+        }
+    }
+
+    function resolveFormDescriptor(el, idx) {
+        const btn = el.querySelector('#contactBtn, #admBtn, #testBtn, #SATBtn, #catBtn, #jobBtn, #loginBtn, #registerBtn, .submit-btn, .ts-submit-btn, button[type="submit"]');
+        const heading = el.closest('section, .glass-card, .form-container, .ts-form-box, .scholarship-form-card')?.querySelector('h1, h2, h3, h4');
+        const btnId = btn?.id || el.id || el.closest('[id]')?.id || `form-${idx + 1}`;
+        const label = (heading?.innerText || btn?.innerText || btnId || 'Enquiry Form').replace(/\s+/g, ' ').trim();
+        return { formId: btnId, formLabel: label };
+    }
+
+    function setupTracking() {
+        if (disabled) return;
+
+        // Require a genuine human gesture before logging visit/form views
+        const gestureEvents = ['pointerdown', 'touchstart', 'scroll', 'keydown', 'mousemove'];
+        const onGesture = () => {
+            ensureHumanConfirmed();
+            gestureEvents.forEach(ev => window.removeEventListener(ev, onGesture, { passive: true }));
+        };
+        gestureEvents.forEach(ev => window.addEventListener(ev, onGesture, { passive: true, once: true }));
+
+        // Observe every <form> section entering the viewport
+        const formEls = Array.from(document.querySelectorAll('form'));
+        if (formEls.length > 0 && 'IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+                    const idx = formEls.indexOf(entry.target);
+                    const { formId, formLabel } = resolveFormDescriptor(entry.target, idx);
+                    if (humanVerified) {
+                        trackOncePerSession('form_section_view', formId, formLabel);
+                    } else {
+                        visiblePendingForms.add(`${formId}||${formLabel}`);
+                    }
+                });
+            }, { threshold: 0.25 });
+            formEls.forEach(f => observer.observe(f));
+        }
+
+        // First focus inside a form confirms form interaction + reach
+        document.addEventListener('focusin', (e) => {
+            const field = e.target?.closest?.('form input, form select, form textarea');
+            if (!field) return;
+            ensureHumanConfirmed();
+            const fEl = field.closest('form');
+            const idx = fEl ? formEls.indexOf(fEl) : 0;
+            const { formId, formLabel } = resolveFormDescriptor(fEl || field, Math.max(0, idx));
+            trackOncePerSession('form_section_view', formId, formLabel);
+            trackOncePerSession('form_focus', formId, formLabel);
+        }, true);
+
+        // Capture ALL Call, WhatsApp, and Form Button / CTA Clicks
+        document.addEventListener('click', (e) => {
+            if (!e.isTrusted) return;
+            ensureHumanConfirmed();
+
+            const telLink = e.target?.closest?.('a[href^="tel:"]');
+            if (telLink) {
+                const rawTel = (telLink.getAttribute('href') || '').replace(/^tel:/i, '').trim();
+                const btnText = (telLink.innerText || rawTel).replace(/\s+/g, ' ').trim();
+                sendPayload('call_click', rawTel || 'tel', btnText || `Call ${rawTel}`, true);
+                return;
+            }
+
+            const waLink = e.target?.closest?.('a[href*="wa.me"], a[href*="api.whatsapp.com"], a[href^="whatsapp:"], .btn-whatsapp-scholarship');
+            if (waLink) {
+                const label = (waLink.innerText || 'Chat on WhatsApp').replace(/\s+/g, ' ').trim();
+                const href = waLink.getAttribute('href') || 'whatsapp';
+                sendPayload('whatsapp_click', href.slice(0, 100), label, true);
+                return;
+            }
+
+            const formTrigger = e.target?.closest?.('#contactBtn, #admBtn, #testBtn, #SATBtn, #catBtn, #jobBtn, #loginBtn, #registerBtn, button[type="submit"], form .submit-btn, form .ts-submit-btn, .enroll-btn, .apply-role-btn, .btn-scholarship-hero, a[href*="#register"], a[href*="#applySection"], a[href*="admission.html"]');
+            if (formTrigger) {
+                const id = formTrigger.id || formTrigger.getAttribute('href') || formTrigger.className || 'form-btn';
+                const label = (formTrigger.innerText || id).replace(/\s+/g, ' ').trim();
+                const isNavLink = formTrigger.tagName === 'A' && !String(formTrigger.getAttribute('href') || '').startsWith('#');
+                sendPayload('form_button_click', String(id).slice(0, 80), label, isNavLink);
+            }
+        }, true);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupTracking);
+    } else {
+        setupTracking();
+    }
+
+    const apiObj = {
+        track: (eventType, targetId = '', targetLabel = '', useBeacon = false) => {
+            ensureHumanConfirmed();
+            sendPayload(eventType, targetId, targetLabel, useBeacon);
+        }
+    };
+    window.__cxAnalyticsInstance = apiObj;
+    return apiObj;
+})();
+
 async function loginRequest(email, password) {
     const res = await fetch(`${API_BASE}/user-login`, {
         method: 'POST',
@@ -235,6 +455,7 @@ if (contactBtn) {
             const result = await response.json();
             
             if (result.status === "success") {
+                cxAnalytics.track('form_submit_success', 'contactBtn', 'Enquiry Callback Submitted');
                 alert("✅ Thank you! Your message has been sent successfully.");
                 document.getElementById('contactName').value = '';
                 document.getElementById('contactPhone').value = '';
@@ -286,6 +507,7 @@ if (admBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
+                cxAnalytics.track('form_submit_success', 'admBtn', `Admission Submitted (${course})`, true);
                 alert("✅ Application Submitted Successfully! We will contact you soon.");
                 window.location.reload(); 
             } else {
@@ -332,6 +554,7 @@ if (testBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
+                cxAnalytics.track('form_submit_success', 'testBtn', `Test Series Submitted (${series})`, true);
                 alert("✅ Request Sent! We will call you shortly.");
                 window.location.reload(); 
             } else {
@@ -391,6 +614,7 @@ if (scholarshipBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
+                cxAnalytics.track('form_submit_success', 'SATBtn', `Scholarship Booked (${studentClass})`);
                 const finalRegId = result.regId || clientRegId;
                 if (typeof showAdmitCardModal === 'function') {
                     showAdmitCardModal({ regId: finalRegId, name, phone, school, studentClass, preferredDate });
@@ -462,6 +686,7 @@ if (jobBtn) {
 
             const result = await response.json();
             if (result.status === "success") {
+                cxAnalytics.track('form_submit_success', 'jobBtn', `Job Application (${position})`);
                 alert("🎉 Application Submitted Successfully! Our Academic Operations / HR team will review your profile and contact you soon.");
                 if (nameEl) nameEl.value = '';
                 if (phoneEl) phoneEl.value = '';

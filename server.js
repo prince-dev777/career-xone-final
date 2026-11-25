@@ -1,4 +1,5 @@
 const path       = require('path');
+const crypto     = require('crypto');
 const dns        = require('dns');
 try { dns.setServers(['8.8.8.8', '1.1.1.1']); } catch (e) {}
 require('dotenv').config({ path: path.join(__dirname, '.env') });
@@ -70,7 +71,10 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'auth-token'],
     credentials: true
 }));
-app.use(express.json());
+const ALL_ANALYTICS_BOTS = /google|googlebot|bingbot|duckduckbot|slurp|baiduspider|yandexbot|yahoo|applebot|semrush|ahrefs|mj12bot|dotbot|petalbot|bytespider|gptbot|claudebot|ccbot|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|pinterest|lighthouse|pagespeed|gtmetrix|pingdom|uptimerobot|statuscake|headless|phantom|selenium|puppeteer|playwright|webdriver|curl|wget|python|aiohttp|urllib|scrapy|httpclient|okhttp|java\/|go-http-client|postman|insomnia|bot\b|crawler|spider/i;
+
+app.use(express.json({ limit: '100kb' }));
+app.use(express.text({ type: 'text/plain', limit: '100kb' }));
 app.use(express.static(__dirname));
 
 // ================================================================
@@ -112,7 +116,7 @@ app.use(async (req, res, next) => {
         '/contact', '/admission', '/testseries', '/scholarship',
         '/register', '/user-login', '/admin-login',
         '/contacts', '/admissions', '/scholarships', '/users',
-        '/jobs', '/job'
+        '/jobs', '/job', '/analytics'
     ].some(p => req.path === p || req.path.startsWith(p + '/'));
 
     if (isApi) {
@@ -174,6 +178,34 @@ const User = mongoose.model('User', new mongoose.Schema({
     password: { type: String, required: true },
     date:     { type: Date, default: Date.now }
 }));
+
+const analyticsEventSchema = new mongoose.Schema({
+    eventType:   {
+        type: String,
+        required: true,
+        enum: ['page_view', 'form_section_view', 'form_focus', 'form_button_click', 'form_submit_success', 'call_click', 'whatsapp_click'],
+        index: true
+    },
+    visitorId:   { type: String, required: true, index: true },
+    sessionId:   { type: String, required: true, index: true },
+    page:        { type: String, default: '/', index: true },
+    pageTitle:   { type: String, default: '' },
+    targetId:    { type: String, default: '' },
+    targetLabel: { type: String, default: '' },
+    deviceType:  { type: String, default: 'desktop' },
+    referrer:    { type: String, default: 'Direct' },
+    isAdminPath: { type: Boolean, default: false },
+    date:        { type: Date, default: Date.now, index: true }
+});
+analyticsEventSchema.index({ eventType: 1, date: -1 });
+analyticsEventSchema.index({ sessionId: 1, eventType: 1, page: 1, targetId: 1 });
+const AnalyticsEvent = mongoose.model('AnalyticsEvent', analyticsEventSchema);
+
+const botFilterStatSchema = new mongoose.Schema({
+    dayKey: { type: String, required: true, unique: true },
+    count:  { type: Number, default: 0 }
+});
+const BotFilterStat = mongoose.model('BotFilterStat', botFilterStatSchema);
 
 // ================================================================
 // AUTH MIDDLEWARE
@@ -368,6 +400,394 @@ app.post(['/jobs', '/job', '/api/jobs', '/api/job'], async (req, res) => {
         res.json({ status: "success" });
     } catch (e) {
         res.status(500).json({ status: "error", message: e.message });
+    }
+});
+
+// ================================================================
+// ROUTES — REAL-TIME WEBSITE ANALYTICS (Human-Only, Bot-Filtered)
+// ================================================================
+const ALLOWED_ANALYTICS_EVENTS = new Set([
+    'page_view',
+    'form_section_view',
+    'form_focus',
+    'form_button_click',
+    'form_submit_success',
+    'call_click',
+    'whatsapp_click'
+]);
+
+const analyticsRateMap = new Map();
+
+function getRangeStartDate(range) {
+    const now = new Date();
+    if (range === 'today') {
+        const istOffsetMs = 5.5 * 60 * 60 * 1000;
+        const istNow = new Date(now.getTime() + istOffsetMs);
+        istNow.setUTCHours(0, 0, 0, 0);
+        return new Date(istNow.getTime() - istOffsetMs);
+    }
+    if (range === '7d') return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    if (range === '30d') return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    return null;
+}
+
+function getTodayIstKey() {
+    return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+}
+
+function normalizePagePath(rawPage) {
+    let p = String(rawPage || '/').trim().split('?')[0].split('#')[0] || '/';
+    if (!p.startsWith('/')) p = '/' + p;
+    if (p === '/index.html' || p === '/index') p = '/';
+    return p.slice(0, 120);
+}
+
+app.post('/api/analytics/event', async (req, res) => {
+    try {
+        let body = req.body;
+        if (typeof body === 'string') {
+            try { body = JSON.parse(body); } catch (_) { body = {}; }
+        }
+        body = body || {};
+
+        const ua = String(req.headers['user-agent'] || '').trim();
+        const acceptLang = String(req.headers['accept-language'] || '').trim();
+        const isAutomatedSignal = Boolean(body.webdriver || body.isBot);
+        const isBotUa = !ua || ALL_ANALYTICS_BOTS.test(ua);
+
+        // Record filtered bot hits separately so real visitor counts stay 100% pure
+        if (isBotUa || isAutomatedSignal || !acceptLang || body.humanSignal !== true) {
+            await BotFilterStat.updateOne(
+                { dayKey: getTodayIstKey() },
+                { $inc: { count: 1 } },
+                { upsert: true }
+            ).catch(() => {});
+            return res.json({ status: 'ignored', botFiltered: true });
+        }
+
+        const eventType = String(body.eventType || '').trim();
+        if (!ALLOWED_ANALYTICS_EVENTS.has(eventType)) {
+            return res.status(400).json({ status: 'error', message: 'Invalid eventType' });
+        }
+
+        const page = normalizePagePath(body.page);
+        if (page.includes('admin')) {
+            return res.json({ status: 'ignored', reason: 'admin_excluded' });
+        }
+
+        const forwarded = req.headers['x-forwarded-for'];
+        const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.ip || 'unknown';
+        const uaHash = crypto.createHash('sha256').update(`${ip}|${ua}`).digest('hex').slice(0, 16);
+        const visitorId = String(body.visitorId || uaHash).trim().slice(0, 64);
+        const sessionId = String(body.sessionId || `${visitorId}_${getTodayIstKey()}`).trim().slice(0, 64);
+        const targetId = String(body.targetId || '').trim().slice(0, 120);
+        const targetLabel = String(body.targetLabel || '').trim().slice(0, 120);
+        const pageTitle = String(body.pageTitle || '').trim().slice(0, 140);
+        const referrer = String(body.referrer || 'Direct').trim().slice(0, 80);
+        const deviceType = /mobile|android|iphone|ipad/i.test(ua)
+            ? (/ipad|tablet/i.test(ua) ? 'tablet' : 'mobile')
+            : 'desktop';
+
+        // Per-minute spam burst throttle per session
+        const nowMs = Date.now();
+        const rateEntry = analyticsRateMap.get(sessionId);
+        if (rateEntry && nowMs - rateEntry.windowStart < 60000) {
+            if (rateEntry.count > 60) {
+                return res.json({ status: 'ignored', rateLimited: true });
+            }
+            rateEntry.count += 1;
+        } else {
+            analyticsRateMap.set(sessionId, { windowStart: nowMs, count: 1 });
+            if (analyticsRateMap.size > 5000) analyticsRateMap.clear();
+        }
+
+        // Deduplicate passive view/focus events per session + page + target so reloads never inflate counts
+        if (['page_view', 'form_section_view', 'form_focus'].includes(eventType)) {
+            const exists = await AnalyticsEvent.findOne({
+                sessionId,
+                eventType,
+                page,
+                ...(targetId ? { targetId } : {})
+            }).select('_id').lean();
+            if (exists) {
+                return res.json({ status: 'ok', deduplicated: true });
+            }
+        }
+
+        // Debounce accidental double-clicks within 1.5s
+        if (['call_click', 'whatsapp_click', 'form_button_click'].includes(eventType)) {
+            const recentClick = await AnalyticsEvent.findOne({
+                sessionId,
+                eventType,
+                page,
+                targetId,
+                date: { $gte: new Date(nowMs - 1500) }
+            }).select('_id').lean();
+            if (recentClick) {
+                return res.json({ status: 'ok', deduplicated: true });
+            }
+        }
+
+        await AnalyticsEvent.create({
+            eventType,
+            visitorId,
+            sessionId,
+            page,
+            pageTitle,
+            targetId,
+            targetLabel,
+            deviceType,
+            referrer,
+            date: new Date()
+        });
+
+        res.json({ status: 'ok' });
+    } catch (e) {
+        res.status(500).json({ status: 'error', message: e.message });
+    }
+});
+
+async function buildAnalyticsSummaryData(range = '7d') {
+    const startDate = getRangeStartDate(range);
+    const todayStart = getRangeStartDate('today');
+    const dateFilter = startDate ? { date: { $gte: startDate } } : {};
+
+    const [events, todayBotDoc, allBotDocs] = await Promise.all([
+        AnalyticsEvent.find(dateFilter).sort({ date: -1 }).lean(),
+        BotFilterStat.findOne({ dayKey: getTodayIstKey() }).lean(),
+        BotFilterStat.find({}).lean()
+    ]);
+
+    const todayViews = await AnalyticsEvent.find({ date: { $gte: todayStart }, eventType: 'page_view' }).select('visitorId').lean();
+    const todayUniqueVisitors = new Set(todayViews.map(e => e.visitorId)).size;
+
+    const uniqueVisitors = new Set();
+    const uniqueFormSectionVisitors = new Set();
+    const uniqueCallClickers = new Set();
+    const uniqueFormButtonClickers = new Set();
+
+    let pageViews = 0;
+    let formSectionViews = 0;
+    let formFocusCount = 0;
+    let formButtonClicks = 0;
+    let formSubmits = 0;
+    let callClicks = 0;
+    let whatsappClicks = 0;
+    let mobileCount = 0;
+    let desktopCount = 0;
+
+    const pageMap = new Map();
+    const ctaMap = new Map();
+    const dailyMap = new Map();
+
+    const ensurePage = (p) => {
+        if (!pageMap.has(p)) {
+            pageMap.set(p, {
+                page: p,
+                visitorsSet: new Set(),
+                pageViews: 0,
+                formVisitorsSet: new Set(),
+                formSectionViews: 0,
+                formButtonClicks: 0,
+                formSubmits: 0,
+                callClicks: 0,
+                whatsappClicks: 0
+            });
+        }
+        return pageMap.get(p);
+    };
+
+    for (const ev of events) {
+        const p = ev.page || '/';
+        const pRow = ensurePage(p);
+        const dayKey = new Date(ev.date).toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+        if (!dailyMap.has(dayKey)) {
+            dailyMap.set(dayKey, { date: dayKey, visitorsSet: new Set(), formViews: 0, formClicks: 0, callClicks: 0, whatsappClicks: 0 });
+        }
+        const dRow = dailyMap.get(dayKey);
+
+        if (ev.eventType === 'page_view') {
+            pageViews++;
+            uniqueVisitors.add(ev.visitorId);
+            pRow.pageViews++;
+            pRow.visitorsSet.add(ev.visitorId);
+            dRow.visitorsSet.add(ev.visitorId);
+            if (ev.deviceType === 'mobile') mobileCount++;
+            else desktopCount++;
+        } else if (ev.eventType === 'form_section_view') {
+            formSectionViews++;
+            uniqueFormSectionVisitors.add(ev.visitorId);
+            pRow.formSectionViews++;
+            pRow.formVisitorsSet.add(ev.visitorId);
+            dRow.formViews++;
+        } else if (ev.eventType === 'form_focus') {
+            formFocusCount++;
+        } else if (ev.eventType === 'form_button_click') {
+            formButtonClicks++;
+            uniqueFormButtonClickers.add(ev.visitorId);
+            pRow.formButtonClicks++;
+            dRow.formClicks++;
+        } else if (ev.eventType === 'form_submit_success') {
+            formSubmits++;
+            pRow.formSubmits++;
+        } else if (ev.eventType === 'call_click') {
+            callClicks++;
+            uniqueCallClickers.add(ev.visitorId);
+            pRow.callClicks++;
+            dRow.callClicks++;
+        } else if (ev.eventType === 'whatsapp_click') {
+            whatsappClicks++;
+            pRow.whatsappClicks++;
+            dRow.whatsappClicks++;
+        }
+
+        if (['call_click', 'whatsapp_click', 'form_button_click', 'form_submit_success'].includes(ev.eventType)) {
+            const ctaKey = `${ev.eventType}|${ev.targetLabel || ev.targetId || ev.eventType}|${p}`;
+            if (!ctaMap.has(ctaKey)) {
+                ctaMap.set(ctaKey, {
+                    eventType: ev.eventType,
+                    label: ev.targetLabel || ev.targetId || ev.eventType,
+                    targetId: ev.targetId || '',
+                    page: p,
+                    clicks: 0,
+                    uniqueVisitorsSet: new Set(),
+                    lastAt: ev.date
+                });
+            }
+            const cRow = ctaMap.get(ctaKey);
+            cRow.clicks++;
+            cRow.uniqueVisitorsSet.add(ev.visitorId);
+            if (new Date(ev.date) > new Date(cRow.lastAt)) cRow.lastAt = ev.date;
+        }
+    }
+
+    const totalBotsFiltered = allBotDocs.reduce((s, d) => s + (d.count || 0), 0);
+
+    const pages = Array.from(pageMap.values())
+        .map(r => ({
+            page: r.page,
+            uniqueVisitors: r.visitorsSet.size,
+            pageViews: r.pageViews,
+            formSectionVisitors: r.formVisitorsSet.size,
+            formSectionViews: r.formSectionViews,
+            formButtonClicks: r.formButtonClicks,
+            formSubmits: r.formSubmits,
+            callClicks: r.callClicks,
+            whatsappClicks: r.whatsappClicks,
+            formReachRate: r.visitorsSet.size > 0 ? Math.round((r.formVisitorsSet.size / r.visitorsSet.size) * 100) : 0
+        }))
+        .sort((a, b) => b.uniqueVisitors - a.uniqueVisitors || b.callClicks - a.callClicks);
+
+    const ctaBreakdown = Array.from(ctaMap.values())
+        .map(c => ({
+            eventType: c.eventType,
+            label: c.label,
+            targetId: c.targetId,
+            page: c.page,
+            clicks: c.clicks,
+            uniqueVisitors: c.uniqueVisitorsSet.size,
+            lastAt: c.lastAt
+        }))
+        .sort((a, b) => b.clicks - a.clicks);
+
+    const daily = Array.from(dailyMap.values())
+        .map(d => ({
+            date: d.date,
+            uniqueVisitors: d.visitorsSet.size,
+            formViews: d.formViews,
+            formClicks: d.formClicks,
+            callClicks: d.callClicks,
+            whatsappClicks: d.whatsappClicks
+        }))
+        .sort((a, b) => b.date.localeCompare(a.date));
+
+    const recentActivity = events.slice(0, 60).map(ev => ({
+        eventType: ev.eventType,
+        page: ev.page,
+        targetLabel: ev.targetLabel || ev.targetId || ev.eventType,
+        deviceType: ev.deviceType || 'desktop',
+        referrer: ev.referrer || 'Direct',
+        date: ev.date
+    }));
+
+    return {
+        range,
+        kpis: {
+            uniqueVisitors: uniqueVisitors.size,
+            todayUniqueVisitors,
+            pageViews,
+            uniqueFormSectionVisitors: uniqueFormSectionVisitors.size,
+            formSectionViews,
+            formFocusCount,
+            formButtonClicks,
+            uniqueFormButtonClickers: uniqueFormButtonClickers.size,
+            formSubmits,
+            callClicks,
+            uniqueCallClickers: uniqueCallClickers.size,
+            whatsappClicks,
+            mobileVisitors: mobileCount,
+            desktopVisitors: desktopCount,
+            todayBotsFiltered: todayBotDoc?.count || 0,
+            totalBotsFiltered
+        },
+        pages,
+        ctaBreakdown,
+        daily,
+        recentActivity
+    };
+}
+
+app.get(['/analytics/summary', '/api/analytics/summary'], checkAuth, async (req, res) => {
+    try {
+        const range = String(req.query.range || '7d');
+        const summary = await buildAnalyticsSummaryData(range);
+        res.json({ success: true, ...summary });
+    } catch (e) {
+        res.status(500).json({ error: 'Analytics error: ' + e.message });
+    }
+});
+
+app.get(['/analytics/export-excel', '/api/analytics/export-excel'], checkAuth, async (req, res) => {
+    try {
+        const range = String(req.query.range || 'all');
+        const data = await buildAnalyticsSummaryData(range);
+        const dateStr = new Date().toISOString().slice(0, 10);
+        const wb = XLSX.utils.book_new();
+
+        const k = data.kpis;
+        const kpiRows = [
+            { Metric: 'Real Human Visitors (Unique)', Value: k.uniqueVisitors },
+            { Metric: 'Today Real Visitors (Unique)', Value: k.todayUniqueVisitors },
+            { Metric: 'Total Human Page Views', Value: k.pageViews },
+            { Metric: 'Form Section Reached (Unique Visitors)', Value: k.uniqueFormSectionVisitors },
+            { Metric: 'Form Section Total Views', Value: k.formSectionViews },
+            { Metric: 'Call Button Clicks', Value: k.callClicks },
+            { Metric: 'Unique People Clicked Call', Value: k.uniqueCallClickers },
+            { Metric: 'Form Button Clicks', Value: k.formButtonClicks },
+            { Metric: 'Form Submissions Completed', Value: k.formSubmits },
+            { Metric: 'WhatsApp Button Clicks', Value: k.whatsappClicks },
+            { Metric: 'Bots / Crawlers Filtered Out (Today)', Value: k.todayBotsFiltered }
+        ];
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(kpiRows), 'Summary');
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data.pages.length ? data.pages : [{ Page: 'No data' }]), 'Page Funnel');
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data.ctaBreakdown.length ? data.ctaBreakdown : [{ Action: 'No data' }]), 'Button Clicks');
+
+        const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+        res.setHeader('Content-Disposition', `attachment; filename="CareerXone_Website_Analytics_${dateStr}.xlsx"`);
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buf);
+    } catch (e) {
+        res.status(500).json({ error: 'Export Error: ' + e.message });
+    }
+});
+
+app.delete(['/analytics/reset', '/api/analytics/reset'], checkAuth, async (req, res) => {
+    try {
+        const resDel = await AnalyticsEvent.deleteMany({});
+        await BotFilterStat.deleteMany({});
+        res.json({ success: true, deletedCount: resDel.deletedCount });
+    } catch (e) {
+        res.status(500).json({ error: 'Reset Error: ' + e.message });
     }
 });
 
@@ -591,7 +1011,7 @@ app.delete(['/jobs/:id', '/api/jobs/:id'],               checkAuth, async (req, 
 // ================================================================
 // SERVER START
 // ================================================================
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+if (require.main === module && process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
 }
 
