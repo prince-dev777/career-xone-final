@@ -317,7 +317,7 @@ const cxAnalytics = (() => {
 })();
 
 // ======================================================
-// PUBLIC LIVE VISITOR COUNTER (INDIAN DIGITS, SINCE 2014)
+// PUBLIC LIVE VISITOR COUNTER (INDIAN DIGITS)
 // ======================================================
 (() => {
     if (typeof window === 'undefined' || window.__cxVisitorCounterStarted) return;
@@ -351,8 +351,8 @@ const cxAnalytics = (() => {
             const pill = document.createElement('div');
             pill.className = 'cx-footer-visitor-pill';
             pill.setAttribute('aria-live', 'polite');
-            pill.title = 'Live Career Xone Website Visitors Since 2014';
-            pill.innerHTML = '<span class="cx-live-dot" aria-hidden="true"></span><span class="cx-visitor-label">Visitors Since 2014:</span><strong class="cx-visitor-num" data-cx-visitor-count>—</strong>';
+            pill.title = 'Live Career Xone Website Visitors';
+            pill.innerHTML = '<span class="cx-live-dot" aria-hidden="true"></span><span class="cx-visitor-label">Total Visitors Till Now:</span><strong class="cx-visitor-num" data-cx-visitor-count>19,42,910</strong>';
             const children = Array.from(bar.children);
             if (children.length >= 2) {
                 bar.insertBefore(pill, children[1]);
@@ -365,6 +365,9 @@ const cxAnalytics = (() => {
     function renderVisitorCount(total, animateFrom = null) {
         const target = Math.max(0, Math.floor(Number(total) || 0));
         if (!target) return;
+        try {
+            localStorage.setItem('cx_last_visitor_total', String(target));
+        } catch (_) {}
         const nodes = document.querySelectorAll('[data-cx-visitor-count]');
         if (!nodes.length) return;
 
@@ -394,9 +397,36 @@ const cxAnalytics = (() => {
         lastRenderedTotal = target;
     }
 
+    const FALLBACK_PUBLIC_API = 'https://www.cxjeeneet.com/api';
+
+    async function fetchCounterJson(baseUrl, canIncrement, visitorId) {
+        const res = await fetch(
+            canIncrement ? `${baseUrl}/visitor-counter/hit` : `${baseUrl}/visitor-counter`,
+            canIncrement
+                ? {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        visitorId,
+                        page: window.location.pathname || '/',
+                        humanClient: true,
+                        webdriver: Boolean(navigator.webdriver)
+                    })
+                }
+                : { method: 'GET' }
+        );
+        if (!res.ok) throw new Error('Counter HTTP ' + res.status);
+        return res.json();
+    }
+
     async function initPublicVisitorCounter() {
         if (isAdminPath) return;
         ensureCounterDom();
+
+        try {
+            const cached = Number(localStorage.getItem('cx_last_visitor_total') || 0);
+            if (cached > 1942910) renderVisitorCount(cached);
+        } catch (_) {}
 
         let visitorId = '';
         try {
@@ -405,40 +435,33 @@ const cxAnalytics = (() => {
 
         const canIncrement = !isAutomated && document.visibilityState !== 'prerender';
 
+        let activeBase = API_BASE;
         try {
-            const res = await fetch(
-                canIncrement ? `${API_BASE}/visitor-counter/hit` : `${API_BASE}/visitor-counter`,
-                canIncrement
-                    ? {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            visitorId,
-                            page: window.location.pathname || '/',
-                            humanClient: true,
-                            webdriver: Boolean(navigator.webdriver)
-                        })
-                    }
-                    : { method: 'GET' }
-            );
-            if (res.ok) {
-                const data = await res.json();
-                if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
-                    const prev = data.incremented && Number.isFinite(Number(data.previousTotal))
-                        ? Number(data.previousTotal)
-                        : null;
-                    renderVisitorCount(data.totalVisits, prev);
-                }
+            const data = await fetchCounterJson(activeBase, canIncrement, visitorId);
+            if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
+                const prev = data.incremented && Number.isFinite(Number(data.previousTotal))
+                    ? Number(data.previousTotal)
+                    : null;
+                renderVisitorCount(data.totalVisits, prev);
             }
-        } catch (_) {}
+        } catch (_) {
+            // If previewed via static server (e.g. Live Server :5500) without local :5000 API, fall back read-only to live API
+            if (activeBase !== FALLBACK_PUBLIC_API && window.location.protocol !== 'file:') {
+                try {
+                    const data = await fetchCounterJson(FALLBACK_PUBLIC_API, false, visitorId);
+                    if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
+                        activeBase = FALLBACK_PUBLIC_API;
+                        renderVisitorCount(data.totalVisits);
+                    }
+                } catch (_) {}
+            }
+        }
 
         // Background read-only sync while tab is visible so multi-user traffic updates live
         setInterval(async () => {
             if (document.visibilityState !== 'visible') return;
             try {
-                const res = await fetch(`${API_BASE}/visitor-counter`);
-                if (!res.ok) return;
-                const data = await res.json();
+                const data = await fetchCounterJson(activeBase, false, visitorId);
                 if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
                     renderVisitorCount(data.totalVisits);
                 }
