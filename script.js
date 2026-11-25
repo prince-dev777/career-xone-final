@@ -316,6 +316,143 @@ const cxAnalytics = (() => {
     return apiObj;
 })();
 
+// ======================================================
+// PUBLIC LIVE VISITOR COUNTER (INDIAN DIGITS, SINCE 2014)
+// ======================================================
+(() => {
+    if (typeof window === 'undefined' || window.__cxVisitorCounterStarted) return;
+    window.__cxVisitorCounterStarted = true;
+
+    const BOT_UA_RE = /google|googlebot|google-inspectiontool|google-site-verification|chrome-lighthouse|bingbot|duckduckbot|slurp|baiduspider|yandexbot|whatsapp|twitterbot|facebookexternalhit|linkedinbot|telegrambot|slackbot|discordbot|headless|phantom|selenium|puppeteer|playwright|webdriver|curl|wget|python|scrapy|crawler|spider|pagespeed|gtmetrix|bot\b/i;
+    const ua = navigator.userAgent || '';
+    const isAdminPath = /admin/i.test(window.location.pathname || '');
+    const isAutomated = Boolean(
+        navigator.webdriver ||
+        document.documentElement.getAttribute('webdriver') ||
+        window.callPhantom ||
+        window._phantom ||
+        window.__nightmare ||
+        BOT_UA_RE.test(ua) ||
+        !navigator.languages ||
+        navigator.languages.length === 0 ||
+        (window.innerWidth === 0 && window.innerHeight === 0)
+    );
+
+    let lastRenderedTotal = null;
+
+    function formatIndianNumber(val) {
+        const num = Math.max(0, Math.floor(Number(val) || 0));
+        return num.toLocaleString('en-IN');
+    }
+
+    function ensureCounterDom() {
+        document.querySelectorAll('.copyright-bar').forEach((bar) => {
+            if (bar.querySelector('[data-cx-visitor-count]')) return;
+            const pill = document.createElement('div');
+            pill.className = 'cx-footer-visitor-pill';
+            pill.setAttribute('aria-live', 'polite');
+            pill.title = 'Live Career Xone Website Visitors Since 2014';
+            pill.innerHTML = '<span class="cx-live-dot" aria-hidden="true"></span><span class="cx-visitor-label">Visitors Since 2014:</span><strong class="cx-visitor-num" data-cx-visitor-count>—</strong>';
+            const children = Array.from(bar.children);
+            if (children.length >= 2) {
+                bar.insertBefore(pill, children[1]);
+            } else {
+                bar.appendChild(pill);
+            }
+        });
+    }
+
+    function renderVisitorCount(total, animateFrom = null) {
+        const target = Math.max(0, Math.floor(Number(total) || 0));
+        if (!target) return;
+        const nodes = document.querySelectorAll('[data-cx-visitor-count]');
+        if (!nodes.length) return;
+
+        if (animateFrom !== null && animateFrom < target && lastRenderedTotal !== target) {
+            const startText = formatIndianNumber(animateFrom);
+            nodes.forEach((el) => { el.textContent = startText; });
+            setTimeout(() => {
+                const finalText = formatIndianNumber(target);
+                nodes.forEach((el) => {
+                    el.textContent = finalText;
+                    el.classList.add('cx-visitor-bump');
+                    setTimeout(() => el.classList.remove('cx-visitor-bump'), 900);
+                });
+            }, 350);
+        } else {
+            const formatted = formatIndianNumber(target);
+            nodes.forEach((el) => {
+                if (el.textContent !== formatted) {
+                    el.textContent = formatted;
+                    if (lastRenderedTotal !== null && target > lastRenderedTotal) {
+                        el.classList.add('cx-visitor-bump');
+                        setTimeout(() => el.classList.remove('cx-visitor-bump'), 900);
+                    }
+                }
+            });
+        }
+        lastRenderedTotal = target;
+    }
+
+    async function initPublicVisitorCounter() {
+        if (isAdminPath) return;
+        ensureCounterDom();
+
+        let visitorId = '';
+        try {
+            visitorId = localStorage.getItem('cx_vid') || '';
+        } catch (_) {}
+
+        const canIncrement = !isAutomated && document.visibilityState !== 'prerender';
+
+        try {
+            const res = await fetch(
+                canIncrement ? `${API_BASE}/visitor-counter/hit` : `${API_BASE}/visitor-counter`,
+                canIncrement
+                    ? {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            visitorId,
+                            page: window.location.pathname || '/',
+                            humanClient: true,
+                            webdriver: Boolean(navigator.webdriver)
+                        })
+                    }
+                    : { method: 'GET' }
+            );
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
+                    const prev = data.incremented && Number.isFinite(Number(data.previousTotal))
+                        ? Number(data.previousTotal)
+                        : null;
+                    renderVisitorCount(data.totalVisits, prev);
+                }
+            }
+        } catch (_) {}
+
+        // Background read-only sync while tab is visible so multi-user traffic updates live
+        setInterval(async () => {
+            if (document.visibilityState !== 'visible') return;
+            try {
+                const res = await fetch(`${API_BASE}/visitor-counter`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data && data.success && Number.isFinite(Number(data.totalVisits))) {
+                    renderVisitorCount(data.totalVisits);
+                }
+            } catch (_) {}
+        }, 60000);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPublicVisitorCounter);
+    } else {
+        initPublicVisitorCounter();
+    }
+})();
+
 async function loginRequest(email, password) {
     const res = await fetch(`${API_BASE}/user-login`, {
         method: 'POST',

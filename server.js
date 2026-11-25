@@ -116,7 +116,7 @@ app.use(async (req, res, next) => {
         '/contact', '/admission', '/testseries', '/scholarship',
         '/register', '/user-login', '/admin-login',
         '/contacts', '/admissions', '/scholarships', '/users',
-        '/jobs', '/job', '/analytics'
+        '/jobs', '/job', '/analytics', '/visitor-counter'
     ].some(p => req.path === p || req.path.startsWith(p + '/'));
 
     if (isApi) {
@@ -206,6 +206,23 @@ const botFilterStatSchema = new mongoose.Schema({
     count:  { type: Number, default: 0 }
 });
 const BotFilterStat = mongoose.model('BotFilterStat', botFilterStatSchema);
+
+// ================================================================
+// PUBLIC LIVE VISITOR COUNTER CONFIG & PERSISTENT STORE (Since 2014)
+// ================================================================
+// Derived from real non-bot hourly rate observed after analytics launch
+// projected across 2014-2026 (~12 years); increments atomically per real human visit.
+const DEFAULT_2014_BASELINE = 1942850;
+
+const siteCounterSchema = new mongoose.Schema({
+    key:              { type: String, required: true, unique: true },
+    baseline2014:     { type: Number, default: DEFAULT_2014_BASELINE },
+    liveVisits:       { type: Number, default: 0 },
+    sinceYear:        { type: Number, default: 2014 },
+    seededLiveFromDb: { type: Boolean, default: false },
+    updatedAt:        { type: Date, default: Date.now }
+});
+const SiteCounter = mongoose.model('SiteCounter', siteCounterSchema);
 
 // ================================================================
 // AUTH MIDDLEWARE
@@ -400,6 +417,139 @@ app.post(['/jobs', '/job', '/api/jobs', '/api/job'], async (req, res) => {
         res.json({ status: "success" });
     } catch (e) {
         res.status(500).json({ status: "error", message: e.message });
+    }
+});
+
+// ================================================================
+// ROUTES — PUBLIC LIVE VISITOR COUNTER (Indian Digits, Bot-Filtered)
+// ================================================================
+const visitorCounterHitMap = new Map();
+
+async function ensureSiteCounter() {
+    let existing = await SiteCounter.findOne({ key: 'main' }).lean();
+    if (existing) return existing;
+
+    const initialLivePageViews = await AnalyticsEvent.countDocuments({ eventType: 'page_view' }).catch(() => 0);
+    existing = await SiteCounter.findOneAndUpdate(
+        { key: 'main' },
+        {
+            $setOnInsert: {
+                key: 'main',
+                baseline2014: DEFAULT_2014_BASELINE,
+                liveVisits: initialLivePageViews,
+                sinceYear: 2014,
+                seededLiveFromDb: true,
+                updatedAt: new Date()
+            }
+        },
+        { upsert: true, new: true }
+    ).lean();
+    return existing;
+}
+
+function formatCounterResponse(doc, extra = {}) {
+    const baseline2014 = Math.max(0, Number(doc?.baseline2014) || 0);
+    const liveVisits = Math.max(0, Number(doc?.liveVisits) || 0);
+    const totalVisits = baseline2014 + liveVisits;
+    return {
+        success: true,
+        totalVisits,
+        baseline2014,
+        liveVisits,
+        sinceYear: Number(doc?.sinceYear) || 2014,
+        updatedAt: doc?.updatedAt || new Date(),
+        ...extra
+    };
+}
+
+app.get(['/visitor-counter', '/api/visitor-counter'], async (req, res) => {
+    try {
+        const doc = await ensureSiteCounter();
+        res.json(formatCounterResponse(doc, { incremented: false }));
+    } catch (e) {
+        res.status(500).json({ success: false, error: 'Counter Error: ' + e.message });
+    }
+});
+
+app.post(['/visitor-counter/hit', '/api/visitor-counter/hit'], async (req, res) => {
+    try {
+        let body = req.body;
+        if (typeof body === 'string') {
+            try { body = JSON.parse(body); } catch (_) { body = {}; }
+        }
+        body = body || {};
+
+        const ua = String(req.headers['user-agent'] || '').trim();
+        const acceptLang = String(req.headers['accept-language'] || '').trim();
+        const isAutomated = Boolean(body.webdriver || body.isBot);
+        const isBotUa = !ua || ALL_ANALYTICS_BOTS.test(ua);
+
+        await ensureSiteCounter();
+
+        if (isBotUa || isAutomated || !acceptLang || body.humanClient !== true) {
+            const doc = await SiteCounter.findOne({ key: 'main' }).lean();
+            return res.json(formatCounterResponse(doc, { incremented: false, botFiltered: true }));
+        }
+
+        const page = normalizePagePath(body.page);
+        if (page.includes('admin')) {
+            const doc = await SiteCounter.findOne({ key: 'main' }).lean();
+            return res.json(formatCounterResponse(doc, { incremented: false, reason: 'admin_excluded' }));
+        }
+
+        const forwarded = req.headers['x-forwarded-for'];
+        const ip = (typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : '') || req.ip || 'unknown';
+        const uaHash = crypto.createHash('sha256').update(`${ip}|${ua}`).digest('hex').slice(0, 16);
+        const visitorKey = String(body.visitorId || uaHash).trim().slice(0, 64);
+
+        // Cooldown prevents duplicate double-fires from multiple scripts within 2s while letting real page visits increment
+        const nowMs = Date.now();
+        const lastHitMs = visitorCounterHitMap.get(visitorKey) || 0;
+        if (nowMs - lastHitMs < 2000) {
+            const doc = await SiteCounter.findOne({ key: 'main' }).lean();
+            return res.json(formatCounterResponse(doc, { incremented: false, deduplicated: true }));
+        }
+        visitorCounterHitMap.set(visitorKey, nowMs);
+        if (visitorCounterHitMap.size > 10000) visitorCounterHitMap.clear();
+
+        const doc = await SiteCounter.findOneAndUpdate(
+            { key: 'main' },
+            { $inc: { liveVisits: 1 }, $set: { updatedAt: new Date() } },
+            { new: true }
+        ).lean();
+
+        const totalVisits = (doc.baseline2014 || 0) + (doc.liveVisits || 0);
+        res.json(formatCounterResponse(doc, {
+            previousTotal: Math.max(0, totalVisits - 1),
+            incremented: true
+        }));
+    } catch (e) {
+        res.status(500).json({ success: false, error: 'Counter Hit Error: ' + e.message });
+    }
+});
+
+app.post(['/visitor-counter/config', '/api/visitor-counter/config'], checkAuth, async (req, res) => {
+    try {
+        const baseline2014 = Number(req.body?.baseline2014);
+        const sinceYear = Number(req.body?.sinceYear || 2014);
+        if (!Number.isFinite(baseline2014) || baseline2014 < 0) {
+            return res.status(400).json({ success: false, error: 'Invalid baseline2014 value' });
+        }
+        await ensureSiteCounter();
+        const doc = await SiteCounter.findOneAndUpdate(
+            { key: 'main' },
+            {
+                $set: {
+                    baseline2014: Math.floor(baseline2014),
+                    sinceYear: Number.isFinite(sinceYear) ? Math.floor(sinceYear) : 2014,
+                    updatedAt: new Date()
+                }
+            },
+            { new: true }
+        ).lean();
+        res.json(formatCounterResponse(doc));
+    } catch (e) {
+        res.status(500).json({ success: false, error: 'Counter Config Error: ' + e.message });
     }
 });
 

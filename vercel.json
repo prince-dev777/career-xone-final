@@ -11,6 +11,11 @@
       "source": "/index",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/(blog|blog\\.html|gallery|gallery\\.html|study-material|study-material\\.html)",
+      "destination": "/",
+      "permanent": false
     }
   ],
   "builds": [
